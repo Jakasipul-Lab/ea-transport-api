@@ -23,8 +23,7 @@ app.add_middleware(
 # 3. Database Connection
 MONGO_URL = os.getenv("MONGO_URL")
 client = AsyncIOMotorClient(MONGO_URL)
-db = client.transport_db
-
+db = client.test
 # 4. Data Models (Schemas)
 class Station(BaseModel):
     name: str
