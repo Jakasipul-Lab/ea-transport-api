@@ -3,26 +3,39 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 from dotenv import load_dotenv
 
+import psycopg2
+import dj_database_url
+
+# 1. Load Environment Variables
 load_dotenv()
 
 app = FastAPI()
 
+# 2. CORS Configuration
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# 3. Database Connection Logic
+def get_db_connection():
+    # Railway automatically provides the DATABASE_URL
+    db_url = os.getenv("DATABASE_URL")
+    return psycopg2.connect(db_url)
+
 @app.get("/")
-async def root():
-    return {"message": "East African Transport API"}
+def root():
+    return {"status": "Online", "message": "East African Transport API"}
 
 @app.get("/health")
-async def health():
-    return {"status": "ok"}
+def health():
+    return {"status": "healthy"}
 
+# 4. The "Railway Port" Fix
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # This line is why Health Checks usually fail—it MUST use os.getenv("PORT")
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
