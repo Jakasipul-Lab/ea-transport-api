@@ -1,46 +1,48 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import os
-from dotenv import load_dotenv
-# This is the change:
 import psycopg2
-
-# Load environment variables
-load_dotenv()
+import dj_database_url
 
 app = FastAPI()
 
-# Postgres connection variable from Railway
-DATABASE_URL = os.getenv("DATABASE_URL")
-
-@app.on_event("startup")
-async def startup_db():
-    print("Starting up... Connecting to Railway Postgres")
-
-@app.on_event("shutdown")
-async def shutdown_db():
-    print("Shutting down...")
-
-# CORS middleware to allow browser access
+# Enable CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# Database Connection Helper
+def get_db_connection():
+    try:
+        # Railway provides DATABASE_URL automatically
+        db_config = dj_database_url.config(default=os.getenv("DATABASE_URL"))
+        conn = psycopg2.connect(**db_config)
+        return conn
+    except Exception as e:
+        print(f"Database connection error: {e}")
+        return None
+
 @app.get("/")
-async def root():
-    return {"message": "East African Transport API", "database": "PostgreSQL"}
+def root():
+    return {
+        "status": "online",
+        "message": "East African Transport API - Live",
+        "database": "Checking..."
+    }
 
-@app.get("/health")
-async def health():
-    return {"status": "ok"}
+@app.get("/db-test")
+def test_db():
+    conn = get_db_connection()
+    if conn:
+        conn.close()
+        return {"status": "connected", "message": "Successfully reached Postgres!"}
+    return {"status": "error", "message": "Could not reach database."}
 
-# THIS PART MUST BE AT THE FAR LEFT (NO SPACES)
 if __name__ == "__main__":
     import uvicorn
-    # Railway sets the PORT automatically; this line reads it correctly
+    # Use the dynamic Railway port
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run(app, host="0.0.0.0", port=port)
