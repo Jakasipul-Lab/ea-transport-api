@@ -1,30 +1,24 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-import os
-from dotenv import load_dotenv
+from pydantic import BaseModel
+from typing import List
 
-load_dotenv()
+# 1. Station/Route Models (What the agent asked for)
+class Station(BaseModel):
+    name: str
+    location: str
 
-app = FastAPI()
+class Schedule(BaseModel):
+    station_name: str
+    arrival_time: str
+    route_id: str
 
-# CORS middleware - Essential for your index.tsx to talk to this API
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# 2. Schedule Endpoints
+@app.get("/schedules", response_model=List[Schedule])
+async def get_all_schedules():
+    schedules = await db.schedules.find().to_list(100)
+    return schedules
 
-@app.get("/")
-async def root():
-    return {"message": "Hello from FastAPI"}
-
-@app.get("/health")
-async def health():
-    return {"status": "ok"}
-
-if __name__ == "__main__":
-    import uvicorn
-    # This part is for local testing; Railway uses the Procfile
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+# 3. Booking Endpoints
+@app.post("/book")
+async def create_booking(booking: dict):
+    result = await db.bookings.insert_one(booking)
+    return {"id": str(result.inserted_id), "status": "success"}
