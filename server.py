@@ -1,38 +1,57 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import os
+import psycopg2
 from dotenv import load_dotenv
 
-import psycopg2
-import dj_database_url
-
-# 1. Load variables
 load_dotenv()
-
-# 2. Initialize App
 app = FastAPI()
 
-# 3. CORS (Allows your frontend to talk to this API)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# 1. Database Connection Logic
+def get_db_connection():
+    try:
+        # This uses your Railway Variable
+        db_url = os.environ.get("DATABASE_URL")
+        return psycopg2.connect(db_url)
+    except Exception as e:
+        print(f"Connection Error: {e}")
+        return None
 
-# 4. Root Route
+# 2. THE CLEAN SLATE (Table Restructuring)
+@app.on_event("startup")
+def setup_db():
+    conn = get_db_connection()
+    if conn:
+        try:
+            cur = conn.cursor()
+            # This 'Drops' the old table so we can build the 5 columns fresh
+            cur.execute("DROP TABLE IF EXISTS stations;")
+            
+            # Rebuilding with your 5 Columns
+            cur.execute('''
+                CREATE TABLE stations (
+                    id SERIAL PRIMARY KEY,
+                    station_name TEXT NOT NULL,
+                    location_city TEXT,
+                    terminal_capacity INTEGER,
+                    is_active BOOLEAN DEFAULT TRUE
+                );
+            ''')
+            conn.commit()
+            cur.close()
+            print("CLEAN SLATE: Stations table recreated with 5 columns.")
+        except Exception as e:
+            print(f"Error during Clean Slate: {e}")
+        finally:
+            conn.close()
+
+# 3. Routes
 @app.get("/")
-def read_root():
-    return {"message": "East African Transport API - Online"}
+def root():
+    return {"status": "Online", "database": "Clean Slate Applied"}
 
-# 5. Health Check (What Railway looks for)
-@app.get("/health")
-def health():
-    return {"status": "healthy"}
-
-# 6. Start the Server (Crucial for Health Check)
+# 4. The Railway Port Fix (DO NOT CHANGE)
 if __name__ == "__main__":
     import uvicorn
-    # This automatically picks up 8080 from Railway
     port = int(os.environ.get("PORT", 8080))
     uvicorn.run(app, host="0.0.0.0", port=port)
