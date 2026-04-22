@@ -1,58 +1,53 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 import os
-import psycopg2
-from dotenv import load_dotenv
+from fastapi import FastAPI
 
-load_dotenv()
 app = FastAPI()
 
-# 1. Database Connection Logic
 def get_db_connection():
+    # We move the import inside so the app doesn't crash on startup 
+    # if the database is still waking up
+    import psycopg2 
     try:
-        # This uses your Railway Variable
         db_url = os.environ.get("DATABASE_URL")
         return psycopg2.connect(db_url)
     except Exception as e:
         print(f"Connection Error: {e}")
         return None
 
-# 2. THE CLEAN SLATE (Table Restructuring)
-@app.on_event("startup")
-def setup_db():
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to the Station API", "status": "Online"}
+
+@app.get("/health")
+def health_check():
     conn = get_db_connection()
     if conn:
-        try:
-            cur = conn.cursor()
-            # This 'Drops' the old table so we can build the 5 columns fresh
-            # Remove this line now!
-cur.execute("DROP TABLE IF EXISTS stations;")
-            
-            # Rebuilding with your 5 Columns
-            cur.execute('''
-                CREATE TABLE stations (
-                    id SERIAL PRIMARY KEY,
-                    station_name TEXT NOT NULL,
-                    location_city TEXT,
-                    terminal_capacity INTEGER,
-                    is_active BOOLEAN DEFAULT TRUE
-                );
-            ''')
-            conn.commit()
-            cur.close()
-            print("CLEAN SLATE: Stations table recreated with 5 columns.")
-        except Exception as e:
-            print(f"Error during Clean Slate: {e}")
-        finally:
-            conn.close()
+        conn.close()
+        return {"status": "healthy", "database": "connected"}
+    else:
+        return {"status": "unhealthy", "database": "disconnected"}
 
-# 3. Routes
-@app.get("/")
-def root():
-    return {"status": "Online", "database": "Clean Slate Applied"}
-
-# 4. The Railway Port Fix (DO NOT CHANGE)
-if __name__ == "__main__":
-    import uvicorn
-    port = int(os.environ.get("PORT", 8080))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+@app.get("/stations")
+def get_stations():
+    conn = get_db_connection()
+    if not conn:
+        return {"error": "Database connection failed"}
+    
+    cur = conn.cursor()
+    # This query fetches your 5 specific columns
+    cur.execute("SELECT id, station_name, location_city, terminal_capacity, is_active FROM stations;")
+    rows = cur.fetchall()
+    
+    stations = []
+    for row in rows:
+        stations.append({
+            "id": row[0],
+            "name": row[1],
+            "city": row[2],
+            "capacity": row[3],
+            "active": row[4]
+        })
+    
+    cur.close()
+    conn.close()
+    return stations
