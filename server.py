@@ -33,6 +33,6 @@ def health():
 # 6. Start the Server (Crucial for Health Check)
 if __name__ == "__main__":
     import uvicorn
-    # This line tells the app to use Railway's assigned port
-    port = int(os.environ.get("PORT", 8000))
+    # This automatically picks up 8080 from Railway
+    port = int(os.environ.get("PORT", 8080))
     uvicorn.run(app, host="0.0.0.0", port=port)
