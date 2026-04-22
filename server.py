@@ -6,12 +6,13 @@ from dotenv import load_dotenv
 import psycopg2
 import dj_database_url
 
-# 1. Load Environment Variables
+# 1. Load variables
 load_dotenv()
 
+# 2. Initialize App
 app = FastAPI()
 
-# 2. CORS Configuration
+# 3. CORS (Allows your frontend to talk to this API)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -19,23 +20,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 3. Database Connection Logic
-def get_db_connection():
-    # Railway automatically provides the DATABASE_URL
-    db_url = os.getenv("DATABASE_URL")
-    return psycopg2.connect(db_url)
-
+# 4. Root Route
 @app.get("/")
-def root():
-    return {"status": "Online", "message": "East African Transport API"}
+def read_root():
+    return {"message": "East African Transport API - Online"}
 
+# 5. Health Check (What Railway looks for)
 @app.get("/health")
 def health():
     return {"status": "healthy"}
 
-# 4. The "Railway Port" Fix
+# 6. Start the Server (Crucial for Health Check)
 if __name__ == "__main__":
     import uvicorn
-    # This line is why Health Checks usually fail—it MUST use os.getenv("PORT")
+    # This line tells the app to use Railway's assigned port
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run(app, host="0.0.0.0", port=port)
