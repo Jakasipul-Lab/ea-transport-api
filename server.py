@@ -1,24 +1,54 @@
+from fastapi import FastAPI, HTTPException, Body
+from fastapi.middleware.cors import CORSMiddleware
+from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
+import os
+from dotenv import load_dotenv
 
-# 1. Station/Route Models (What the agent asked for)
+# 1. Load variables (Essential for Railway)
+load_dotenv()
+
+app = FastAPI(title="Transport API")
+
+# 2. CORS (Essential for your Frontend to talk to this code)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# 3. Database Connection
+MONGO_URL = os.getenv("MONGO_URL")
+client = AsyncIOMotorClient(MONGO_URL)
+db = client.transport_db
+
+# 4. Data Models (Schemas)
 class Station(BaseModel):
     name: str
     location: str
 
-class Schedule(BaseModel):
-    station_name: str
-    arrival_time: str
-    route_id: str
+# 5. Endpoints
+@app.get("/")
+async def root():
+    return {"message": "Transport Backend is Live"}
 
-# 2. Schedule Endpoints
-@app.get("/schedules", response_model=List[Schedule])
-async def get_all_schedules():
-    schedules = await db.schedules.find().to_list(100)
-    return schedules
+@app.get("/health")
+async def health():
+    try:
+        await client.admin.command('ping')
+        return {"status": "online", "database": "connected"}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
 
-# 3. Booking Endpoints
-@app.post("/book")
-async def create_booking(booking: dict):
-    result = await db.bookings.insert_one(booking)
-    return {"id": str(result.inserted_id), "status": "success"}
+@app.get("/stations")
+async def get_stations():
+    stations = await db.stations.find().to_list(100)
+    return stations
+
+# This part runs the server
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", 8000)))
