@@ -32,6 +32,13 @@ class Station(BaseModel):
 # 5. Endpoints
 @app.get("/")
 async def root():
+    return {
+        "message": "Welcome to the Transport API",
+        "status": "Online",
+        "available_endpoints": ["/stations", "/health"]
+    }
+@app.get("/")
+async def root():
     return {"message": "Transport Backend is Live"}
 
 @app.get("/health")
