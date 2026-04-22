@@ -7,7 +7,7 @@ load_dotenv()
 
 app = FastAPI()
 
-# CORS middleware
+# CORS middleware - Essential for your index.tsx to talk to this API
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -26,6 +26,5 @@ async def health():
 
 if __name__ == "__main__":
     import uvicorn
+    # This part is for local testing; Railway uses the Procfile
     uvicorn.run(app, host="0.0.0.0", port=8000)
-
-
