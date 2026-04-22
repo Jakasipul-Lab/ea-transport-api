@@ -1,17 +1,26 @@
-from fastapi import FastAPI, HTTPException, Body
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from motor.motor_asyncio import AsyncIOMotorClient
-from pydantic import BaseModel
-from typing import List, Optional
 import os
 from dotenv import load_dotenv
+import psycopg2
 
-# 1. Load variables (Essential for Railway)
+# Load environment variables
 load_dotenv()
 
-app = FastAPI(title="Transport API")
+app = FastAPI()
 
-# 2. CORS (Essential for your Frontend to talk to this code)
+# Postgres connection variable from Railway
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+@app.on_event("startup")
+async def startup_db():
+    print("Starting up... Connecting to Railway Postgres")
+
+@app.on_event("shutdown")
+async def shutdown_db():
+    print("Shutting down...")
+
+# CORS middleware to allow browser access
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -20,47 +29,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 3. Database Connection
-MONGO_URL = os.getenv("MONGO_URL")
-client = AsyncIOMotorClient(MONGO_URL)
-db = client.test
-# 4. Data Models (Schemas)
-class Station(BaseModel):
-    name: str
-    location: str
-
-# 5. Endpoints
 @app.get("/")
 async def root():
-    return {
-        "message": "Welcome to the Transport API",
-        "status": "Online",
-        "available_endpoints": ["/stations", "/health"]
-    }
-@app.get("/")
-async def root():
-    return {"message": "Transport Backend is Live"}
+    return {"message": "East African Transport API", "database": "PostgreSQL"}
 
 @app.get("/health")
 async def health():
-    try:
-        await client.admin.command('ping')
-        return {"status": "online", "database": "connected"}
-    except Exception as e:
-        return {"status": "error", "message": str(e)}
+    return {"status": "ok"}
 
-@app.get("/stations")
-async def get_stations():
-    stations = await db.stations.find().to_list(100)
-    return stations
-
-# This part runs the server
+# THIS PART MUST BE AT THE FAR LEFT (NO SPACES)
 if __name__ == "__main__":
     import uvicorn
-    if __name__ == "__main__":
-    import uvicorn
-    import os
-    # Railway tells the app which port to use via an 'environment variable'
-    port = int(os.getenv("PORT", 8080))
-    # '0.0.0.0' allows the app to accept outside traffic
-    uvicorn.run("server:app", host="0.0.0.0", port=port, reload=False)
+    # Railway sets the PORT automatically; this line reads it correctly
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
