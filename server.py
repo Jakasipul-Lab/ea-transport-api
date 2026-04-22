@@ -25,7 +25,8 @@ def setup_db():
         try:
             cur = conn.cursor()
             # This 'Drops' the old table so we can build the 5 columns fresh
-            cur.execute("DROP TABLE IF EXISTS stations;")
+            # Remove this line now!
+cur.execute("DROP TABLE IF EXISTS stations;")
             
             # Rebuilding with your 5 Columns
             cur.execute('''
