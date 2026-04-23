@@ -1,20 +1,21 @@
+# Use Python 3.11 (stable for your 8GB plan)
 FROM python:3.11-slim
 
-# Install system dependencies for PostgreSQL
+# THIS LINE FIXES THE ERROR: It installs the missing libpq5 driver
 RUN apt-get update && apt-get install -y libpq-dev gcc && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Copy and install requirements
+# Copy and install your requirements
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy all project files
+# Copy your original server.py and files
 COPY . .
 
-# Expose port and set environment variable
-EXPOSE 8000
-ENV PORT=8000
+# Ensure the port is set for Railway
+ENV PORT=8080
+EXPOSE 8080
 
-# Run the application
-CMD ["python", "server.py"]
+# Start your FastAPI/Uvicorn server
+CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8080"]
