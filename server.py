@@ -51,6 +51,6 @@ def get_stations():
 # --- THE STARTUP BLOCK ---
 if __name__ == "__main__":
     import uvicorn
-    # Railway provides the PORT variable; we default to 8080 if not found
-    port = int(os.environ.get("PORT", 8080))
+    # Change the default to 8000 to match your Railway settings
+    port = int(os.environ.get("PORT", 8000))
     uvicorn.run(app, host="0.0.0.0", port=port)
