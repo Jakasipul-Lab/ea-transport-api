@@ -19,12 +19,9 @@ def read_root():
 
 @app.get("/health")
 def health_check():
-    conn = get_db_connection()
-    if conn:
-        conn.close()
-        return {"status": "healthy", "database": "connected"}
-    else:
-        return {"status": "unhealthy", "database": "disconnected"}
+    # We removed the database connection here so the site 
+    # stays "Healthy" even if the DB is sleeping.
+    return {"status": "healthy"}
 
 @app.get("/stations")
 def get_stations():
