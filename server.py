@@ -5,6 +5,7 @@ from psycopg2.extras import RealDictCursor
 
 app = FastAPI()
 
+# Database Connection Tool
 def get_db_connection():
     db_url = os.environ.get("DATABASE_URL")
     if db_url and db_url.startswith("postgres://"):
@@ -12,25 +13,35 @@ def get_db_connection():
     return psycopg2.connect(db_url)
 
 @app.get("/")
-def root():
-    return {"message": "API is Live"}
+def read_root():
+    return {"status": "API is Online", "docs": "/docs"}
+
+@app.get("/health")
+def check_health():
+    return {"status": "healthy"}
 
 @app.get("/stations")
 def get_stations():
-    conn = get_db_connection()
-    cur = conn.cursor(cursor_factory=RealDictCursor)
-    cur.execute("SELECT * FROM stations;")
-    results = cur.fetchall()
-    cur.close()
-    conn.close()
-    return results
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
+        cursor.execute("SELECT * FROM stations;")
+        data = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return data
+    except Exception as e:
+        return {"error": "Database error", "details": str(e)}
 
 @app.get("/todos")
 def get_todos():
-    conn = get_db_connection()
-    cur = conn.cursor(cursor_factory=RealDictCursor)
-    cur.execute("SELECT * FROM todos;")
-    results = cur.fetchall()
-    cur.close()
-    conn.close()
-    return results
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
+        cursor.execute("SELECT * FROM todos;")
+        data = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return data
+    except Exception as e:
+        return {"error": "Database error", "details": str(e)}
