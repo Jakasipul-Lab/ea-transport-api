@@ -2,7 +2,32 @@ import os
 from fastapi import FastAPI
 
 app = FastAPI()
-
+@app.get("/stations")
+def get_all_stations():
+    import psycopg2
+    from psycopg2.extras import RealDictCursor
+    
+    # This pulls the secret link you set in Railway Variables
+    db_url = os.environ.get("DATABASE_URL")
+    
+    # Fix for SQLAlchemy/Psycopg2 compatibility
+    if db_url and db_url.startswith("postgres://"):
+        db_url = db_url.replace("postgres://", "postgresql://", 1)
+    
+    try:
+        # Connect to the database
+        conn = psycopg2.connect(db_url)
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
+        
+        # Execute the query
+        cursor.execute("SELECT * FROM stations;")
+        data = cursor.fetchall()
+        
+        cursor.close()
+        conn.close()
+        return data
+    except Exception as e:
+        return {"error": "Database connection failed", "details": str(e)}
 def get_db_connection():
     import psycopg2 
     try:
