@@ -4,10 +4,9 @@ from fastapi import FastAPI
 app = FastAPI()
 
 def get_db_connection():
-    # We move the import inside so the app doesn't crash on startup 
-    # if the database is still waking up
     import psycopg2 
     try:
+        # This looks for the DATABASE_URL variable you set in Railway
         db_url = os.environ.get("DATABASE_URL")
         return psycopg2.connect(db_url)
     except Exception as e:
@@ -34,7 +33,7 @@ def get_stations():
         return {"error": "Database connection failed"}
     
     cur = conn.cursor()
-    # This query fetches your 5 specific columns
+    # This query matches your 'stations' table structure
     cur.execute("SELECT id, station_name, location_city, terminal_capacity, is_active FROM stations;")
     rows = cur.fetchall()
     
@@ -51,3 +50,10 @@ def get_stations():
     cur.close()
     conn.close()
     return stations
+
+# --- THE STARTUP BLOCK ---
+if __name__ == "__main__":
+    import uvicorn
+    # Railway provides the PORT variable; we default to 8080 if not found
+    port = int(os.environ.get("PORT", 8080))
+    uvicorn.run(app, host="0.0.0.0", port=port)
