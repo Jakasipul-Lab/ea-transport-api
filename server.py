@@ -1,27 +1,39 @@
 from fastapi import FastAPI
 
-# 1. Initialize the FastAPI app instance
-# This MUST come before any of the @app.get decorators
 app = FastAPI()
 
-# 2. The Root Route
-# This fixes the "404 Not Found" error you were seeing at the main URL
+# Database of SGR Schedules
+SGR_SCHEDULE = [
+    {"train": "Inter-County", "departs": "08:00 AM", "arrives": "02:00 PM", "type": "Day"},
+    {"train": "Express", "departs": "03:00 PM", "arrives": "08:10 PM", "type": "Afternoon"},
+    {"train": "Night Express", "departs": "10:00 PM", "arrives": "03:35 AM", "type": "Night"}
+]
+
 @app.get("/")
 def read_root():
-    return {"message": "EA Transport API is running"}
+    return {"message": "EA Transport API: SGR & Bus Corridor Service"}
 
-# 3. The Health Check Route
-# This is what Railway uses to verify your app is alive
 @app.get("/health")
 def health_check():
     return {"status": "healthy"}
 
-# 4. Your Other Endpoints
-# You can add your transport-specific routes below this line
-# Example:
-# @app.get("/routes")
-# def get_transport_routes():
-#     return {"routes": ["Route A", "Route B"]}
-
-# If you are running this locally for testing, 
-# you can use: uvicorn Server:app --reload
+# New Endpoint: Nairobi to Mombasa Corridor
+@app.get("/corridor/nairobi-mombasa")
+def get_nairobi_mombasa():
+    return {
+        "route": "Nairobi to Mombasa",
+        "modes": [
+            {
+                "mode": "SGR Train",
+                "options": SGR_SCHEDULE,
+                "station": "Syokimau Terminus"
+            },
+            {
+                "mode": "Connection Bus",
+                "provider": "SGR Link Bus / Basigo Electric",
+                "details": "Buses wait at Miritini Terminus to take passengers to Mombasa CBD."
+            }
+        ],
+        "visa_status": "Not Required (Domestic)",
+        "total_estimated_time": "6 hours"
+    }
