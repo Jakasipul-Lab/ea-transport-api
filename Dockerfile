@@ -17,5 +17,16 @@ COPY . .
 ENV PORT=8080
 EXPOSE 8080
 
-# Start your FastAPI/Uvicorn server
-CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8080"]
+# 1. The base (Python)
+FROM python:3.9-slim
+
+# 2. Your setup (Copying files, installing requirements)
+WORKDIR /app
+COPY . .
+RUN pip install -r requirements.txt
+
+# 3. The Railway Port Setup
+EXPOSE 8080
+
+# 4. PASTE THE NEW LINE HERE (The very end)
+CMD uvicorn server:app --host 0.0.0.0 --port ${PORT:-8080}
