@@ -23,5 +23,12 @@ def health_check():
 
 # KEEP THIS RUNNER (Works with Railway)
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
+    import uvicorn
+    # This part handles the Railway port error
+    raw_port = os.getenv("PORT", "8000")
+    if not raw_port.isdigit():
+        port = 8000
+    else:
+        port = int(raw_port)
+        
     uvicorn.run(app, host="0.0.0.0", port=port)
