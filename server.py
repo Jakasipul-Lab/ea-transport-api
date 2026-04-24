@@ -1,30 +1,27 @@
 from fastapi import FastAPI
-import os
-import uvicorn
-# ADD YOUR ORIGINAL IMPORTS HERE
-# from your_module import your_functions
 
+# 1. Initialize the FastAPI app instance
+# This MUST come before any of the @app.get decorators
 app = FastAPI()
 
-# YOUR ORIGINAL ENDPOINTS/ROUTES GO HERE
+# 2. The Root Route
+# This fixes the "404 Not Found" error you were seeing at the main URL
 @app.get("/")
 def read_root():
     return {"message": "EA Transport API is running"}
 
-# ADD YOUR ORIGINAL ROUTES HERE
-# @app.get("/routes")
-# def get_routes():
-#     return {...}
-
-# KEEP THE NEW HEALTH CHECK
+# 3. The Health Check Route
+# This is what Railway uses to verify your app is alive
 @app.get("/health")
 def health_check():
     return {"status": "healthy"}
 
-from fastapi import FastAPI
+# 4. Your Other Endpoints
+# You can add your transport-specific routes below this line
+# Example:
+# @app.get("/routes")
+# def get_transport_routes():
+#     return {"routes": ["Route A", "Route B"]}
 
-app = FastAPI()
-
-@app.get("/health")
-def health():
-    return {"status": "healthy"}
+# If you are running this locally for testing, 
+# you can use: uvicorn Server:app --reload
