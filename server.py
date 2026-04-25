@@ -1,8 +1,16 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-# Database of SGR Schedules
+# THE BRIDGE: This allows your HTML file to talk to Railway
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all websites to access your API
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 SGR_SCHEDULE = [
     {"train": "Inter-County", "departs": "08:00 AM", "arrives": "02:00 PM", "type": "Day"},
     {"train": "Express", "departs": "03:00 PM", "arrives": "08:10 PM", "type": "Afternoon"},
@@ -17,7 +25,6 @@ def read_root():
 def health_check():
     return {"status": "healthy"}
 
-# New Endpoint: Nairobi to Mombasa Corridor
 @app.get("/corridor/nairobi-mombasa")
 def get_nairobi_mombasa():
     return {
@@ -33,7 +40,5 @@ def get_nairobi_mombasa():
                 "provider": "SGR Link Bus / Basigo Electric",
                 "details": "Buses wait at Miritini Terminus to take passengers to Mombasa CBD."
             }
-        ],
-        "visa_status": "Not Required (Domestic)",
-        "total_estimated_time": "6 hours"
+        ]
     }
