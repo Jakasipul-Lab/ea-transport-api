@@ -2,7 +2,24 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
+app = FastAPI()          # ← line 4
+
+# ✅ PASTE THE CORS BLOCK HERE (line 5)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[...],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# routes come AFTER
+@app.get("/health")
+def health():
+    return {"status": "healthy"}
 # THE BRIDGE: This allows your HTML file to talk to Railway
 app.add_middleware(
     CORSMiddleware,
