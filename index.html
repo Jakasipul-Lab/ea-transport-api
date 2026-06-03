@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Agency | Homepage</title>
+    <title>Jakasipul‑HUB | Corporate Portal</title>
     <style>
         /* Modern Reset and Base Styles */
         * {
@@ -16,7 +16,7 @@
         body {
             line-height: 1.6;
             color: #333;
-            background-color: #f9f9f9;
+            background-color: #f4f7f6;
         }
 
         /* Navigation Bar */
@@ -29,6 +29,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 2px solid #3498db;
         }
 
         nav .logo {
@@ -52,6 +53,7 @@
             color: #cccccc;
             text-decoration: none;
             font-size: 1rem;
+            font-weight: 500;
             transition: color 0.3s ease;
         }
 
@@ -59,10 +61,10 @@
             color: #3498db;
         }
 
-        /* Hero / Main Homepage Section */
+        /* Hero Section */
         header {
-            background: linear-gradient(rgba(26, 37, 47, 0.8), rgba(26, 37, 47, 0.8)), url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1920') no-repeat center center/cover;
-            height: 70vh;
+            background: linear-gradient(rgba(26, 37, 47, 0.85), rgba(26, 37, 47, 0.9)), url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1920') no-repeat center center/cover;
+            height: 60vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -73,7 +75,7 @@
         }
 
         header h1 {
-            font-size: 3rem;
+            font-size: 3.5rem;
             margin-bottom: 1rem;
             letter-spacing: 2px;
         }
@@ -81,7 +83,7 @@
         header p {
             font-size: 1.25rem;
             margin-bottom: 2rem;
-            max-width: 600px;
+            max-width: 700px;
             color: #dddddd;
         }
 
@@ -93,18 +95,19 @@
             border-radius: 4px;
             text-decoration: none;
             font-weight: bold;
-            transition: background 0.3s ease;
+            transition: background 0.3s ease, transform 0.2s ease;
             cursor: pointer;
         }
 
         .btn:hover {
             background-color: #2980b9;
+            transform: translateY(-2px);
         }
 
         /* Standard Content Sections */
         section {
-            padding: 5rem 2rem;
-            max-width: 1100px;
+            padding: 4rem 2rem;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
@@ -114,75 +117,139 @@
             margin-bottom: 3rem;
             color: #2c3e50;
             position: relative;
+            font-weight: 700;
         }
 
         .section-title::after {
             content: '';
             display: block;
-            width: 50px;
-            height: 3px;
+            width: 60px;
+            height: 4px;
             background-color: #3498db;
-            margin: 0.5rem auto 0 auto;
+            margin: 0.6rem auto 0 auto;
+            border-radius: 2px;
         }
 
-        /* Who We Are Flex Layout */
-        .about-container {
+        /* Profile Layout */
+        .about-layout {
             display: flex;
+            gap: 2.5rem;
             align-items: center;
-            gap: 3rem;
-            flex-wrap: wrap;
+            margin-bottom: 4rem;
         }
 
-        .about-text {
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .about-text p {
-            margin-bottom: 1.5rem;
-            font-size: 1.1rem;
-            color: #555555;
-        }
-
-        .about-image {
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .about-image img {
-            width: 100%;
+        /* Profile Photo Frame */
+        .photo-frame-container {
+            flex: 0 0 260px;
+            background: #ffffff;
+            padding: 1rem;
             border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            text-align: center;
+            border-top: 4px solid #2ecc71;
         }
 
-        /* What We Stand For Grid Layout */
-        .values-grid {
+        .photo-frame-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            object-fit: cover;
+            margin-bottom: 0.5rem;
+        }
+
+        .photo-frame-container h3 {
+            font-size: 1.3rem;
+            color: #111827;
+            margin-bottom: 0.2rem;
+        }
+
+        .photo-frame-container p {
+            font-size: 0.85rem;
+            color: #6b7280;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Corporate Data Box */
+        .details-box {
+            flex: 1;
+            background: #ffffff;
+            padding: 2.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .details-box p {
+            color: #333333;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .details-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Office Grid Layout */
+        .office-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .office-card {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border-left: 4px solid #3498db;
+        }
+
+        .office-card h3 {
+            color: #2c3e50;
+            margin-bottom: 0.8rem;
+            font-size: 1.3rem;
+            border-bottom: 2px solid #f3f4f6;
+            padding-bottom: 0.5rem;
+        }
+
+        .office-card p {
+            color: #555555;
+            font-size: 1.05rem;
+        }
+
+        /* Regional Network Grid */
+        .team-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
         }
 
-        .value-card {
+        .team-card {
             background: #ffffff;
-            padding: 2.5rem 1.5rem;
+            padding: 2rem;
             border-radius: 8px;
             text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
             border-top: 4px solid #3498db;
         }
 
-        .value-card:hover {
-            transform: translateY(-5px);
+        .team-card .city {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #9ca3af;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
         }
 
-        .value-card h3 {
-            margin-bottom: 1rem;
+        .team-card h4 {
             color: #2c3e50;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
+            margin-bottom: 0.4rem;
         }
 
-        .value-card p {
+        .team-card p {
             color: #666666;
             font-size: 0.95rem;
         }
@@ -192,71 +259,113 @@
             background-color: #1a252f;
             color: #ffffff;
             text-align: center;
-            padding: 2rem;
+            padding: 2.5rem 2rem;
             margin-top: 4rem;
             font-size: 0.9rem;
+            border-top: 1px solid #2c3e50;
+        }
+
+        footer a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
         }
 
         /* Responsive Tweaks */
         @media (max-width: 768px) {
-            header h1 { font-size: 2.25rem; }
-            header p { font-size: 1rem; }
+            header h1 { font-size: 2.5rem; }
+            header p { font-size: 1.1rem; }
             section { padding: 3rem 1.5rem; }
+            .about-layout { flex-direction: column; align-items: center; }
+            .photo-frame-container { flex: 1 1 100%; width: 100%; max-width: 350px; }
+            .office-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
     <nav>
-        <div class="logo">BrandName</div>
+        <div class="logo">Jakasipul‑HUB</div>
         <ul>
             <li><a href="#home" class="active">Home</a></li>
-            <li><a href="#about">Who We Are</a></li>
-            <li><a href="#values">What We Stand For</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#offices">Offices</a></li>
+            <li><a href="#network">Network</a></li>
         </ul>
     </nav>
 
     <header id="home">
-        <h1>Welcome to Our Digital Space</h1>
-        <p>We build seamless digital experiences connecting clean frontends to robust cloud infrastructure.</p>
-        <a href="#about" class="btn">Learn More</a>
+        <h1>Jakasipul‑HUB</h1>
+        <p>Connecting communication lines, data management, and operational pipelines.</p>
+        <a href="#about" class="btn">View Profile</a>
     </header>
 
+    <!-- About Us Section without Extended Profiles -->
     <section id="about">
-        <h2 class="section-title">Who We Are</h2>
-        <div class="about-container">
-            <div class="about-text">
-                <p>We are a dedicated group of designers, builders, and developers committed to launching impactful web services. Our team works at the intersection of modern design and strict engineering to bring apps to life effortlessly.</p>
-                <p>By keeping our structures clear and our architectures straightforward, we deploy fast, secure, and easily accessible user interfaces that span cross-platform frameworks seamlessly.</p>
+        <h2 class="section-title">About Us</h2>
+        
+        <div class="about-layout">
+            <!-- Left Side: Profile Frame -->
+            <div class="photo-frame-container">
+                <img src="https://github.com/Jakasipul-Lab.png" alt="Nakinson Osare">
+                <h3>Nakinson Osare</h3>
+                <p>CEO / Developer</p>
             </div>
-            <div class="about-image">
-                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=600" alt="Team working together">
+
+            <!-- Right Side: Exact Core Information -->
+            <div class="details-box">
+                <p><strong>Who We Are:</strong> A tech infrastructure company building multi-regional software networks.</p>
+                <p><strong>Main Aim:</strong> Eliminating distributed technical friction across custom endpoints.</p>
+                <p><strong>Project Info:</strong> Active, asynchronous database synchronization and core persistence applications.</p>
             </div>
         </div>
-    </section>
 
-    <section id="values" style="background-color: #f0f4f8; max-width: 100%;">
-        <div style="max-width: 1100px; margin: 0 auto; padding: 0 2rem;">
-            <h2 class="section-title">What We Stand For</h2>
-            <div class="values-grid">
-                <div class="value-card">
-                    <h3>Absolute Transparency</h3>
-                    <p>We operate with pure clarity in both code execution and open communications. No black boxes, no guessing games.</p>
-                </div>
-                <div class="value-card">
-                    <h3>Resilient Architecture</h3>
-                    <p>We value software systems that don't fracture when cloud parameters pivot. Build to last, build to remain secure.</p>
-                </div>
-                <div class="value-card">
-                    <h3>Uncompromising Access</h3>
-                    <p>Web applications belong to everyone. We prioritize high-speed loading optimization and complete screen responsiveness.</p>
-                </div>
+        <!-- Corporate Offices -->
+        <h2 class="section-title" id="offices">Our Base Locations</h2>
+        <div class="office-grid">
+            <div class="office-card">
+                <h3>Company Head Office</h3>
+                <p>Oginga Odinga Road Block 45</p>
             </div>
+            <div class="office-card">
+                <h3>Branch Office</h3>
+                <p>Brunenstrasse 48,<br>34547 Bad Wildungen, Germany</p>
+            </div>
+        </div>
+
+        <!-- Regional State Representatives -->
+        <h2 class="section-title" id="network">State Representatives</h2>
+        <div class="team-grid">
+            
+            <!-- Tanzania -->
+            <div class="team-card">
+                <div class="city">Tanzania</div>
+                <h4>Johnson Yongongo</h4>
+                <p>Dar es Salaam Office Representative</p>
+            </div>
+
+            <!-- Kenya -->
+            <div class="team-card">
+                <div class="city">Kenya</div>
+                <h4>Kenneth Oketch</h4>
+                <p>Nairobi Branch Representative</p>
+            </div>
+
+            <!-- Uganda -->
+            <div class="team-card">
+                <div class="city">Uganda</div>
+                <h4>Ssempembwa Jimmy</h4>
+                <p>Kampala Branch Representative</p>
+            </div>
+
         </div>
     </section>
 
     <footer>
-        <p>&copy; 2026 BrandName. Connected & Live via Render Cloud Hosting.</p>
+        <p>&copy; 2026 <strong>Jakasipul‑HUB</strong>. Secure networks hosted at <a href="https://nakinson-hub.app" target="_blank">nakinson-hub.app</a>.</p>
     </footer>
 
     <script>
