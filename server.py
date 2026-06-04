@@ -2,7 +2,7 @@ import csv
 from datetime import datetime
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, HTMLResponse
 
 app = FastAPI()
 
@@ -23,9 +23,11 @@ def record_booking(provider, route):
 
 # --- ROUTES ---
 
-@app.get("/")
+# SERVES YOUR WEBSITE FRONTEND
+@app.get("/", response_class=HTMLResponse)
 def read_root():
-    return {"message": "EA SafariRoutes: Official Travel & Logistics Concierge"}
+    with open("index.html", "r") as f:
+        return f.read()
 
 @app.get("/health")
 def health_check():
