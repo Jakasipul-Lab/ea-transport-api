@@ -5,13 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EA SafariRoutes | Travel & Logistics Concierge</title>
     <style>
-        /* [KEEP YOUR EXISTING CSS HERE] */
-        /* Just update colors slightly for a travel vibe */
+        /* ... [Keep your existing CSS here] ... */
+        /* Specific update for CEO profile placement */
+        .ceo-top-left {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            width: 150px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .ceo-top-left img { width: 80px; height: 80px; border-radius: 50%; }
+        .ceo-top-left p { font-size: 0.8rem; font-weight: bold; margin-top: 5px; }
         .btn-book { background-color: #27ae60; color: #ffffff; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none; font-weight: bold; }
         .btn-book:hover { background-color: #219150; }
     </style>
 </head>
 <body>
+
+    <!-- CEO Profile Top-Left -->
+    <div class="ceo-top-left">
+        <img src="https://github.com/Jakasipul-Lab.png" alt="ceo">
+        <p>osare nakinson<br>entrepreneur & developer</p>
+    </div>
 
     <nav>
         <div class="logo">EA SafariRoutes</div>
@@ -45,7 +64,7 @@
     </section>
 
     <section id="offices">
-        <h2 class="section-title">Regional Headquarters</h2>
+        <h2 class="section-title">Regional Headquarters & Branches</h2>
         <div class="team-grid">
             <div class="team-card">
                 <div class="city">Headquarters (Kisumu)</div>
@@ -53,19 +72,24 @@
                 <p>Officer-in-Charge</p>
             </div>
             <div class="team-card">
-                <div class="city">Nairobi</div>
+                <div class="city">Germany Branch</div>
+                <h4>Brunnenstraße 48</h4>
+                <p>34537, Bad Wildungen</p>
+            </div>
+            <div class="team-card">
+                <div class="city">Kenya</div>
                 <h4>Kenneth Oketch</h4>
-                <p>Branch Manager</p>
+                <p>Nairobi Branch Manager</p>
             </div>
             <div class="team-card">
-                <div class="city">Kampala</div>
-                <h4>Ssempembwa Jimmy</h4>
-                <p>Branch Manager</p>
+                <div class="city">Uganda</div>
+                <h4>Brian Omollo</h4>
+                <p>Kampala Branch Manager</p>
             </div>
             <div class="team-card">
-                <div class="city">Dar es Salaam</div>
+                <div class="city">Tanzania</div>
                 <h4>Johnson Yongongo</h4>
-                <p>Branch Manager</p>
+                <p>Dar es Salaam Branch Manager</p>
             </div>
         </div>
     </section>
