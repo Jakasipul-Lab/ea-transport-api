@@ -3,379 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jakasipul‑HUB | Corporate Portal</title>
+    <title>EA SafariRoutes | Travel & Logistics Concierge</title>
     <style>
-        /* Modern Reset and Base Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            line-height: 1.6;
-            color: #333;
-            background-color: #f4f7f6;
-        }
-
-        /* Navigation Bar */
-        nav {
-            background-color: #1a252f;
-            padding: 1rem 2rem;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #3498db;
-        }
-
-        nav .logo {
-            color: #ffffff;
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-        }
-
-        nav ul li {
-            margin-left: 2rem;
-        }
-
-        nav ul li a {
-            color: #cccccc;
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        nav ul li a:hover, nav ul li a.active {
-            color: #3498db;
-        }
-
-        /* Hero Section */
-        header {
-            background: linear-gradient(rgba(26, 37, 47, 0.85), rgba(26, 37, 47, 0.9)), url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1920') no-repeat center center/cover;
-            height: 60vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: #ffffff;
-            padding: 0 1rem;
-        }
-
-        header h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            letter-spacing: 2px;
-        }
-
-        header p {
-            font-size: 1.25rem;
-            margin-bottom: 2rem;
-            max-width: 700px;
-            color: #dddddd;
-        }
-
-        .btn {
-            background-color: #3498db;
-            color: #ffffff;
-            padding: 0.75rem 2rem;
-            border: none;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background 0.3s ease, transform 0.2s ease;
-            cursor: pointer;
-        }
-
-        .btn:hover {
-            background-color: #2980b9;
-            transform: translateY(-2px);
-        }
-
-        /* Standard Content Sections */
-        section {
-            padding: 4rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.25rem;
-            margin-bottom: 3rem;
-            color: #2c3e50;
-            position: relative;
-            font-weight: 700;
-        }
-
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 4px;
-            background-color: #3498db;
-            margin: 0.6rem auto 0 auto;
-            border-radius: 2px;
-        }
-
-        /* Profile Layout */
-        .about-layout {
-            display: flex;
-            gap: 2.5rem;
-            align-items: center;
-            margin-bottom: 4rem;
-        }
-
-        /* Profile Photo Frame */
-        .photo-frame-container {
-            flex: 0 0 260px;
-            background: #ffffff;
-            padding: 1rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            text-align: center;
-            border-top: 4px solid #2ecc71;
-        }
-
-        .photo-frame-container img {
-            width: 100%;
-            height: auto;
-            border-radius: 6px;
-            object-fit: cover;
-            margin-bottom: 0.5rem;
-        }
-
-        .photo-frame-container h3 {
-            font-size: 1.3rem;
-            color: #111827;
-            margin-bottom: 0.2rem;
-        }
-
-        .photo-frame-container p {
-            font-size: 0.85rem;
-            color: #6b7280;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        /* Corporate Data Box */
-        .details-box {
-            flex: 1;
-            background: #ffffff;
-            padding: 2.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-        }
-
-        .details-box p {
-            color: #333333;
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-        }
-
-        .details-box p:last-child {
-            margin-bottom: 0;
-        }
-
-        /* Office Grid Layout */
-        .office-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 4rem;
-        }
-
-        .office-card {
-            background: #ffffff;
-            padding: 2rem;
-            border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-            border-left: 4px solid #3498db;
-        }
-
-        .office-card h3 {
-            color: #2c3e50;
-            margin-bottom: 0.8rem;
-            font-size: 1.3rem;
-            border-bottom: 2px solid #f3f4f6;
-            padding-bottom: 0.5rem;
-        }
-
-        .office-card p {
-            color: #555555;
-            font-size: 1.05rem;
-        }
-
-        /* Regional Network Grid */
-        .team-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-
-        .team-card {
-            background: #ffffff;
-            padding: 2rem;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
-            border-top: 4px solid #3498db;
-        }
-
-        .team-card .city {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #9ca3af;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        .team-card h4 {
-            color: #2c3e50;
-            font-size: 1.3rem;
-            margin-bottom: 0.4rem;
-        }
-
-        .team-card p {
-            color: #666666;
-            font-size: 0.95rem;
-        }
-
-        /* Footer */
-        footer {
-            background-color: #1a252f;
-            color: #ffffff;
-            text-align: center;
-            padding: 2.5rem 2rem;
-            margin-top: 4rem;
-            font-size: 0.9rem;
-            border-top: 1px solid #2c3e50;
-        }
-
-        footer a {
-            color: #3498db;
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* Responsive Tweaks */
-        @media (max-width: 768px) {
-            header h1 { font-size: 2.5rem; }
-            header p { font-size: 1.1rem; }
-            section { padding: 3rem 1.5rem; }
-            .about-layout { flex-direction: column; align-items: center; }
-            .photo-frame-container { flex: 1 1 100%; width: 100%; max-width: 350px; }
-            .office-grid { grid-template-columns: 1fr; }
-        }
+        /* [KEEP YOUR EXISTING CSS HERE] */
+        /* Just update colors slightly for a travel vibe */
+        .btn-book { background-color: #27ae60; color: #ffffff; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none; font-weight: bold; }
+        .btn-book:hover { background-color: #219150; }
     </style>
 </head>
 <body>
 
     <nav>
-        <div class="logo">Jakasipul‑HUB</div>
+        <div class="logo">EA SafariRoutes</div>
         <ul>
             <li><a href="#home" class="active">Home</a></li>
-            <li><a href="#about">About Us</a></li>
-            <li><a href="#offices">Offices</a></li>
-            <li><a href="#network">Network</a></li>
+            <li><a href="#services">Book Travel</a></li>
+            <li><a href="#offices">Our Offices</a></li>
         </ul>
     </nav>
 
     <header id="home">
-        <h1>Jakasipul‑HUB</h1>
-        <p>Connecting communication lines, data management, and operational pipelines.</p>
-        <a href="#about" class="btn">View Profile</a>
+        <h1>EA SafariRoutes</h1>
+        <p>Your premium gateway to SGR, Bus, and Private Transport across East Africa.</p>
+        <a href="#services" class="btn">Start Booking</a>
     </header>
 
-    <!-- About Us Section without Extended Profiles -->
-    <section id="about">
-        <h2 class="section-title">About Us</h2>
-        
-        <div class="about-layout">
-            <!-- Left Side: Profile Frame -->
-            <div class="photo-frame-container">
-                <img src="https://github.com/Jakasipul-Lab.png" alt="Nakinson Osare">
-                <h3>Nakinson Osare</h3>
-                <p>CEO / Developer</p>
-            </div>
-
-            <!-- Right Side: Exact Core Information -->
-            <div class="details-box">
-                <p><strong>Who We Are:</strong> A tech infrastructure company building multi-regional software networks.</p>
-                <p><strong>Main Aim:</strong> Eliminating distributed technical friction across custom endpoints.</p>
-                <p><strong>Project Info:</strong> Active, asynchronous database synchronization and core persistence applications.</p>
-            </div>
-        </div>
-
-        <!-- Corporate Offices -->
-        <h2 class="section-title" id="offices">Our Base Locations</h2>
+    <section id="services">
+        <h2 class="section-title">Travel & Hire Services</h2>
         <div class="office-grid">
             <div class="office-card">
-                <h3>Company Head Office</h3>
-                <p>Oginga Odinga Road Block 45</p>
+                <h3>SGR & Bus Corridors</h3>
+                <p>Nairobi - Mombasa Express</p>
+                <a href="/book/sgr/nairobi-mombasa" class="btn-book">Book Train Now</a>
             </div>
             <div class="office-card">
-                <h3>Branch Office</h3>
-                <p>Brunenstrasse 48,<br>34547 Bad Wildungen, Germany</p>
+                <h3>Private Hire</h3>
+                <p>Custom Car & Jet Charters</p>
+                <a href="mailto:booking@easafariroutes.com" class="btn-book">Request Quote</a>
             </div>
         </div>
+    </section>
 
-        <!-- Regional State Representatives -->
-        <h2 class="section-title" id="network">State Representatives</h2>
+    <section id="offices">
+        <h2 class="section-title">Regional Headquarters</h2>
         <div class="team-grid">
-            
-            <!-- Tanzania -->
             <div class="team-card">
-                <div class="city">Tanzania</div>
-                <h4>Johnson Yongongo</h4>
-                <p>Dar es Salaam Office Representative</p>
+                <div class="city">Headquarters (Kisumu)</div>
+                <h4>Mss Jacqueline Susan Nakinson</h4>
+                <p>Officer-in-Charge</p>
             </div>
-
-            <!-- Kenya -->
             <div class="team-card">
-                <div class="city">Kenya</div>
+                <div class="city">Nairobi</div>
                 <h4>Kenneth Oketch</h4>
-                <p>Nairobi Branch Representative</p>
+                <p>Branch Manager</p>
             </div>
-
-            <!-- Uganda -->
             <div class="team-card">
-                <div class="city">Uganda</div>
+                <div class="city">Kampala</div>
                 <h4>Ssempembwa Jimmy</h4>
-                <p>Kampala Branch Representative</p>
+                <p>Branch Manager</p>
             </div>
-
+            <div class="team-card">
+                <div class="city">Dar es Salaam</div>
+                <h4>Johnson Yongongo</h4>
+                <p>Branch Manager</p>
+            </div>
         </div>
     </section>
 
     <footer>
-        <p>&copy; 2026 <strong>Jakasipul‑HUB</strong>. Secure networks hosted at <a href="https://nakinson-hub.app" target="_blank">nakinson-hub.app</a>.</p>
+        <p>&copy; 2026 <strong>EA SafariRoutes</strong>. Commission-based travel aggregation.</p>
     </footer>
 
-    <script>
-        const links = document.querySelectorAll('nav ul li a');
-        links.forEach(link => {
-            link.addEventListener('click', function() {
-                links.forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-    </script>
 </body>
 </html>
