@@ -1,130 +1,116 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EA SafariRoutes | Travel & Logistics Concierge</title>
-    <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EA SafariRoutes | Travel & Logistics Concierge</title>
 
-
-        /* ... [Keep your existing CSS here] ... */
-        /* Specific update for CEO profile placement */
-        .ceo-top-left {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 1001;
-            width: 150px;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .ceo-top-left img { width: 80px; height: 80px; border-radius: 50%; }
-        .ceo-top-left p { font-size: 0.8rem; font-weight: bold; margin-top: 5px; }
-        .btn-book { background-color: #27ae60; color: #ffffff; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none; font-weight: bold; }
-        .btn-book:hover { background-color: #219150; }
-    </style>
-</head>
-<body>
+<style>
 body {
     margin: 0;
     font-family: Arial, sans-serif;
     background: #f4f4f4;
 }
 
+/* Profile (top right) */
+.ceo-top-left {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1001;
+    width: 150px;
+    background: rgba(255,255,255,0.9);
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.ceo-top-left img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+.ceo-top-left p {
+    font-size: 0.8rem;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+/* Center content */
 .container {
     max-width: 900px;
     margin: 80px auto;
     background: white;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-h1, h2 {
+/* Buttons */
+.btn-book {
+    display: inline-block;
+    margin-top: 10px;
+    background-color: #27ae60;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.btn-book:hover {
+    background-color: #219150;
+}
+
+/* Footer */
+footer {
     text-align: center;
+    padding: 20px;
+    margin-top: 30px;
 }
+</style>
+</head>
 
-p {
-    line-height: 1.6;
-}
+<body>
 
-.section {
-    margin-top: 20px;
-}
-    <!-- CEO Profile Top-Left -->
-    <div class="ceo-top-left">
-        <img src="https://github.com/Jakasipul-Lab.png" alt="ceo">
-        <p>osare nakinson<br>entrepreneur & developer</p>
-    </div>
+<!-- PROFILE -->
+<div class="ceo-top-left">
+    <img src="https://github.com/Jakasipul-Lab.png" alt="ceo">
+    <p>Osare Nakinson<br>Entrepreneur & Developer</p>
+</div>
 
-    <nav>
-        <div class="logo">EA SafariRoutes</div>
-        <ul>
-            <li><a href="#home" class="active">Home</a></li>
-            <li><a href="#services">Book Travel</a></li>
-            <li><a href="#offices">Our Offices</a></li>
-        </ul>
-    </nav>
+<div class="container">
 
-    <header id="home">
-        <h1>EA SafariRoutes</h1>
-        <p>Your premium gateway to SGR, Bus, and Private Transport across East Africa.</p>
-        <a href="#services" class="btn">Start Booking</a>
-    </header>
+    <h1 style="text-align:center;">EA SafariRoutes</h1>
 
-    <section id="services">
-        <h2 class="section-title">Travel & Hire Services</h2>
-        <div class="office-grid">
-            <div class="office-card">
-                <h3>SGR & Bus Corridors</h3>
-                <p>Nairobi - Mombasa Express</p>
-                <a href="/book/sgr/nairobi-mombasa" class="btn-book">Book Train Now</a>
-            </div>
-            <div class="office-card">
-                <h3>Private Hire</h3>
-                <p>Custom Car & Jet Charters</p>
-                <a href="mailto:booking@easafariroutes.com" class="btn-book">Request Quote</a>
-            </div>
-        </div>
-    </section>
+    <p style="text-align:center;">
+        Your premium gateway to SGR, Bus, and Private Transport across East Africa.
+    </p>
 
-    <section id="offices">
-        <h2 class="section-title">Regional Headquarters & Branches</h2>
-        <div class="team-grid">
-            <div class="team-card">
-                <div class="city">Headquarters (Kisumu)</div>
-                <h4>Mss Jacqueline Susan Nakinson</h4>
-                <p>Officer-in-Charge</p>
-            </div>
-            <div class="team-card">
-                <div class="city">Germany Branch</div>
-                <h4>Brunnenstraße 48</h4>
-                <p>34537, Bad Wildungen</p>
-            </div>
-            <div class="team-card">
-                <div class="city">Kenya</div>
-                <h4>Kenneth Oketch</h4>
-                <p>Nairobi Branch Manager</p>
-            </div>
-            <div class="team-card">
-                <div class="city">Uganda</div>
-                <h4>Brian Omollo</h4>
-                <p>Kampala Branch Manager</p>
-            </div>
-            <div class="team-card">
-                <div class="city">Tanzania</div>
-                <h4>Johnson Yongo</h4>
-                <p>Dar es Salaam Branch Manager</p>
-            </div>
-        </div>
-    </section>
+    <hr>
 
-    <footer>
-        <p>&copy; 2026 <strong>EA SafariRoutes</strong>. Commission-based travel aggregation.</p>
-    </footer>
+    <h2>Travel Services</h2>
+
+    <p>Nairobi - Mombasa Express</p>
+    <a href="/book/sgr/nairobi-mombasa" class="btn-book">Book Train</a>
+
+    <br><br>
+
+    <p>Private Hire</p>
+    <a href="mailto:booking@easafariroutes.com" class="btn-book">Request Quote</a>
+
+    <hr>
+
+    <h2>Our Offices</h2>
+    <p>Kisumu Headquarters</p>
+    <p>Germany - Bad Wildungen</p>
+    <p>Nairobi Branch</p>
+
+</div>
+
+<footer>
+    <p>&copy; 2026 <strong>EA SafariRoutes</strong>. Commission-based travel aggregation.</p>
+</footer>
 
 </body>
 </html>
