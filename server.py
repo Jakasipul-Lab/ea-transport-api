@@ -1,29 +1,43 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 
 app = FastAPI()
 
-# THE BRIDGE: This allows your HTML file to talk to Railway
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all websites to access your API
+    allow_origins=["*"], 
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# Added commission_link to your schedule for direct booking hand-offs
 SGR_SCHEDULE = [
-    {"train": "Inter-County", "departs": "08:00 AM", "arrives": "02:00 PM", "type": "Day"},
-    {"train": "Express", "departs": "03:00 PM", "arrives": "08:10 PM", "type": "Afternoon"},
-    {"train": "Night Express", "departs": "10:00 PM", "arrives": "03:35 AM", "type": "Night"}
+    {
+        "train": "Inter-County", 
+        "departs": "08:00 AM", 
+        "arrives": "02:00 PM", 
+        "type": "Day",
+        "booking_url": "https://metickets.krc.co.ke?ref=safariroutes" 
+    },
+    {
+        "train": "Express", 
+        "departs": "03:00 PM", 
+        "arrives": "08:10 PM", 
+        "type": "Afternoon",
+        "booking_url": "https://metickets.krc.co.ke?ref=safariroutes"
+    }
 ]
 
 @app.get("/")
 def read_root():
-    return {"message": "EA Transport API: SGR & Bus Corridor Service"}
+    return {"message": "EA SafariRoutes: Official Travel & Logistics Concierge"}
 
-@app.get("/health")
-def health_check():
-    return {"status": "healthy"}
+# New Business Route: This acts as your "Agent" portal
+@app.get("/book/sgr/{train_name}")
+def book_sgr(train_name: str):
+    # This acts as the automated hand-off to the partner
+    return RedirectResponse(url=f"https://metickets.krc.co.ke?ref=safariroutes&train={train_name}")
 
 @app.get("/corridor/nairobi-mombasa")
 def get_nairobi_mombasa():
@@ -38,7 +52,7 @@ def get_nairobi_mombasa():
             {
                 "mode": "Connection Bus",
                 "provider": "SGR Link Bus / Basigo Electric",
-                "details": "Buses wait at Miritini Terminus to take passengers to Mombasa CBD."
+                "booking_url": "https://sako-bus-booking.com?ref=safariroutes" # Added tracking
             }
         ]
     }
