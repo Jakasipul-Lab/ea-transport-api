@@ -44,8 +44,14 @@ def home():
 def about():
     return FileResponse("about.html")
 
+import uuid
+
 @app.get("/book/sgr/{route_id}")
 async def book_sgr(route_id: str):
+    code = f"SR-{uuid.uuid4().hex[:6]}"
+
+    print("Tracking Code:", code)
+
     return RedirectResponse(
-        url=f"https://metickets.krc.co.ke?ref=safariroutes&route={route_id}"
+        url=f"https://metickets.krc.co.ke?ref=safariroutes&route={route_id}&code={code}"
     )
