@@ -37,23 +37,15 @@ async def record_booking(provider, route):
 # --- ROUTES ---
 
 @app.get("/")
-def read_root():
+def home():
     return FileResponse("index.html")
 
 @app.get("/about")
-def about_page():
-    return FileResponse("AboutMe.html")
+def about():
+    return FileResponse("about.html")
 
 @app.get("/book/sgr/{route_id}")
 async def book_sgr(route_id: str):
-    await record_booking("SGR", route_id)
     return RedirectResponse(
         url=f"https://metickets.krc.co.ke?ref=safariroutes&route={route_id}"
-    )
-
-@app.get("/book/bus/{operator}/{route_id}")
-async def book_bus(operator: str, route_id: str):
-    await record_booking(operator, route_id)
-    return RedirectResponse(
-        url=f"https://official-{operator}-site.com/book?ref=safariroutes"
     )
