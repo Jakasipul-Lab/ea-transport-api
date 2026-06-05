@@ -40,6 +40,10 @@ async def record_booking(provider, route):
 def read_root():
     return FileResponse("index.html")
 
+@app.get("/about")
+def about_page():
+    return FileResponse("AboutMe.html")
+
 @app.get("/book/sgr/{route_id}")
 async def book_sgr(route_id: str):
     await record_booking("SGR", route_id)
