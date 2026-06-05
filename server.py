@@ -43,9 +43,12 @@ def home():
 def about():
     return FileResponse("about.html")
 
+@app.get("/verify", response_class=HTMLResponse)
+def verify_page():
+    return FileResponse("verify.html")
+
 @app.get("/api/routes")
 def get_routes():
-    # Combine all local route data
     all_routes = []
     route_files = [
         "safariroute/data/routes/kenya_sgr.json",
@@ -61,10 +64,7 @@ def get_routes():
 
 @app.post("/api/book")
 async def book_route(request: BookingRequest):
-    # 1. Generate unique code
     code = generate_safariroute_code(request.route_id)
-    
-    # 2. Create booking record
     booking = {
         "booking_id": f"BK-{int(datetime.now().timestamp())}",
         "passenger_name": request.passenger_name,
@@ -73,26 +73,36 @@ async def book_route(request: BookingRequest):
         "safariroute_code": code,
         "status": "ISSUED"
     }
-    
-    # 3. Save to Postgres if available
     if os.getenv("RAILWAY_DB_URL"):
         try:
             save_booking(booking)
         except Exception as e:
             print(f"Database Error: {e}")
-            
-    return {
-        "status": "success",
-        "code": code,
-        "message": "Booking issued. Present this code to the operator."
-    }
+    return {"status": "success", "code": code, "message": "Booking issued."}
 
-# Legacy route fixed to avoid 403 redirect
-@app.get("/book/sgr/{route_id}")
-async def legacy_book_sgr(route_id: str):
-    code = generate_safariroute_code(route_id)
-    return JSONResponse(content={
-        "status": "success",
-        "code": code,
-        "instruction": "Show this code at the SGR ticket counter to complete your booking."
-    })
+@app.get("/api/verify/{code}")
+async def verify_code(code: str):
+    if not os.getenv("RAILWAY_DB_URL"):
+        return {"status": "unknown", "message": "Database not connected"}
+    
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT passenger_name, route_id, operator, status, created_at FROM bookings WHERE safariroute_code = %s", (code,))
+        result = cur.fetchone()
+        cur.close()
+        conn.close()
+        
+        if result:
+            return {
+                "status": "valid",
+                "passenger": result[0],
+                "route": result[1],
+                "operator": result[2],
+                "booking_status": result[3],
+                "issued_at": result[4].isoformat()
+            }
+        else:
+            return {"status": "invalid", "message": "Code not found"}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
