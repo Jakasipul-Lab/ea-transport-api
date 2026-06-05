@@ -1,23 +1,17 @@
 import os
-from datetime import datetime
+import json
 import uuid
-
-from fastapi import FastAPI
+from datetime import datetime
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import RedirectResponse, FileResponse
-from motor.motor_asyncio import AsyncIOMotorClient
+from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
+from pydantic import BaseModel
+
+# Safariroute internal modules
+from safariroute.src.generator import generate_safariroute_code
+from safariroute.src.database import save_booking, setup_database, get_connection
 
 app = FastAPI()
-
-# --- DATABASE SETUP ---
-MONGO_URL = os.getenv(
-    "MONGO_URL",
-    "mongodb://mongo:rjAnxIXFSEwQrJSzPDzsKXDWBATwPcsZ@shortline.proxy.rlwy.net:13892"
-)
-
-client = AsyncIOMotorClient(MONGO_URL)
-db = client.safariroutes
-bookings_collection = db.bookings
 
 # --- CORS ---
 app.add_middleware(
@@ -27,34 +21,78 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- TRACKING FUNCTION ---
-async def record_booking(provider, route):
-    booking_data = {
-        "timestamp": datetime.now().isoformat(),
-        "provider": provider,
-        "route": route,
-        "status": "PENDING"
-    }
-    await bookings_collection.insert_one(booking_data)
+# Initialize database tables on startup
+@app.on_event("startup")
+def startup_db():
+    if os.getenv("RAILWAY_DB_URL"):
+        setup_database()
+
+# --- MODELS ---
+class BookingRequest(BaseModel):
+    route_id: str
+    operator: str
+    passenger_name: str
 
 # --- ROUTES ---
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 def home():
     return FileResponse("index.html")
 
-@app.get("/about")
+@app.get("/about", response_class=HTMLResponse)
 def about():
     return FileResponse("about.html")
+
+@app.get("/api/routes")
+def get_routes():
+    # Combine all local route data
+    all_routes = []
+    route_files = [
+        "safariroute/data/routes/kenya_sgr.json",
+        "safariroute/data/routes/tanzania_sgr.json",
+        "safariroute/data/routes/east_africa_buses.json",
+        "safariroute/data/routes/uganda_buses.json"
+    ]
+    for f in route_files:
+        if os.path.exists(f):
+            with open(f, "r") as file:
+                all_routes.extend(json.load(file))
+    return all_routes
+
+@app.post("/api/book")
+async def book_route(request: BookingRequest):
+    # 1. Generate unique code
+    code = generate_safariroute_code(request.route_id)
+    
+    # 2. Create booking record
+    booking = {
+        "booking_id": f"BK-{int(datetime.now().timestamp())}",
+        "passenger_name": request.passenger_name,
+        "route_id": request.route_id,
+        "operator": request.operator,
+        "safariroute_code": code,
+        "status": "ISSUED"
+    }
+    
+    # 3. Save to Postgres if available
+    if os.getenv("RAILWAY_DB_URL"):
+        try:
+            save_booking(booking)
+        except Exception as e:
+            print(f"Database Error: {e}")
+            
+    return {
+        "status": "success",
+        "code": code,
+        "message": "Booking issued. Present this code to the operator."
+    }
+
+# Legacy route fixed to avoid 403 redirect
 @app.get("/book/sgr/{route_id}")
-async def book_sgr(route_id: str):
-    code = f"SR-{uuid.uuid4().hex[:6]}"
-
-    print("Tracking Code:", code)
-
-    await record_booking("SGR", route_id)
-
-    return RedirectResponse(
-        url=f"https://metickets.krc.co.ke?ref=safariroutes&route={route_id}&code={code}"
-    )
-
+async def legacy_book_sgr(route_id: str):
+    code = generate_safariroute_code(route_id)
+    return JSONResponse(content={
+        "status": "success",
+        "code": code,
+        "instruction": "Show this code at the SGR ticket counter to complete your booking."
+    })
