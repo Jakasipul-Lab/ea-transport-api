@@ -55,5 +55,6 @@ async def book_sgr(route_id: str):
     await record_booking("SGR", route_id)
 
     return RedirectResponse(
-        url=f"https://metickets.krc.co.ke?ref=safariroutes&route={route_id}&code={code}"
+       url=f"https://metickets.krc.co.ke?ref=safariroutes&route={route_id}&code={code}"
+
     )
