@@ -19,6 +19,7 @@ client = AsyncIOMotorClient(MONGO_URL)
 db = client.safariroutes
 bookings_collection = db.bookings
 
+# --- CORS ---
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -26,7 +27,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- TRACKING ---
+# --- TRACKING FUNCTION ---
 async def record_booking(provider, route):
     booking_data = {
         "timestamp": datetime.now().isoformat(),
@@ -55,6 +56,5 @@ async def book_sgr(route_id: str):
     await record_booking("SGR", route_id)
 
     return RedirectResponse(
-       url=f"https://metickets.krc.co.ke?ref=safariroutes&route={route_id}&code={code}"
-
+        url=f"https://metickets.krc.co.ke?ref=safariroutes&route={route_id}&code={code}"
     )
