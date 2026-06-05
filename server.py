@@ -46,13 +46,16 @@ def about():
 
 import uuid
 
+import uuid
+
 @app.get("/book/sgr/{route_id}")
 async def book_sgr(route_id: str):
     code = f"SR-{uuid.uuid4().hex[:6]}"
 
     print("Tracking Code:", code)
 
+    await record_booking("SGR", route_id)
+
     return RedirectResponse(
         url=f"https://metickets.krc.co.ke?ref=safariroutes&route={route_id}&code={code}"
-``
     )
