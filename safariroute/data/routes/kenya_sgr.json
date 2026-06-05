@@ -1,0 +1,18 @@
+[
+  {
+    "route_id": "K-SGR-001",
+    "origin": "Nairobi (Terminus)",
+    "destination": "Mombasa (Terminus)",
+    "type": "Railway",
+    "operator": "Kenya Railways (Madaraka Express)",
+    "stops": ["Athi River", "Emali", "Kibwezi", "Mtito Andei", "Voi", "Miasenyi", "Mariakani"]
+  },
+  {
+    "route_id": "K-SGR-002",
+    "origin": "Nairobi (Terminus)",
+    "destination": "Suswa",
+    "type": "Railway",
+    "operator": "Kenya Railways (Madaraka Express)",
+    "stops": ["Ongata Rongai", "Ngong", "Maai Mahiu"]
+  }
+]
