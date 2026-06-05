@@ -1,5 +1,7 @@
 import os
 from datetime import datetime
+import uuid
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse, FileResponse
@@ -43,10 +45,6 @@ def home():
 @app.get("/about")
 def about():
     return FileResponse("about.html")
-
-import uuid
-
-import uuid
 
 @app.get("/book/sgr/{route_id}")
 async def book_sgr(route_id: str):
