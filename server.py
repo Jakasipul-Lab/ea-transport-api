@@ -54,4 +54,5 @@ async def book_sgr(route_id: str):
 
     return RedirectResponse(
         url=f"https://metickets.krc.co.ke?ref=safariroutes&route={route_id}&code={code}"
+``
     )
