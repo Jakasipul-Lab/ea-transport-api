@@ -1,0 +1,18 @@
+[
+  {
+    "route_id": "T-BUS-001",
+    "origin": "Arusha",
+    "destination": "Moshi",
+    "type": "Bus/Shuttle",
+    "operators": ["Kilimanjaro Express", "Marangu Coach"],
+    "est_duration": "2 hours"
+  },
+  {
+    "route_id": "T-BUS-002",
+    "origin": "Dar es Salaam",
+    "destination": "Mwanza",
+    "type": "Bus",
+    "operators": ["Happy Nation", "Rungwe Express", "Kimbinyiko Int. Coach"],
+    "est_duration": "19-20 hours"
+  }
+]
