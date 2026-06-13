@@ -1,24 +1,20 @@
 import os
 import json
-import uuid
 from datetime import datetime
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from pydantic import BaseModel
 
-# SafariRoutes internal modules
 try:
     from safariroute.src.generator import generate_safariroute_code
     from safariroute.src.database import save_booking, setup_database, get_connection
-    DB_AVAILABLE = True
-except Exception as e:
-    print(f"Warning: Internal modules not found correctly: {e}")
-    DB_AVAILABLE = False
+    MODULES_OK = True
+except Exception:
+    MODULES_OK = False
 
-app = FastAPI(title="EA SafariRoutes API")
+app = FastAPI()
 
-# --- CORS ---
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -26,23 +22,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Fail-safe database initialization
 @app.on_event("startup")
 def startup_db():
-    db_url = os.getenv("RAILWAY_DB_URL")
-    if db_url and DB_AVAILABLE:
+    if os.getenv("RAILWAY_DB_URL") and MODULES_OK:
         try:
             setup_database()
-        except Exception as e:
-            print(f"Database setup failed: {e}")
+        except Exception:
+            pass
 
-# --- MODELS ---
 class BookingRequest(BaseModel):
     route_id: str
     operator: str
     passenger_name: str
 
-# --- ROUTES ---
 @app.get("/", response_class=HTMLResponse)
 def home():
     return FileResponse("index.html")
@@ -76,7 +68,7 @@ def get_routes():
 
 @app.post("/api/book")
 async def book_route(request: BookingRequest):
-    code = "ERROR" if not DB_AVAILABLE else generate_safariroute_code(request.route_id)
+    code = generate_safariroute_code(request.route_id) if MODULES_OK else "CODE-ERROR"
     booking = {
         "booking_id": f"BK-{int(datetime.now().timestamp())}",
         "passenger_name": request.passenger_name,
@@ -85,16 +77,14 @@ async def book_route(request: BookingRequest):
         "safariroute_code": code,
         "status": "ISSUED"
     }
-    if os.getenv("RAILWAY_DB_URL") and DB_AVAILABLE:
-        try:
-            save_booking(booking)
-        except Exception as e:
-            print(f"Database Error: {e}")
-    return {"status": "success", "code": code, "message": "Booking issued."}
+    if os.getenv("RAILWAY_DB_URL") and MODULES_OK:
+        try: save_booking(booking)
+        except: pass
+    return {"status": "success", "code": code}
 
 @app.get("/api/admin/stats")
 async def get_admin_stats():
-    if not os.getenv("RAILWAY_DB_URL") or not DB_AVAILABLE:
+    if not os.getenv("RAILWAY_DB_URL") or not MODULES_OK:
         return {"total_bookings": 0, "total_commission": 0, "recent_bookings": []}
     try:
         conn = get_connection()
@@ -105,11 +95,9 @@ async def get_admin_stats():
         cur.execute("SELECT passenger_name, route_id, operator, safariroute_code, status FROM bookings ORDER BY created_at DESC LIMIT 10")
         rows = cur.fetchall()
         recent = [{"passenger": r[0], "route": r[1], "operator": r[2], "code": r[3], "status": r[4]} for r in rows]
-        cur.close()
-        conn.close()
+        cur.close(); conn.close()
         return {"total_bookings": total, "total_commission": commission, "recent_bookings": recent}
-    except Exception as e:
-        return {"error": str(e), "total_bookings": 0, "total_commission": 0, "recent_bookings": []}
+    except: return {"total_bookings": 0, "total_commission": 0, "recent_bookings": []}
 
 if __name__ == "__main__":
     import uvicorn
