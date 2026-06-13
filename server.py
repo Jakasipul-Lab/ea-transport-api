@@ -47,6 +47,10 @@ def about():
 def verify_page():
     return FileResponse("verify.html")
 
+@app.get("/admin", response_class=HTMLResponse)
+def admin_dashboard():
+    return FileResponse("admin.html")
+
 @app.get("/api/routes")
 def get_routes():
     all_routes = []
@@ -84,7 +88,6 @@ async def book_route(request: BookingRequest):
 async def verify_code(code: str):
     if not os.getenv("RAILWAY_DB_URL"):
         return {"status": "unknown", "message": "Database not connected"}
-    
     try:
         conn = get_connection()
         cur = conn.cursor()
@@ -92,17 +95,35 @@ async def verify_code(code: str):
         result = cur.fetchone()
         cur.close()
         conn.close()
-        
         if result:
             return {
                 "status": "valid",
-                "passenger": result[0],
-                "route": result[1],
-                "operator": result[2],
-                "booking_status": result[3],
-                "issued_at": result[4].isoformat()
+                "passenger": result[0], "route": result[1], "operator": result[2],
+                "booking_status": result[3], "issued_at": result[4].isoformat()
             }
         else:
             return {"status": "invalid", "message": "Code not found"}
     except Exception as e:
         return {"status": "error", "message": str(e)}
+
+@app.get("/api/admin/stats")
+async def get_admin_stats():
+    if not os.getenv("RAILWAY_DB_URL"):
+        return {"total_bookings": 0, "total_commission": 0, "recent_bookings": []}
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+        # 1. Total Count
+        cur.execute("SELECT COUNT(*) FROM bookings")
+        total = cur.fetchone()[0]
+        # 2. Commission (assuming avg ticket 2000)
+        commission = total * 2000 * 0.05
+        # 3. Recent bookings
+        cur.execute("SELECT passenger_name, route_id, operator, safariroute_code, status FROM bookings ORDER BY created_at DESC LIMIT 10")
+        rows = cur.fetchall()
+        recent = [{"passenger": r[0], "route": r[1], "operator": r[2], "code": r[3], "status": r[4]} for r in rows]
+        cur.close()
+        conn.close()
+        return {"total_bookings": total, "total_commission": commission, "recent_bookings": recent}
+    except Exception as e:
+        return {"error": str(e), "total_bookings": 0, "total_commission": 0, "recent_bookings": []}

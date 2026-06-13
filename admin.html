@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - EA SafariRoutes</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f0f2f5; }
+        .sidebar { width: 250px; height: 100vh; background: #1b5e20; color: white; position: fixed; padding: 20px; }
+        .main-content { margin-left: 290px; padding: 40px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center; }
+        .card h2 { font-size: 2.5em; color: #2e7d32; margin: 10px 0; }
+        .card p { color: #666; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; background: white; margin-top: 30px; border-radius: 8px; overflow: hidden; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #e8f5e9; color: #2e7d32; }
+        h1 { color: #1b5e20; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>SafariRoutes</h2>
+        <p>Admin Portal v1.0</p>
+        <hr>
+        <nav>
+            <p>Dashboard</p>
+            <p>Partners</p>
+            <p>Reports</p>
+        </nav>
+    </div>
+    <div class="main-content">
+        <h1>Executive Overview</h1>
+        <div class="stats-grid">
+            <div class="card">
+                <p>TOTAL BOOKINGS</p>
+                <h2 id="stat-bookings">...</h2>
+            </div>
+            <div class="card">
+                <p>EST. REVENUE (5%)</p>
+                <h2 id="stat-commission">...</h2>
+            </div>
+            <div class="card">
+                <p>ACTIVE REPS</p>
+                <h2>4</h2>
+            </div>
+        </div>
+
+        <h2>Recent Leads</h2>
+        <table id="recent-leads">
+            <thead>
+                <tr>
+                    <th>Passenger</th>
+                    <th>Route</th>
+                    <th>Operator</th>
+                    <th>Code</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Loaded via API -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        async function loadStats() {
+            const res = await fetch('/api/admin/stats');
+            const data = await res.json();
+            
+            document.getElementById('stat-bookings').innerText = data.total_bookings;
+            document.getElementById('stat-commission').innerText = data.total_commission.toLocaleString() + " KES/TZS";
+
+            const tableBody = document.querySelector('#recent-leads tbody');
+            tableBody.innerHTML = '';
+            data.recent_bookings.forEach(b => {
+                const row = `<tr>
+                    <td>${b.passenger}</td>
+                    <td>${b.route}</td>
+                    <td>${b.operator}</td>
+                    <td><code>${b.code}</code></td>
+                    <td><span style="color:green">${b.status}</span></td>
+                </tr>`;
+                tableBody.innerHTML += row;
+            });
+        }
+        loadStats();
+    </script>
+</body>
+</html>
