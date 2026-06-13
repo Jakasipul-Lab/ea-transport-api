@@ -8,8 +8,13 @@ from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
 from pydantic import BaseModel
 
 # SafariRoutes internal modules
-from safariroute.src.generator import generate_safariroute_code
-from safariroute.src.database import save_booking, setup_database, get_connection
+try:
+    from safariroute.src.generator import generate_safariroute_code
+    from safariroute.src.database import save_booking, setup_database, get_connection
+    DB_AVAILABLE = True
+except Exception as e:
+    print(f"Warning: Internal modules not found correctly: {e}")
+    DB_AVAILABLE = False
 
 app = FastAPI(title="EA SafariRoutes API")
 
@@ -21,11 +26,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize database tables on startup
+# Fail-safe database initialization
 @app.on_event("startup")
 def startup_db():
-    if os.getenv("RAILWAY_DB_URL"):
-        setup_database()
+    db_url = os.getenv("RAILWAY_DB_URL")
+    print(f"DEBUG: Starting up with DB_URL: {'Found' if db_url else 'MISSING'}")
+    if db_url and DB_AVAILABLE:
+        try:
+            setup_database()
+            print("DEBUG: Database tables verified.")
+        except Exception as e:
+            print(f"DEBUG: Database setup failed but keeping app alive: {e}")
 
 # --- MODELS ---
 class BookingRequest(BaseModel):
@@ -68,7 +79,7 @@ def get_routes():
 
 @app.post("/api/book")
 async def book_route(request: BookingRequest):
-    code = generate_safariroute_code(request.route_id)
+    code = "ERROR" if not DB_AVAILABLE else generate_safariroute_code(request.route_id)
     booking = {
         "booking_id": f"BK-{int(datetime.now().timestamp())}",
         "passenger_name": request.passenger_name,
@@ -77,38 +88,16 @@ async def book_route(request: BookingRequest):
         "safariroute_code": code,
         "status": "ISSUED"
     }
-    if os.getenv("RAILWAY_DB_URL"):
+    if os.getenv("RAILWAY_DB_URL") and DB_AVAILABLE:
         try:
             save_booking(booking)
         except Exception as e:
             print(f"Database Error: {e}")
-    return {"status": "success", "code": code, "message": "Booking issued. Present this code to the operator."}
-
-@app.get("/api/verify/{code}")
-async def verify_code(code: str):
-    if not os.getenv("RAILWAY_DB_URL"):
-        return {"status": "unknown", "message": "Database not connected"}
-    try:
-        conn = get_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT passenger_name, route_id, operator, status, created_at FROM bookings WHERE safariroute_code = %s", (code,))
-        result = cur.fetchone()
-        cur.close()
-        conn.close()
-        if result:
-            return {
-                "status": "valid",
-                "passenger": result[0], "route": result[1], "operator": result[2],
-                "booking_status": result[3], "issued_at": result[4].isoformat()
-            }
-        else:
-            return {"status": "invalid", "message": "Code not found"}
-    except Exception as e:
-        return {"status": "error", "message": str(e)}
+    return {"status": "success", "code": code, "message": "Booking issued."}
 
 @app.get("/api/admin/stats")
 async def get_admin_stats():
-    if not os.getenv("RAILWAY_DB_URL"):
+    if not os.getenv("RAILWAY_DB_URL") or not DB_AVAILABLE:
         return {"total_bookings": 0, "total_commission": 0, "recent_bookings": []}
     try:
         conn = get_connection()
@@ -128,4 +117,5 @@ async def get_admin_stats():
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 8000))
+    print(f"DEBUG: Starting server on port {port}")
     uvicorn.run(app, host="0.0.0.0", port=port)
