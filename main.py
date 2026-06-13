@@ -3,8 +3,9 @@ import json
 from datetime import datetime
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
 from pydantic import BaseModel
+import uvicorn
 
 try:
     from safariroute.src.generator import generate_safariroute_code
@@ -22,84 +23,32 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.on_event("startup")
-def startup_db():
-    if os.getenv("RAILWAY_DB_URL") and MODULES_OK:
-        try:
-            setup_database()
-        except Exception:
-            pass
-
-class BookingRequest(BaseModel):
-    route_id: str
-    operator: str
-    passenger_name: str
-
-@app.get("/", response_class=HTMLResponse)
+@app.get("/")
 def home():
     return FileResponse("index.html")
 
-@app.get("/about", response_class=HTMLResponse)
+@app.get("/about")
 def about():
     return FileResponse("about.html")
 
-@app.get("/verify", response_class=HTMLResponse)
+@app.get("/verify")
 def verify_page():
     return FileResponse("verify.html")
 
-@app.get("/admin", response_class=HTMLResponse)
+@app.get("/admin")
 def admin_dashboard():
     return FileResponse("admin.html")
 
 @app.get("/api/routes")
 def get_routes():
     all_routes = []
-    route_files = [
-        "safariroute/data/routes/kenya_sgr.json",
-        "safariroute/data/routes/tanzania_sgr.json",
-        "safariroute/data/routes/east_africa_buses.json",
-        "safariroute/data/routes/uganda_buses.json"
-    ]
+    route_files = ["safariroute/data/routes/kenya_sgr.json","safariroute/data/routes/tanzania_sgr.json","safariroute/data/routes/east_africa_buses.json","safariroute/data/routes/uganda_buses.json"]
     for f in route_files:
         if os.path.exists(f):
-            with open(f, "r") as file:
-                all_routes.extend(json.load(file))
+            with open(f, "r") as file: all_routes.extend(json.load(file))
     return all_routes
 
-@app.post("/api/book")
-async def book_route(request: BookingRequest):
-    code = generate_safariroute_code(request.route_id) if MODULES_OK else "CODE-ERROR"
-    booking = {
-        "booking_id": f"BK-{int(datetime.now().timestamp())}",
-        "passenger_name": request.passenger_name,
-        "route_id": request.route_id,
-        "operator": request.operator,
-        "safariroute_code": code,
-        "status": "ISSUED"
-    }
-    if os.getenv("RAILWAY_DB_URL") and MODULES_OK:
-        try: save_booking(booking)
-        except: pass
-    return {"status": "success", "code": code}
-
-@app.get("/api/admin/stats")
-async def get_admin_stats():
-    if not os.getenv("RAILWAY_DB_URL") or not MODULES_OK:
-        return {"total_bookings": 0, "total_commission": 0, "recent_bookings": []}
-    try:
-        conn = get_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT COUNT(*) FROM bookings")
-        total = cur.fetchone()[0]
-        commission = total * 2000 * 0.05
-        cur.execute("SELECT passenger_name, route_id, operator, safariroute_code, status FROM bookings ORDER BY created_at DESC LIMIT 10")
-        rows = cur.fetchall()
-        recent = [{"passenger": r[0], "route": r[1], "operator": r[2], "code": r[3], "status": r[4]} for r in rows]
-        cur.close(); conn.close()
-        return {"total_bookings": total, "total_commission": commission, "recent_bookings": recent}
-    except: return {"total_bookings": 0, "total_commission": 0, "recent_bookings": []}
-
 if __name__ == "__main__":
-    import uvicorn
+    # RAILWAY CRITICAL: Must use 0.0.0.0 and dynamic PORT
     port = int(os.environ.get("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    uvicorn.run("main:app", host="0.0.0.0", port=port, log_level="info")
