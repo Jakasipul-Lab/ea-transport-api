@@ -30,13 +30,11 @@ app.add_middleware(
 @app.on_event("startup")
 def startup_db():
     db_url = os.getenv("RAILWAY_DB_URL")
-    print(f"DEBUG: Starting up with DB_URL: {'Found' if db_url else 'MISSING'}")
     if db_url and DB_AVAILABLE:
         try:
             setup_database()
-            print("DEBUG: Database tables verified.")
         except Exception as e:
-            print(f"DEBUG: Database setup failed but keeping app alive: {e}")
+            print(f"Database setup failed: {e}")
 
 # --- MODELS ---
 class BookingRequest(BaseModel):
@@ -45,7 +43,6 @@ class BookingRequest(BaseModel):
     passenger_name: str
 
 # --- ROUTES ---
-
 @app.get("/", response_class=HTMLResponse)
 def home():
     return FileResponse("index.html")
@@ -117,5 +114,4 @@ async def get_admin_stats():
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 8000))
-    print(f"DEBUG: Starting server on port {port}")
     uvicorn.run(app, host="0.0.0.0", port=port)
