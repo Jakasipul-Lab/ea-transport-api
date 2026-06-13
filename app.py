@@ -3,41 +3,36 @@ import json
 from datetime import datetime
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from pydantic import BaseModel
-import uvicorn
 
 try:
     from safariroute.src.generator import generate_safariroute_code
     from safariroute.src.database import save_booking, setup_database, get_connection
     MODULES_OK = True
-except Exception:
-    MODULES_OK = False
+except Exception: MODULES_OK = False
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
-@app.get("/")
-def home():
-    return FileResponse("index.html")
+@app.on_event("startup")
+def startup_db():
+    if os.getenv("RAILWAY_DB_URL") and MODULES_OK:
+        try: setup_database()
+        except: pass
 
-@app.get("/about")
-def about():
-    return FileResponse("about.html")
+@app.get("/", response_class=HTMLResponse)
+def home(): return FileResponse("index.html")
 
-@app.get("/verify")
-def verify_page():
-    return FileResponse("verify.html")
+@app.get("/about", response_class=HTMLResponse)
+def about(): return FileResponse("about.html")
 
-@app.get("/admin")
-def admin_dashboard():
-    return FileResponse("admin.html")
+@app.get("/verify", response_class=HTMLResponse)
+def verify_page(): return FileResponse("verify.html")
+
+@app.get("/admin", response_class=HTMLResponse)
+def admin_dashboard(): return FileResponse("admin.html")
 
 @app.get("/api/routes")
 def get_routes():
@@ -49,6 +44,6 @@ def get_routes():
     return all_routes
 
 if __name__ == "__main__":
-    # RAILWAY CRITICAL: Must use 0.0.0.0 and dynamic PORT
+    import uvicorn
     port = int(os.environ.get("PORT", 8000))
-    uvicorn.run("main:app", host="0.0.0.0", port=port, log_level="info")
+    uvicorn.run(app, host="0.0.0.0", port=port)
