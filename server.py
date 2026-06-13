@@ -7,11 +7,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
 from pydantic import BaseModel
 
-# Safariroute internal modules
+# SafariRoutes internal modules
 from safariroute.src.generator import generate_safariroute_code
 from safariroute.src.database import save_booking, setup_database, get_connection
 
-app = FastAPI()
+app = FastAPI(title="EA SafariRoutes API")
 
 # --- CORS ---
 app.add_middleware(
@@ -78,7 +78,7 @@ async def book_route(request: BookingRequest):
             save_booking(booking)
         except Exception as e:
             print(f"Database Error: {e}")
-    return {"status": "success", "code": code, "message": "Booking issued."}
+    return {"status": "success", "code": code, "message": "Booking issued. Present this code to the operator."}
 
 @app.get("/api/verify/{code}")
 async def verify_code(code: str):
