@@ -113,12 +113,9 @@ async def get_admin_stats():
     try:
         conn = get_connection()
         cur = conn.cursor()
-        # 1. Total Count
         cur.execute("SELECT COUNT(*) FROM bookings")
         total = cur.fetchone()[0]
-        # 2. Commission (assuming avg ticket 2000)
         commission = total * 2000 * 0.05
-        # 3. Recent bookings
         cur.execute("SELECT passenger_name, route_id, operator, safariroute_code, status FROM bookings ORDER BY created_at DESC LIMIT 10")
         rows = cur.fetchall()
         recent = [{"passenger": r[0], "route": r[1], "operator": r[2], "code": r[3], "status": r[4]} for r in rows]
@@ -127,3 +124,8 @@ async def get_admin_stats():
         return {"total_bookings": total, "total_commission": commission, "recent_bookings": recent}
     except Exception as e:
         return {"error": str(e), "total_bookings": 0, "total_commission": 0, "recent_bookings": []}
+
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
