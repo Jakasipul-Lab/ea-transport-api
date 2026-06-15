@@ -6,24 +6,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, FileResponse
 from pydantic import BaseModel
 
-# SafariRoutes internal modules
-try:
-    from safariroute.src.generator import generate_safariroute_code
-    from safariroute.src.database import save_booking, setup_database, get_connection
-    MODULES_OK = True
-except Exception:
-    MODULES_OK = False
-
-app = FastAPI()
-
+app = FastAPI(title="EA SafariRoutes Momentum Engine")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
-
-@app.on_event("startup")
-def startup_db():
-    db_url = os.getenv("RAILWAY_DB_URL") or os.getenv("NEON_DB_URL")
-    if db_url and MODULES_OK:
-        try: setup_database()
-        except: pass
 
 @app.get("/", response_class=HTMLResponse)
 def home(): return FileResponse("index.html")
@@ -31,38 +15,38 @@ def home(): return FileResponse("index.html")
 @app.get("/help", response_class=HTMLResponse)
 def help_page(): return FileResponse("help.html")
 
-@app.get("/about", response_class=HTMLResponse)
-def about(): return FileResponse("about.html")
-
-@app.get("/verify", response_class=HTMLResponse)
-def verify_page(): return FileResponse("verify.html")
-
 @app.get("/admin", response_class=HTMLResponse)
 def admin_dashboard(): return FileResponse("admin.html")
 
 @app.get("/api/routes")
 def get_routes():
-    all_routes = []
-    route_files = ["safariroute/data/routes/kenya_sgr.json","safariroute/data/routes/tanzania_sgr.json","safariroute/data/routes/east_africa_buses.json","safariroute/data/routes/uganda_buses.json"]
-    for f in route_files:
-        if os.path.exists(f):
-            with open(f, "r") as file: all_routes.extend(json.load(file))
-    return all_routes
-
-@app.post("/api/book")
-async def book_route(request: BookingRequest):
-    code = generate_safariroute_code(request.route_id) if MODULES_OK else "SR-OFFLINE"
-    booking = {"booking_id": f"BK-{int(datetime.now().timestamp())}", "passenger_name": request.passenger_name, "route_id": request.route_id, "operator": request.operator, "safariroute_code": code, "status": "ISSUED"}
-    db_url = os.getenv("RAILWAY_DB_URL") or os.getenv("NEON_DB_URL")
-    if db_url and MODULES_OK:
-        try: save_booking(booking)
-        except: pass
-    return {"status": "success", "code": code}
+    return [
+        {"route_id": "K-SGR-001", "origin": "Nairobi", "destination": "Mombasa", "operator": "Madaraka Express", "base_price": 1000, "currency": "KES"},
+        {"route_id": "T-SGR-001", "origin": "Dar es Salaam", "destination": "Dodoma", "operator": "TRC", "base_price": 15000, "currency": "TZS"},
+        {"route_id": "U-BUS-001", "origin": "Kampala", "destination": "Gulu", "operator": "Global Coaches", "base_price": 30000, "currency": "UGX"}
+    ]
 
 class BookingRequest(BaseModel):
     route_id: str
-    operator: str
     passenger_name: str
+    base_price: int
+
+@app.post("/api/book")
+async def book_route(request: BookingRequest):
+    # Calculate 5% Fee for revenue
+    service_fee = int(request.base_price * 0.05)
+    total_to_pay = request.base_price + service_fee
+    
+    # Generate SafariRoutes Code
+    code = "SR-2026-" + str(int(datetime.now().timestamp()))[-6:].upper()
+    
+    return {
+        "status": "success",
+        "code": code,
+        "base_price": request.base_price,
+        "service_fee": service_fee,
+        "total": total_to_pay
+    }
 
 if __name__ == "__main__":
     import uvicorn
