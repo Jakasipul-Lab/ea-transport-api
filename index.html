@@ -3,137 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EA SafariRoutes - Professional Ticketing</title>
+    <title>EA SafariRoutes - Official Ticketing</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 600px; margin: 20px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        h1 { color: #2e7d32; font-size: 24px; }
-        .form-group { text-align: left; margin-bottom: 15px; }
-        label { font-weight: bold; display: block; margin-bottom: 5px; }
-        select, input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
-        .price-tag { font-size: 22px; font-weight: bold; color: #e65100; margin: 20px 0; }
-        .btn { width: 100%; padding: 15px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-pay { background: #2e7d32; color: white; }
-        .btn-pay:hover { background: #1b5e20; }
-        .payment-modal { display: none; background: #fff8e1; border: 2px solid #ffb300; padding: 20px; border-radius: 12px; margin-top: 20px; }
-        .success-box { display: none; background: #e8f5e9; border: 2px solid #2e7d32; padding: 20px; border-radius: 12px; margin-top: 20px; }
-        .code-display { font-size: 28px; letter-spacing: 3px; color: #1b5e20; font-weight: bold; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .header { text-align: center; border-bottom: 2px solid #2e7d32; padding-bottom: 10px; margin-bottom: 20px; }
+        h1 { color: #2e7d32; margin: 0; font-size: 26px; }
+        .route-card { border: 1px solid #eee; padding: 15px; margin-bottom: 15px; border-radius: 8px; background: #fff; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid #2e7d32; }
+        .btn { padding: 12px 24px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .payment-box { display: none; background: #fffde7; border: 1px solid #fbc02d; padding: 20px; border-radius: 8px; text-align: left; margin-top: 20px; }
+        .success-box { display: none; background: #e8f5e9; border: 2px solid #2e7d32; padding: 25px; border-radius: 12px; text-align: center; margin-top: 20px; }
+        .code { font-size: 32px; font-weight: bold; color: #1b5e20; letter-spacing: 4px; display: block; margin: 15px 0; }
+        .footer-nav { margin-top: 40px; text-align: center; font-size: 14px; border-top: 1px solid #eee; padding-top: 20px; }
+        .footer-nav a { color: #2e7d32; text-decoration: none; margin: 0 10px; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>EA SafariRoutes</h1>
-        <p>Book your inter-city travel across East Africa.</p>
-
-        <div class="form-group">
-            <label>Select Transport Route</label>
-            <select id="route-select" onchange="updateStops()">
-                <option value="">-- Choose a Route --</option>
-            </select>
+        <div class="header">
+            <h1>EA SafariRoutes</h1>
+            <p>Authorized Digital Ticketing Gateway</p>
         </div>
 
-        <div id="stop-selection" style="display:none">
-            <div class="form-group">
-                <label>From (Origin)</label>
-                <select id="from-stop" onchange="calculatePrice()"></select>
-            </div>
-            <div class="form-group">
-                <label>To (Destination)</label>
-                <select id="to-stop" onchange="calculatePrice()"></select>
-            </div>
-            <div class="form-group">
-                <label>Passenger Full Name</label>
-                <input type="text" id="passenger-name" placeholder="Enter your name">
-            </div>
-
-            <div class="price-tag">Estimated Fare: <span id="price-display">0</span> <span id="currency">KES</span></div>
-            
-            <button class="btn btn-pay" id="initiate-btn" onclick="showPayment()">Initiate Payment</button>
+        <div id="main-view">
+            <p>Select your route to generate a booking code:</p>
+            <div id="route-list"><p>Connecting to regional servers...</p></div>
         </div>
 
-        <div id="payment-area" class="payment-modal">
-            <h3>Complete Payment</h3>
-            <p>Please pay the fare using your preferred mobile money method.</p>
-            <p><strong>Step 1:</strong> Send funds to the operator's Till/Paybill.</p>
-            <p><strong>Step 2:</strong> Once you get the confirmation SMS, click below to generate your code.</p>
-            <button class="btn" style="background:#ffb300; color:black;" onclick="finalizeBooking()">Confirm Payment & Get Code</button>
+        <div id="payment-view" class="payment-box">
+            <h3>Complete Your Purchase</h3>
+            <p>1. Pay fare via <strong>M-PESA / Airtel / MTN</strong> at the booking office.</p>
+            <p>2. Use your name as the reference.</p>
+            <p>3. Click below to issue your tracking code.</p>
+            <button class="btn" style="background:#fbc02d; color:#000; width:100%;" onclick="finalize()">I Have Paid - Get My Code</button>
         </div>
 
-        <div id="success-area" class="success-box">
-            <h3>Ticket Confirmed!</h3>
-            <p>Your official SafariRoutes Code:</p>
-            <div class="code-display" id="final-code">-------</div>
-            <p><small>Present this code and your payment SMS to the clerk at the station.</small></p>
-            <a href="/" style="color:#2e7d32; text-decoration:none; font-weight:bold;">Book Another Trip</a>
+        <div id="success-view" class="success-box">
+            <h2 style="color:#2e7d32; margin-top:0;">Success! ✅</h2>
+            <p>Your SafariRoutes Tracking Code:</p>
+            <span class="code" id="final-code">-------</span>
+            <p><small>Present this code and your payment SMS to the clerk for your seat assignment.</small></p>
+            <button class="btn" onclick="location.reload()">Book Another Trip</button>
         </div>
 
-        <div style="margin-top:30px; border-top:1px solid #eee; padding-top:15px; font-size:14px;">
-            <a href="/help" style="color:#666; margin-right:15px;">Help</a>
-            <a href="/about" style="color:#666; margin-right:15px;">About</a>
-            <a href="/admin" style="color:#666;">Admin</a>
+        <div class="footer-nav">
+            <a href="/support" style="color:#c62828;">⚠️ SAFETY & SUPPORT HUB</a><br><br>
+            <a href="/help">User Guide</a>
+            <a href="/about">Our Offices</a>
+            <a href="/admin">Admin Portal</a>
         </div>
     </div>
 
     <script>
+        let currentRoute = null;
         let allRoutes = [];
-        async function init() {
+        async function load() {
             const res = await fetch('/api/routes');
             allRoutes = await res.json();
-            const select = document.getElementById('route-select');
+            const list = document.getElementById('route-list');
+            list.innerHTML = '';
             allRoutes.forEach(r => {
-                const opt = document.createElement('option');
-                opt.value = r.route_id;
-                opt.innerText = r.origin + ' to ' + r.destination + ' (' + (r.operator || r.operators[0]) + ')';
-                select.appendChild(opt);
+                const card = document.createElement('div');
+                card.className = 'route-card';
+                card.innerHTML = '<div><strong>' + r.origin + ' to ' + r.destination + '</strong><br><small>' + r.operator + '</small></div><button class="btn" onclick="startBooking(\'' + r.route_id + '\')">Select</button>';
+                list.appendChild(card);
             });
         }
-
-        function updateStops() {
-            const routeId = document.getElementById('route-select').value;
-            if(!routeId) return;
-            const route = allRoutes.find(r => r.route_id === routeId);
-            const fromSelect = document.getElementById('from-stop');
-            const toSelect = document.getElementById('to-stop');
-            fromSelect.innerHTML = ''; toSelect.innerHTML = '';
-            
-            const stops = route.stops || [route.origin, route.destination];
-            stops.forEach(s => {
-                const opt1 = document.createElement('option'); opt1.value = s; opt1.innerText = s;
-                const opt2 = document.createElement('option'); opt2.value = s; opt2.innerText = s;
-                fromSelect.appendChild(opt1); toSelect.appendChild(opt2);
-            });
-            document.getElementById('stop-selection').style.display = 'block';
-            calculatePrice();
+        function startBooking(id) {
+            currentRoute = id;
+            document.getElementById('main-view').style.display = 'none';
+            document.getElementById('payment-view').style.display = 'block';
         }
-
-        function calculatePrice() {
-            document.getElementById('price-display').innerText = "1,200";
-        }
-
-        function showPayment() {
-            if(!document.getElementById('passenger-name').value) { alert("Please enter name"); return; }
-            document.getElementById('initiate-btn').style.display = 'none';
-            document.getElementById('payment-area').style.display = 'block';
-        }
-
-        async function finalizeBooking() {
-            const routeId = document.getElementById('route-select').value;
-            const name = document.getElementById('passenger-name').value;
-            const res = await fetch('/api/book', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    route_id: routeId, operator: "Official Operator", passenger_name: name,
-                    from_stop: document.getElementById('from-stop').value,
-                    to_stop: document.getElementById('to-stop').value, price: 1200
-                })
+        async function finalize() {
+            const name = prompt('Enter passenger name:') || 'Guest';
+            const res = await fetch('/api/book', { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify({ route_id: currentRoute, operator: 'Official', passenger_name: name, base_price: 1000 }) 
             });
             const data = await res.json();
-            document.getElementById('payment-area').style.display = 'none';
-            document.getElementById('success-area').style.display = 'block';
-            document.getElementById('final-code').innerText = "SR-2026-" + Math.random().toString(36).substr(2, 6).toUpperCase();
+            document.getElementById('payment-view').style.display = 'none';
+            document.getElementById('success-view').style.display = 'block';
+            document.getElementById('final-code').innerText = data.code;
         }
-        init();
+        load();
     </script>
 </body>
 </html>
