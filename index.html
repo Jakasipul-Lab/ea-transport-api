@@ -14,8 +14,7 @@
         .payment-box { display: none; background: #fffde7; border: 1px solid #fbc02d; padding: 20px; border-radius: 8px; text-align: left; margin-top: 20px; }
         .success-box { display: none; background: #e8f5e9; border: 2px solid #2e7d32; padding: 25px; border-radius: 12px; text-align: center; margin-top: 20px; }
         .code { font-size: 32px; font-weight: bold; color: #1b5e20; letter-spacing: 4px; display: block; margin: 15px 0; }
-        .footer-nav { margin-top: 40px; text-align: center; font-size: 14px; border-top: 1px solid #eee; padding-top: 20px; }
-        .footer-nav a { color: #2e7d32; text-decoration: none; margin: 0 10px; font-weight: bold; }
+        .back-link { color: #2e7d32; text-decoration: none; font-weight: bold; cursor: pointer; display: inline-block; margin-bottom: 15px; }
     </style>
 </head>
 <body>
@@ -31,6 +30,7 @@
         </div>
 
         <div id="payment-view" class="payment-box">
+            <span class="back-link" onclick="goBackToRoutes()">← Back to Routes</span>
             <h3>Complete Your Purchase</h3>
             <p>1. Pay fare via <strong>M-PESA / Airtel / MTN</strong> at the booking office.</p>
             <p>2. Use your name as the reference.</p>
@@ -46,11 +46,11 @@
             <button class="btn" onclick="location.reload()">Book Another Trip</button>
         </div>
 
-        <div class="footer-nav">
-            <a href="/support" style="color:#c62828;">⚠️ SAFETY & SUPPORT HUB</a><br><br>
-            <a href="/help">User Guide</a>
-            <a href="/about">Our Offices</a>
-            <a href="/admin">Admin Portal</a>
+        <div style="margin-top:40px; text-align:center; font-size:14px; border-top:1px solid #eee; padding-top:20px;">
+            <a href="/support" style="color:#c62828; text-decoration:none; font-weight:bold; display:block; margin-bottom:10px;">⚠️ SAFETY & SUPPORT HUB</a>
+            <a href="/help" style="color:#2e7d32; text-decoration:none; margin:0 10px;">Help</a>
+            <a href="/about" style="color:#2e7d32; text-decoration:none; margin:0 10px;">About Us</a>
+            <a href="/admin" style="color:#2e7d32; text-decoration:none; margin:0 10px;">Admin</a>
         </div>
     </div>
 
@@ -73,6 +73,10 @@
             currentRoute = id;
             document.getElementById('main-view').style.display = 'none';
             document.getElementById('payment-view').style.display = 'block';
+        }
+        function goBackToRoutes() {
+            document.getElementById('payment-view').style.display = 'none';
+            document.getElementById('main-view').style.display = 'block';
         }
         async function finalize() {
             const name = prompt('Enter passenger name:') || 'Guest';
