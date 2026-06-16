@@ -3,57 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - EA SafariRoutes</title>
+    <title>Admin Dashboard • EA SafariRoutes</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f0f2f5; }
-        .sidebar { width: 250px; height: 100vh; background: #1b5e20; color: white; position: fixed; padding: 20px; }
-        .main-content { margin-left: 290px; padding: 40px; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center; }
-        .card h2 { font-size: 2.5em; color: #2e7d32; margin: 10px 0; }
-        .card p { color: #666; font-weight: bold; }
-        table { width: 100%; border-collapse: collapse; background: white; margin-top: 30px; border-radius: 8px; overflow: hidden; }
-        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background: #e8f5e9; color: #2e7d32; }
-        h1 { color: #1b5e20; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: #f4f7f6; display: flex; }
+        .sidebar { width: 260px; height: 100vh; background: #1b5e20; color: white; position: fixed; padding: 30px 20px; }
+        .main-content { margin-left: 300px; padding: 40px; width: calc(100% - 340px); }
+        .nav-link { color: white; text-decoration: none; display: block; padding: 12px; border-radius: 6px; margin-bottom: 10px; font-weight: bold; }
+        .nav-link:hover { background: rgba(255,255,255,0.1); }
+        .btn-return { display: inline-block; padding: 10px 20px; background: white; color: #1b5e20; text-decoration: none; border-radius: 6px; font-weight: bold; margin-bottom: 30px; border: 1px solid #1b5e20; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; margin-bottom: 40px; }
+        .stat-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 5px solid #2e7d32; }
+        .stat-card h3 { margin: 0; color: #666; font-size: 14px; text-transform: uppercase; }
+        .stat-card .value { font-size: 32px; font-weight: bold; color: #2e7d32; margin-top: 10px; display: block; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        th, td { padding: 18px; text-align: left; border-bottom: 1px solid #f0f2f5; }
+        th { background: #f8f9fa; color: #1b5e20; font-weight: bold; }
+        .status-paid { color: #2e7d32; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <h2>SafariRoutes</h2>
-        <p>Admin Portal v1.0</p>
-        <hr>
-        <nav>
-            <p>Dashboard</p>
-            <p>Partners</p>
-            <p>Reports</p>
-        </nav>
+        <h2 style="margin-top:0;">SafariRoutes</h2>
+        <p style="opacity:0.7; font-size:12px; margin-bottom:40px;">Regional Admin Portal</p>
+        <a href="/" class="nav-link">🏠 Main Hub</a>
+        <a href="/admin" class="nav-link" style="background:rgba(255,255,255,0.2)">📊 Sales Dashboard</a>
+        <a href="/verify" class="nav-link">✅ Ticket Verification</a>
+        <a href="/support" class="nav-link">⚠️ Safety Hub</a>
+        <hr style="opacity:0.2; margin: 30px 0;">
+        <a href="/about" class="nav-link">🏢 About Us</a>
     </div>
+
     <div class="main-content">
-        <h1>Executive Overview</h1>
+        <a href="/" class="btn-return">← Back to Main Hub</a>
+        
+        <h1>Regional Sales Command Center</h1>
+        <p>Real-time monitoring of East African transport leads and commissions.</p>
+
         <div class="stats-grid">
-            <div class="card">
-                <p>TOTAL BOOKINGS</p>
-                <h2 id="stat-bookings">...</h2>
+            <div class="stat-card">
+                <h3>Total Tickets Sold</h3>
+                <span class="value" id="total-tickets">...</span>
             </div>
-            <div class="card">
-                <p>EST. REVENUE (5%)</p>
-                <h2 id="stat-commission">...</h2>
+            <div class="stat-card">
+                <h3>Est. Revenue (5% Fee)</h3>
+                <span class="value" id="total-revenue">...</span>
             </div>
-            <div class="card">
-                <p>ACTIVE REPS</p>
-                <h2>4</h2>
+            <div class="stat-card">
+                <h3>Active Station Reps</h3>
+                <span class="value">4</span>
             </div>
         </div>
 
-        <h2>Recent Leads</h2>
+        <h2>Recent Live Bookings</h2>
         <table id="recent-leads">
             <thead>
                 <tr>
                     <th>Passenger</th>
                     <th>Route</th>
                     <th>Operator</th>
-                    <th>Code</th>
+                    <th>SR Code</th>
                     <th>Status</th>
                 </tr>
             </thead>
@@ -65,24 +73,24 @@
 
     <script>
         async function loadStats() {
-            const res = await fetch('/api/admin/stats');
-            const data = await res.json();
-            
-            document.getElementById('stat-bookings').innerText = data.total_bookings;
-            document.getElementById('stat-commission').innerText = data.total_commission.toLocaleString() + " KES/TZS";
+            try {
+                const res = await fetch('/api/admin/stats');
+                const data = await res.json();
+                
+                document.getElementById('total-tickets').innerText = data.total_bookings || 0;
+                document.getElementById('total-revenue').innerText = (data.total_commission || 0).toLocaleString() + ' KES/TZS';
 
-            const tableBody = document.querySelector('#recent-leads tbody');
-            tableBody.innerHTML = '';
-            data.recent_bookings.forEach(b => {
-                const row = `<tr>
-                    <td>${b.passenger}</td>
-                    <td>${b.route}</td>
-                    <td>${b.operator}</td>
-                    <td><code>${b.code}</code></td>
-                    <td><span style="color:green">${b.status}</span></td>
-                </tr>`;
-                tableBody.innerHTML += row;
-            });
+                const tableBody = document.querySelector('#recent-leads tbody');
+                tableBody.innerHTML = '';
+                if (data.recent_bookings) {
+                    data.recent_bookings.forEach(b => {
+                        const row = '<tr><td><strong>' + b.passenger + '</strong></td><td>' + b.route + '</td><td>' + b.operator + '</td><td><code>' + b.code + '</code></td><td><span class="status-paid">' + b.status + '</span></td></tr>';
+                        tableBody.innerHTML += row;
+                    });
+                }
+            } catch (err) {
+                console.error('Admin data load failed', err);
+            }
         }
         loadStats();
     </script>
