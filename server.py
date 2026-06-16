@@ -1,38 +1,39 @@
 import os
 import json
+import hashlib
+import hmac
 from datetime import datetime
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
 from pydantic import BaseModel
 
-app = FastAPI(title="EA SafariRoutes Master Server")
+app = FastAPI(title="EA SafariRoutes Momentum Engine")
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Secure Anti-Tamper Logic
+def generate_validation_hash(agency_id, official_ref, amount):
+    secret_salt = os.getenv("SECRET_SALT", "kisumu_hq_secure_key_2026")
+    payload = f"{agency_id}|{official_ref}|{amount}"
+    return hmac.new(secret_salt.encode(), payload.encode(), hashlib.sha256).hexdigest()[:16]
 
-# --- PAGE ROUTES (Explicit HTML Mapping) ---
 @app.get("/", response_class=HTMLResponse)
 def home(): return FileResponse("index.html")
 
 @app.get("/about", response_class=HTMLResponse)
-def about_page(): return FileResponse("about.html")
-
-@app.get("/aboutme", response_class=HTMLResponse)
-def aboutme_page(): return FileResponse("about.html")
+def about_p(): return FileResponse("about.html")
 
 @app.get("/help", response_class=HTMLResponse)
-def help_page(): return FileResponse("help.html")
+def help_p(): return FileResponse("help.html")
 
 @app.get("/support", response_class=HTMLResponse)
-def support_page(): return FileResponse("support.html")
+def support_p(): return FileResponse("support.html")
 
 @app.get("/admin", response_class=HTMLResponse)
-def admin_dashboard(): return FileResponse("admin.html")
+def admin_p(): return FileResponse("admin.html")
+
+@app.get("/verify", response_class=HTMLResponse)
+def verify_p(): return FileResponse("verify.html")
 
 @app.get("/api/routes")
 def get_routes():
@@ -45,11 +46,26 @@ class BookingRequest(BaseModel):
     route_id: str
     passenger_name: str
     base_price: int
+    official_ref: str = "PENDING"
 
 @app.post("/api/book")
 async def book_route(request: BookingRequest):
-    code = "SR-2026-" + str(int(datetime.now().timestamp()))[-6:].upper()
-    return {"status": "success", "code": code}
+    commission_rate = 0.05
+    fee = int(request.base_price * commission_rate)
+    total = request.base_price + fee
+    agency_tx_id = "SR-" + str(int(datetime.now().timestamp()))[-6:].upper()
+    
+    # Generate anti-tamper token
+    security_token = generate_validation_hash(agency_tx_id, request.official_ref, total)
+
+    return {
+        "status": "success",
+        "code": agency_tx_id,
+        "base_price": request.base_price,
+        "service_fee": fee,
+        "total": total,
+        "security_token": security_token
+    }
 
 if __name__ == "__main__":
     import uvicorn
