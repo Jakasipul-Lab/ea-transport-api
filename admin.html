@@ -7,56 +7,38 @@
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: #f4f7f6; display: flex; }
         .sidebar { width: 280px; height: 100vh; background: #1b5e20; color: white; position: fixed; padding: 40px 20px; }
-        .main-content { margin-left: 320px; padding: 50px; width: 100%; }
-        .nav-link { color: white; text-decoration: none; display: block; padding: 15px; border-radius: 8px; margin-bottom: 12px; font-weight: bold; border: 1px solid transparent; }
-        .nav-link:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
-        .action-bar { margin-bottom: 40px; display: flex; gap: 15px; }
-        .btn-cmd { padding: 12px 25px; background: #2e7d32; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .main-content { margin-left: 320px; padding: 50px; width: calc(100% - 320px); }
+        .nav-link { color: white; text-decoration: none; display: block; padding: 15px; border-radius: 8px; margin-bottom: 12px; font-weight: bold; background: rgba(255,255,255,0.05); }
+        .nav-link:hover { background: rgba(255,255,255,0.2); }
+        .btn-cmd { padding: 12px 25px; background: #2e7d32; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-right: 10px; }
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-bottom: 50px; }
         .stat-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-bottom: 6px solid #2e7d32; }
-        .stat-card h3 { margin: 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-card h3 { margin: 0; color: #888; font-size: 12px; text-transform: uppercase; }
         .stat-card .value { font-size: 36px; font-weight: bold; color: #1b5e20; margin-top: 15px; display: block; }
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 15px; overflow: hidden; }
-        th, td { padding: 20px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background: #f8f9fa; color: #1b5e20; font-size: 13px; }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <h2 style="margin-top:0;">SafariRoutes</h2>
-        <p style="opacity:0.6; font-size:11px; margin-bottom:50px;">EXECUTIVE COMMAND CENTER</p>
+        <h2>SafariRoutes</h2>
+        <p style="opacity:0.6; font-size:11px;">EXECUTIVE COMMAND</p>
         <a href="/admin" class="nav-link" style="background:rgba(255,255,255,0.2)">📊 Sales Intelligence</a>
-        <a href="#" class="nav-link">🛳️ Freight Management</a>
-        <a href="#" class="nav-link">✈️ Aviation Marketplace</a>
+        <a href="/support" class="nav-link">🛡️ Safety Hub</a>
         <a href="/verify" class="nav-link">✅ Verify Center</a>
+        <a href="/help" class="nav-link">📖 User Guide</a>
         <hr style="opacity:0.1; margin: 40px 0;">
         <a href="/" class="nav-link">🏠 Back to Live Site</a>
     </div>
-
     <div class="main-content">
-        <div class="action-bar">
-            <button class="btn-cmd">💳 Verify M-PESA Ref</button>
-            <button class="btn-cmd">📑 Download Commission CSV</button>
-            <button class="btn-cmd" style="background:#555">⚙️ System Health</button>
+        <div style="margin-bottom:40px;">
+            <button class="btn-cmd" onclick="alert('Opening M-PESA Verification...')">💳 Verify M-PESA Ref</button>
+            <button class="btn-cmd" onclick="alert('Generating CSV Report...')">📑 Download CSV</button>
         </div>
-
-        <h1>Regional Performance Overview</h1>
-        
+        <h1>Regional Performance</h1>
         <div class="stats-grid">
-            <div class="stat-card"><h3>Gross Ticket Volume</h3><span class="value" id="total-volume">KES 1.4M</span></div>
-            <div class="stat-card"><h3>Commission Earned (5%)</h3><span class="value" id="total-earnings">KES 70,000</span></div>
-            <div class="stat-card"><h3>Active Station Reps</h3><span class="value">4</span></div>
+            <div class="stat-card"><h3>Total Sales</h3><span class="value">$0</span></div>
+            <div class="stat-card"><h3>Net 5% Fee</h3><span class="value">$0.00</span></div>
+            <div class="stat-card"><h3>Station Reps</h3><span class="value">4</span></div>
         </div>
-
-        <h2>Recent Inter-City Transactions</h2>
-        <table>
-            <thead>
-                <tr><th>Passenger</th><th>Route</th><th>SR Tracking Code</th><th>Status</th></tr>
-            </thead>
-            <tbody>
-                <tr><td><strong>John Doe</strong></td><td>Nairobi ➔ Mombasa</td><td><code>SR-X927S1</code></td><td><span style="color:#2e7d32; font-weight:bold;">VERIFIED</span></td></tr>
-            </tbody>
-        </table>
     </div>
 </body>
 </html>
