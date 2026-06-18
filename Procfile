@@ -1,1 +1,1 @@
-web: uvicorn server:app --host 0.0.0.0 --port $PORT
+$(cat /root/workspace/final_procfile.b64)
