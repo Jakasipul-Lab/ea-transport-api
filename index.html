@@ -29,8 +29,9 @@
             padding: 2rem;
             text-align: center;
         }
-        .logo { font-size: 4rem; font-weight: 800; margin-bottom: 0.5rem; text-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .tagline { font-size: 1.5rem; opacity: 0.95; margin-bottom: 3rem; }
+        .logo { font-size: 5rem; font-weight: 800; margin-bottom: 0.5rem; text-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .tagline { font-size: 1.8rem; font-weight: 600; margin-bottom: 1.5rem; opacity: 1; }
+        .mission { max-width: 700px; margin: 0 auto 3rem auto; font-size: 1.2rem; line-height: 1.6; opacity: 0.9; }
         .theme-toggle {
             position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); border: none;
             width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer;
@@ -40,7 +41,7 @@
         }
         .card {
             background: var(--card-bg); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 24px; padding: 2.8rem 2rem; width: 350px; transition: all 0.4s ease;
+            border-radius: 24px; padding: 2.8rem 2rem; width: 360px; transition: all 0.4s ease;
         }
         .card:hover { transform: translateY(-12px); box-shadow: 0 25px 50px rgba(0,0,0,0.25); }
         .card h2 { font-size: 1.8rem; margin-bottom: 1rem; }
@@ -59,22 +60,28 @@
         <button class="theme-toggle" id="themeToggle">🌙</button>
         <h1 class="logo">OSARE</h1>
         <p class="tagline">East Africa’s Smart Transit Super Search Hub</p>
+        <p class="mission">Osare is a unified transit search and booking platform for East Africa that aggregates trains, buses, and informal transport into a single real-time interface.</p>
 
         <div class="cards">
+            <!-- TIER 1: INTERCITY -->
             <div class="card">
                 <h2>🚄 SafariRoutes</h2>
-                <p>Long-distance travel: SGR, Buses & Intercity ticketing.</p>
-                <a href="/help" class="btn">Plan Your Route</a>
+                <p>Unified long-distance travel: SGR, Regional Buses & Cross-border booking.</p>
+                <a href="/help" class="btn">Find Intercity Trip</a>
             </div>
+
+            <!-- TIER 2: INFORMAL/LOCAL -->
             <div class="card">
                 <h2>🚌 Jakasipul Hub</h2>
-                <p>Matatu, Local Routes & Real-time Commuter info.</p>
-                <a href="/support" class="btn">Local Assistance</a>
+                <p>Matatu, Local Commuter Routes & Real-time Informal Transport tracking.</p>
+                <a href="/support" class="btn">Find Local Matatu</a>
             </div>
+
+            <!-- TIER 3: PREMIUM AVIATION -->
             <div class="card" style="border-color: #ffb300;">
                 <h2>✈️ Aviation Hub</h2>
-                <p>Hire Light Aircraft, Private Charters & Safari Circuits.</p>
-                <a href="/support" class="btn" style="background: #ffb300; color: black;">Charter a Plane</a>
+                <p>Charter Light Aircraft & Private Safari Circuits for premium travelers.</p>
+                <a href="/support" class="btn" style="background: #ffb300; color: black;">Hire a Plane</a>
             </div>
         </div>
 
