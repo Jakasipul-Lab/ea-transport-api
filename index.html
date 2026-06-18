@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Osare - East Africa Transit Super Search</title>
+    <title>OSARE - East Africa Transit Super Search</title>
     <style>
         :root {
             --bg: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
@@ -24,7 +24,7 @@
             transition: background 0.4s;
         }
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
             text-align: center;
@@ -33,7 +33,7 @@
         .tagline { font-size: 1.5rem; opacity: 0.95; margin-bottom: 3rem; }
         .cards {
             display: flex;
-            gap: 2rem;
+            gap: 1.5rem;
             justify-content: center;
             flex-wrap: wrap;
         }
@@ -42,24 +42,26 @@
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255,255,255,0.2);
             border-radius: 24px;
-            padding: 2.8rem 2rem;
-            width: 380px;
+            padding: 2.5rem 1.5rem;
+            width: 320px;
             transition: all 0.4s ease;
         }
         .card:hover {
             transform: translateY(-12px);
             box-shadow: 0 25px 50px rgba(0,0,0,0.25);
         }
+        .card h2 { font-size: 1.8rem; margin-bottom: 1rem; }
         .btn {
             display: inline-block;
             margin-top: 1.8rem;
-            padding: 14px 36px;
+            padding: 12px 28px;
             background: #1e40af;
             color: white;
             font-weight: 600;
             border-radius: 50px;
             text-decoration: none;
             transition: all 0.3s;
+            font-size: 14px;
         }
         .nav-hub {
             margin-top: 4rem;
@@ -73,33 +75,40 @@
             font-weight: 600;
             opacity: 0.8;
         }
-        .nav-hub a:hover { opacity: 1; text-decoration: underline; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1 class="logo">OSARE</h1>
-        <p class="tagline">East Africa’s Smart Transit Super Search Engine</p>
+        <p class="tagline">East Africa’s Smart Transit Super Search Hub</p>
 
         <div class="cards">
+            <!-- TIER 1: INTERCITY -->
             <div class="card">
-                <h2>🚄 Easafari Routes</h2>
-                <p>Long-distance travel: SGR, Buses & Intercity options</p>
-                <a href="/help" class="btn">Plan Your Route</a>
+                <h2>🚄 SafariRoutes</h2>
+                <p>Long-distance travel: SGR, Buses & Intercity ticketing.</p>
+                <a href="/help" class="btn">Book Intercity Trip</a>
             </div>
 
+            <!-- TIER 2: LOCAL -->
             <div class="card">
                 <h2>🚌 Jakasipul Hub</h2>
-                <p>Matatu, Local Routes & Commuter Transport</p>
+                <p>Matatu, Local Routes & Real-time Commuter info.</p>
                 <a href="/support" class="btn">Local Assistance</a>
+            </div>
+
+            <!-- TIER 3: PREMIUM AVIATION -->
+            <div class="card" style="border-color: #ffb300;">
+                <h2>✈️ Aviation Hub</h2>
+                <p>Hire Light Aircraft, Private Charters & Safari Circuits.</p>
+                <a href="/support" class="btn" style="background: #ffb300; color: black;">Charter a Plane</a>
             </div>
         </div>
 
         <div class="nav-hub">
             <a href="/about">🏢 Our Offices</a>
-            <a href="/help">❓ Help & Guide</a>
+            <a href="/help">❓ User Guide</a>
             <a href="/support">🛡️ Safety Hub</a>
-            <a href="/admin">📊 Admin Portal</a>
         </div>
 
         <footer style="margin-top: 3rem; opacity: 0.6;">

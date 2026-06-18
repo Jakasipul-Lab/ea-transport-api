@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="OSARE Super Search Engine")
+app = FastAPI(title="OSARE Master Hub")
 
 app.add_middleware(
     CORSMiddleware,
@@ -16,16 +16,7 @@ app.add_middleware(
 @app.get("/about", response_class=HTMLResponse) def about(): return FileResponse("about.html")
 @app.get("/help", response_class=HTMLResponse) def help_p(): return FileResponse("help.html")
 @app.get("/support", response_class=HTMLResponse) def support(): return FileResponse("support.html")
-@app.get("/admin", response_class=HTMLResponse) def admin(): return FileResponse("admin.html")
 @app.get("/verify", response_class=HTMLResponse) def verify(): return FileResponse("verify.html")
-
-@app.get("/api/admin/stats")
-def admin_stats():
-    return {
-        "total_sales": "KES 0",
-        "active_reps": 4,
-        "status": "OSARE Master Hub Online"
-    }
 
 if __name__ == "__main__":
     import uvicorn
