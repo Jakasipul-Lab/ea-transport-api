@@ -5,105 +5,103 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OSARE - East Africa Transit Super Search</title>
     <style>
-        :root {
-            --bg: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-            --card-bg: rgba(255,255,255,0.1);
-            --text: white;
-        }
-        [data-theme="light"] {
-            --bg: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
-            --card-bg: rgba(255,255,255,0.95);
-            --text: #1e3a8a;
-        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
             min-height: 100vh;
-            transition: background 0.4s;
+            display: flex; flex-direction: column;
         }
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-            text-align: center;
+            max-width: 500px; margin: auto; padding: 2rem; text-align: center;
         }
-        .logo { font-size: 5rem; font-weight: 800; margin-bottom: 0.5rem; text-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .tagline { font-size: 1.8rem; font-weight: 600; margin-bottom: 1.5rem; opacity: 1; }
-        .mission { max-width: 700px; margin: 0 auto 3rem auto; font-size: 1.2rem; line-height: 1.6; opacity: 0.9; }
-        .theme-toggle {
-            position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); border: none;
-            width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer;
+        .logo { font-size: 3rem; font-weight: 800; margin-bottom: 2rem; }
+        .search-box {
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);
+            padding: 25px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2);
+            text-align: left;
         }
-        .cards {
-            display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;
-        }
-        .card {
-            background: var(--card-bg); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 24px; padding: 2.8rem 2rem; width: 360px; transition: all 0.4s ease;
-        }
-        .card:hover { transform: translateY(-12px); box-shadow: 0 25px 50px rgba(0,0,0,0.25); }
-        .card h2 { font-size: 1.8rem; margin-bottom: 1rem; }
-        .btn {
-            display: inline-block; margin-top: 1.8rem; padding: 14px 36px; background: #1e40af; color: white;
-            font-weight: 600; border-radius: 50px; text-decoration: none; transition: all 0.3s;
-        }
-        .btn:hover { background: #2563eb; transform: scale(1.05); }
-        .nav-hub { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.2); }
-        .nav-hub a { color: white; text-decoration: none; margin: 0 15px; font-weight: 600; opacity: 0.8; }
-        footer { margin-top: 3rem; opacity: 0.6; font-size: 14px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-size: 14px; opacity: 0.8; }
+        input, select { width: 100%; padding: 12px; border-radius: 10px; border: none; font-size: 16px; color: #1e3a8a; }
+        .btn-search { width: 100%; padding: 15px; background: white; color: #1e3a8a; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        
+        .results-view { display: none; width: 100%; text-align: left; }
+        .result-card { background: white; color: #333; padding: 20px; border-radius: 15px; margin-bottom: 15px; position: relative; border-left: 6px solid #2e7d32; }
+        .tag { position: absolute; top: 10px; right: 10px; font-size: 10px; padding: 3px 8px; border-radius: 10px; font-weight: bold; }
+        .tag-fast { background: #e8f5e9; color: #2e7d32; }
+        .tag-cheap { background: #fff3e0; color: #e65100; }
+        
+        .back-btn { color: white; cursor: pointer; display: inline-block; margin-bottom: 20px; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="container">
-        <button class="theme-toggle" id="themeToggle">🌙</button>
         <h1 class="logo">OSARE</h1>
-        <p class="tagline">East Africa’s Smart Transit Super Search Hub</p>
-        <p class="mission">Osare is a unified transit search and booking platform for East Africa that aggregates trains, buses, and informal transport into a single real-time interface.</p>
 
-        <div class="cards">
-            <!-- TIER 1: INTERCITY -->
-            <div class="card">
-                <h2>🚄 SafariRoutes</h2>
-                <p>Unified long-distance travel: SGR, Regional Buses & Cross-border booking.</p>
-                <a href="/help" class="btn">Find Intercity Trip</a>
-            </div>
-
-            <!-- TIER 2: INFORMAL/LOCAL -->
-            <div class="card">
-                <h2>🚌 Jakasipul Hub</h2>
-                <p>Matatu, Local Commuter Routes & Real-time Informal Transport tracking.</p>
-                <a href="/support" class="btn">Find Local Matatu</a>
-            </div>
-
-            <!-- TIER 3: PREMIUM AVIATION -->
-            <div class="card" style="border-color: #ffb300;">
-                <h2>✈️ Aviation Hub</h2>
-                <p>Charter Light Aircraft & Private Safari Circuits for premium travelers.</p>
-                <a href="/support" class="btn" style="background: #ffb300; color: black;">Hire a Plane</a>
+        <!-- SEARCH SCREEN -->
+        <div id="search-screen">
+            <p style="margin-bottom: 20px; opacity: 0.9;">Your Smart Transit Search Hub</p>
+            <div class="search-box">
+                <div class="form-group">
+                    <label>From</label>
+                    <input type="text" id="origin" value="Nairobi">
+                </div>
+                <div class="form-group">
+                    <label>To</label>
+                    <input type="text" id="destination" value="Mombasa">
+                </div>
+                <div class="form-group">
+                    <label>Travel Date</label>
+                    <input type="date" id="travel-date">
+                </div>
+                <button class="btn-search" onclick="runSearch()">🔍 Search Routes</button>
             </div>
         </div>
 
-        <div class="nav-hub">
-            <a href="/about">🏢 Our Offices</a>
-            <a href="/help">❓ User Guide</a>
-            <a href="/support">🛡️ Safety Hub</a>
-            <a href="/admin">📊 Admin Portal</a>
+        <!-- RESULTS SCREEN -->
+        <div id="results-screen" class="results-view">
+            <span class="back-btn" onclick="showSearch()">← Back to Search</span>
+            <p style="margin-bottom: 15px;">Best options for your journey:</p>
+            
+            <div class="result-card">
+                <span class="tag tag-fast">🟢 FASTEST</span>
+                <strong>🚆 SGR Madaraka Express</strong><br>
+                <small>4h 30m • 08:00 AM</small><br>
+                <p style="margin-top:10px; color:#2e7d32; font-weight:bold;">KES 1,050</p>
+                <button class="btn-search" style="padding:8px; font-size:12px;" onclick="alert('Checkout coming in Week 3!')">Select</button>
+            </div>
+
+            <div class="result-card" style="border-left-color: #e65100;">
+                <span class="tag tag-cheap">🟡 CHEAPEST</span>
+                <strong>🚌 Modern Coast Bus</strong><br>
+                <small>8h 00m • 07:30 AM</small><br>
+                <p style="margin-top:10px; color:#e65100; font-weight:bold;">KES 850</p>
+                <button class="btn-search" style="padding:8px; font-size:12px;">Select</button>
+            </div>
         </div>
 
-        <footer>
-            <p>© 2026 Osare • Built by Nakinson Owang’o</p>
+        <footer style="margin-top: 3rem; opacity: 0.6; font-size: 12px;">
+            <a href="/admin" style="color:white; margin:0 10px;">Admin</a>
+            <a href="/support" style="color:white; margin:0 10px;">Support</a>
+            <p style="margin-top:10px;">© 2026 Osare • Regional Transport Aggregator</p>
         </footer>
     </div>
+
     <script>
-        const toggle = document.getElementById('themeToggle');
-        toggle.addEventListener('click', () => {
-            const current = document.body.getAttribute('data-theme');
-            const next = current === 'light' ? 'dark' : 'light';
-            document.body.setAttribute('data-theme', next);
-            toggle.textContent = next === 'light' ? '☀️' : '🌙';
-        });
+        function runSearch() {
+            document.getElementById('search-screen').style.display = 'none';
+            document.getElementById('results-screen').style.display = 'block';
+        }
+        function showSearch() {
+            document.getElementById('results-screen').style.display = 'none';
+            document.getElementById('search-screen').style.display = 'block';
+        }
+        // Set default date to tomorrow
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        document.getElementById('travel-date').value = tomorrow.toISOString().split('T')[0];
     </script>
 </body>
 </html>
