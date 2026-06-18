@@ -1,9 +1,9 @@
 import os
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+app = FastAPI(title="OSARE Super Search Engine")
 
 app.add_middleware(
     CORSMiddleware,
@@ -12,13 +12,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/", response_class=HTMLResponse)
-def home():
-    return FileResponse("index.html")
+@app.get("/", response_class=HTMLResponse) def home(): return FileResponse("index.html")
+@app.get("/about", response_class=HTMLResponse) def about(): return FileResponse("about.html")
+@app.get("/help", response_class=HTMLResponse) def help_p(): return FileResponse("help.html")
+@app.get("/support", response_class=HTMLResponse) def support(): return FileResponse("support.html")
+@app.get("/admin", response_class=HTMLResponse) def admin(): return FileResponse("admin.html")
+@app.get("/verify", response_class=HTMLResponse) def verify(): return FileResponse("verify.html")
 
-@app.get("/{path:path}", response_class=HTMLResponse)
-def catch_all(path: str):
-    return FileResponse("index.html")
+@app.get("/api/admin/stats")
+def admin_stats():
+    return {
+        "total_sales": "KES 0",
+        "active_reps": 4,
+        "status": "OSARE Master Hub Online"
+    }
 
 if __name__ == "__main__":
     import uvicorn

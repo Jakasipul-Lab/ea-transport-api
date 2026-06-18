@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Command Center • OSARE</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f4f7f6; display: flex; }
+        .sidebar { width: 280px; height: 100vh; background: #1e3a8a; color: white; position: fixed; padding: 40px 20px; }
+        .main-content { margin-left: 320px; padding: 50px; width: calc(100% - 320px); }
+        .nav-link { color: white; text-decoration: none; display: block; padding: 15px; border-radius: 8px; margin-bottom: 12px; font-weight: bold; background: rgba(255,255,255,0.05); }
+        .nav-link:hover { background: rgba(255,255,255,0.2); }
+        .stat-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-bottom: 6px solid #1e3a8a; margin-bottom: 30px; }
+        .value { font-size: 36px; font-weight: bold; color: #1e3a8a; margin-top: 15px; display: block; }
+        .btn-hub { display: inline-block; padding: 12px 25px; background: #1e3a8a; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>OSARE</h2>
+        <p style="opacity:0.6; font-size:11px;">REGIONAL COMMAND CENTER</p>
+        <a href="/" class="nav-link">🏠 Back to Super Search</a>
+        <a href="/admin" class="nav-link" style="background:rgba(255,255,255,0.2)">📊 Sales Intelligence</a>
+        <a href="/verify" class="nav-link">✅ Verify Hub</a>
+        <a href="/support" class="nav-link">🛡️ Safety Desk</a>
+    </div>
+    <div class="main-content">
+        <h1>Executive Overview</h1>
+        <p>Strategic monitoring of the OSARE transit network.</p>
+        
+        <div class="stat-card">
+            <h3>Network Status</h3>
+            <span class="value">OSARE Hub Online</span>
+        </div>
+
+        <div class="stat-card">
+            <h3>Active Regional Reps</h3>
+            <span class="value">4 (Nairobi, Dar, Kampala, Kisumu)</span>
+        </div>
+
+        <a href="/" class="btn-hub">← Return to Main Hub</a>
+    </div>
+</body>
+</html>
