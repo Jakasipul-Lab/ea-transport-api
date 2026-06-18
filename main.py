@@ -1,0 +1,1 @@
+$(cat /root/workspace/final_server.b64)
