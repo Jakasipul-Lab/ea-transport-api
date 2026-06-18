@@ -4,10 +4,12 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y libpq-dev gcc && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt . RUN pip install --no-cache-dir -r requirements.txt
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-EXPOSE 8000
+EXPOSE 10000
 
-CMD ["gunicorn", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "app:app", "--bind", "0.0.0.0:8000"]*
+# Use python -m to avoid module not found errors
+CMD python -m uvicorn app:app --host 0.0.0.0 --port 10000
