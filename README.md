@@ -25,7 +25,10 @@ OSARE solves the fragmentation problem by acting as a high-performance aggregato
 - **Vendor Payouts**: 100% of the base fare goes to the operator, ensuring high partnership retention.
 - **Premium Tiers**: 10% commission on high-value aviation charters and specialized safari circuits.
 
-## 7. Risks & Mitigation
+## 7. Execution Roadmap (Pilot Phase)
+To ensure operational excellence, **Osare will start with 2–3 anchor partners per category** before scaling coverage across the entire region. This focused approach allows us to refine the "Human Handshake" at key stations and ensure 100% reliability for our first wave of travelers.
+
+## 8. Risks & Mitigation
 - **Data Connectivity**: Mitigation via the "Momentum Engine" fallback system and Neon Serverless Postgres for 100% database uptime.
 - **Operator Resistance**: Mitigation via our regional representative network on the ground in Kisumu, Nairobi, and Kampala.
 - **Tech Handshake**: Secure cryptographic hashing to prevent ticket tampering or revenue leakage.
