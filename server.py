@@ -13,8 +13,10 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], all
 def get_db():
     db_url = os.getenv("NEON_DB_URL") or os.getenv("DATA_URL")
     if not db_url: return None
-    try: return psycopg2.connect(db_url)
-    except: return None
+    try:
+        return psycopg2.connect(db_url)
+    except:
+        return None
 
 # --- MIGRATION RUNNER ---
 def run_migrations():
@@ -28,14 +30,22 @@ def run_migrations():
             if os.path.exists(path):
                 with open(path, "r") as f: cur.execute(f.read())
         conn.commit()
-        cur.close(); conn.close()
-    except Exception as e: print(f"Migration Failed: {e}")
+        cur.close()
+        conn.close()
+    except Exception as e: 
+        print(f"Migration Failed: {e}")
 
 @app.on_event("startup")
-def on_startup(): run_migrations()
+def on_startup():
+    run_migrations()
 
-@app.get("/", response_class=HTMLResponse) def home(): return FileResponse("index.html")
-@app.get("/admin", response_class=HTMLResponse) def admin(): return FileResponse("admin.html")
+@app.get("/", response_class=HTMLResponse)
+def home():
+    return FileResponse("index.html")
+
+@app.get("/admin", response_class=HTMLResponse)
+def admin():
+    return FileResponse("admin.html")
 
 # --- AGGREGATOR API ---
 @app.get("/api/search")
