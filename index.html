@@ -3,79 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OSARE - East Africa Transit Super Search</title>
+    <title>Osare - East Africa Transit Super Search</title>
+    <meta name="description" content="Find the best way to travel across Kenya with SGR, Buses & Matatus in one place.">
     <style>
-        :root {
-            --bg: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-            --card-bg: rgba(255,255,255,0.1);
-            --text: white;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        [data-theme="light"] {
-            --bg: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
-            --card-bg: rgba(255,255,255,0.95);
-            --text: #1e3a8a;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
             min-height: 100vh;
-            transition: background 0.4s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .container { max-width: 1000px; margin: 0 auto; padding: 2rem; text-align: center; }
-        .logo { font-size: 4rem; font-weight: 800; margin-bottom: 0.5rem; text-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .tagline { font-size: 1.5rem; opacity: 0.95; }
-        .theme-toggle { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; }
-        .search-demo { max-width: 600px; margin: 2.5rem auto; background: var(--card-bg); backdrop-filter: blur(12px); border-radius: 20px; padding: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        .search-input { width: 100%; padding: 16px 20px; font-size: 1.1rem; border: none; border-radius: 50px; background: rgba(255,255,255,0.9); color: #1e3a8a; }
-        .cards { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem; }
-        .card { background: var(--card-bg); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2); border-radius: 24px; padding: 2.8rem 2rem; width: 380px; transition: all 0.4s ease; }
-        .card:hover { transform: translateY(-12px); box-shadow: 0 25px 50px rgba(0,0,0,0.25); }
-        .btn { display: inline-block; margin-top: 1.8rem; padding: 14px 36px; background: #1e40af; color: white; font-weight: 600; border-radius: 50px; text-decoration: none; transition: all 0.3s; }
-        footer { margin-top: 5rem; opacity: 0.85; }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 2rem;
+        }
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .tagline {
+            font-size: 1.4rem;
+            margin-bottom: 3rem;
+            opacity: 0.95;
+        }
+        .cards {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            width: 380px;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+        .btn {
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 14px 32px;
+            background: white;
+            color: #1e40af;
+            font-weight: 600;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            background: #f8fafc;
+            transform: scale(1.05);
+        }
+        footer {
+            margin-top: 4rem;
+            opacity: 0.8;
+            font-size: 0.95rem;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <button class="theme-toggle" id="themeToggle">🌙</button>
         <h1 class="logo">OSARE</h1>
-        <p class="tagline">East Africa’s Smart Transit Super Search Engine</p>
-
-        <div class="search-demo">
-            <input type="text" id="searchInput" class="search-input" placeholder="Where are you going? e.g. Nairobi to Mombasa">
-            <small style="display:block; margin-top: 10px; opacity: 0.8;">Try it — real search coming soon</small>
-        </div>
-
+        <p class="tagline">Your Super Search Engine for East Africa Transit</p>
+        
         <div class="cards">
+            <!-- Card 1 -->
             <div class="card">
                 <h2>🚄 Easafari Routes</h2>
-                <p>Long-distance travel: SGR, Modern Coast, EasyCoach & more</p>
-                <a href="#" class="btn" onclick="alert('Opening Ticket Gateway...')">Open Easafari Routes</a>
+                <p>Long-distance travel: SGR, Buses & Intercity options</p>
+                <a href="https://easafariroutes.com" target="_blank" class="btn">Go to Easafari Routes</a>
             </div>
+
+            <!-- Card 2 -->
             <div class="card">
                 <h2>🚌 Jakasipul Hub</h2>
-                <p>Matatu, Local Commuter Routes & Real-time Tracking</p>
-                <a href="#" class="btn" onclick="alert('Opening Local Hub...')">Open Jakasipul Hub</a>
+                <p>Matatu, Local Routes & Commuter Transport</p>
+                <a href="https://jakasipul-hub.app" target="_blank" class="btn">Go to Jakasipul Hub</a>
             </div>
         </div>
 
         <footer>
-            <p>© 2026 Osare • Built by Nakinson Owang’o</p>
-            <div style="margin-top:20px;">
-                <a href="/admin" style="color:white; margin:0 10px;">Admin</a>
-                <a href="/support" style="color:white; margin:0 10px;">Support</a>
-                <a href="/help" style="color:white; margin:0 10px;">Help</a>
-            </div>
+            <p>© 2026 Osare • Aggregating Kenya's Transport Network</p>
+            <p style="margin-top: 10px;">
+                <a href="https://github.com/Jakasipul-Lab/ea-transport-api" style="color: white; text-decoration: underline;">
+                    View on GitHub
+                </a>
+            </p>
         </footer>
     </div>
-    <script>
-        const toggle = document.getElementById('themeToggle');
-        toggle.addEventListener('click', () => {
-            const isLight = document.body.getAttribute('data-theme') === 'light';
-            document.body.setAttribute('data-theme', isLight ? 'dark' : 'light');
-            toggle.textContent = isLight ? '🌙' : '☀️';
-        });
-    </script>
 </body>
 </html>
