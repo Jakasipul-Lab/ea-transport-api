@@ -1,1 +1,0 @@
-$(cat /root/workspace/server_content.b64)
