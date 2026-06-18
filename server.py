@@ -12,8 +12,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/", response_class=HTMLResponse) def home(): return FileResponse("index.html")
-@app.get("/{path:path}", response_class=HTMLResponse) def catch_all(path: str): return FileResponse("index.html")
+@app.get("/", response_class=HTMLResponse)
+def home():
+    return FileResponse("index.html")
+
+@app.get("/{path:path}", response_class=HTMLResponse)
+def catch_all(path: str):
+    return FileResponse("index.html")
 
 if __name__ == "__main__":
     import uvicorn
