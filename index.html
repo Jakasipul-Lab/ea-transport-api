@@ -3,105 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OSARE - East Africa Transit Super Search</title>
+    <title>Osare - East Africa Transit Super Search</title>
+    <meta name="description" content="Find the best way to travel across Kenya with SGR, Buses & Matatus in one place.">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
             background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
             color: white;
             min-height: 100vh;
-            display: flex; flex-direction: column;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .container {
-            max-width: 500px; margin: auto; padding: 2rem; text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 2rem;
         }
-        .logo { font-size: 3rem; font-weight: 800; margin-bottom: 2rem; }
-        .search-box {
-            background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);
-            padding: 25px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2);
-            text-align: left;
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-size: 14px; opacity: 0.8; }
-        input, select { width: 100%; padding: 12px; border-radius: 10px; border: none; font-size: 16px; color: #1e3a8a; }
-        .btn-search { width: 100%; padding: 15px; background: white; color: #1e3a8a; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        
-        .results-view { display: none; width: 100%; text-align: left; }
-        .result-card { background: white; color: #333; padding: 20px; border-radius: 15px; margin-bottom: 15px; position: relative; border-left: 6px solid #2e7d32; }
-        .tag { position: absolute; top: 10px; right: 10px; font-size: 10px; padding: 3px 8px; border-radius: 10px; font-weight: bold; }
-        .tag-fast { background: #e8f5e9; color: #2e7d32; }
-        .tag-cheap { background: #fff3e0; color: #e65100; }
-        
-        .back-btn { color: white; cursor: pointer; display: inline-block; margin-bottom: 20px; font-weight: bold; }
+        .tagline {
+            font-size: 1.4rem;
+            margin-bottom: 3rem;
+            opacity: 0.95;
+        }
+        .cards {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            width: 380px;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+        .btn {
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 14px 32px;
+            background: white;
+            color: #1e40af;
+            font-weight: 600;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            background: #f8fafc;
+            transform: scale(1.05);
+        }
+        footer {
+            margin-top: 4rem;
+            opacity: 0.8;
+            font-size: 0.95rem;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1 class="logo">OSARE</h1>
+        <p class="tagline">Your Super Search Engine for East Africa Transit</p>
+        
+        <div class="cards">
+            <!-- Card 1 -->
+            <div class="card">
+                <h2>🚄 Easafari Routes</h2>
+                <p>Long-distance travel: SGR, Buses & Intercity options</p>
+                <a href="https://easafariroutes.com" target="_blank" class="btn">Go to Easafari Routes</a>
+            </div>
 
-        <!-- SEARCH SCREEN -->
-        <div id="search-screen">
-            <p style="margin-bottom: 20px; opacity: 0.9;">Your Smart Transit Search Hub</p>
-            <div class="search-box">
-                <div class="form-group">
-                    <label>From</label>
-                    <input type="text" id="origin" value="Nairobi">
-                </div>
-                <div class="form-group">
-                    <label>To</label>
-                    <input type="text" id="destination" value="Mombasa">
-                </div>
-                <div class="form-group">
-                    <label>Travel Date</label>
-                    <input type="date" id="travel-date">
-                </div>
-                <button class="btn-search" onclick="runSearch()">🔍 Search Routes</button>
+            <!-- Card 2 -->
+            <div class="card">
+                <h2>🚌 Jakasipul Hub</h2>
+                <p>Matatu, Local Routes & Commuter Transport</p>
+                <a href="https://jakasipul-hub.app" target="_blank" class="btn">Go to Jakasipul Hub</a>
             </div>
         </div>
 
-        <!-- RESULTS SCREEN -->
-        <div id="results-screen" class="results-view">
-            <span class="back-btn" onclick="showSearch()">← Back to Search</span>
-            <p style="margin-bottom: 15px;">Best options for your journey:</p>
-            
-            <div class="result-card">
-                <span class="tag tag-fast">🟢 FASTEST</span>
-                <strong>🚆 SGR Madaraka Express</strong><br>
-                <small>4h 30m • 08:00 AM</small><br>
-                <p style="margin-top:10px; color:#2e7d32; font-weight:bold;">KES 1,050</p>
-                <button class="btn-search" style="padding:8px; font-size:12px;" onclick="alert('Checkout coming in Week 3!')">Select</button>
-            </div>
-
-            <div class="result-card" style="border-left-color: #e65100;">
-                <span class="tag tag-cheap">🟡 CHEAPEST</span>
-                <strong>🚌 Modern Coast Bus</strong><br>
-                <small>8h 00m • 07:30 AM</small><br>
-                <p style="margin-top:10px; color:#e65100; font-weight:bold;">KES 850</p>
-                <button class="btn-search" style="padding:8px; font-size:12px;">Select</button>
-            </div>
-        </div>
-
-        <footer style="margin-top: 3rem; opacity: 0.6; font-size: 12px;">
-            <a href="/admin" style="color:white; margin:0 10px;">Admin</a>
-            <a href="/support" style="color:white; margin:0 10px;">Support</a>
-            <p style="margin-top:10px;">© 2026 Osare • Regional Transport Aggregator</p>
+        <footer>
+            <p>© 2026 Osare • Aggregating Kenya's Transport Network</p>
+            <p style="margin-top: 10px;">
+                <a href="https://github.com/Jakasipul-Lab/ea-transport-api" style="color: white; text-decoration: underline;">
+                    View on GitHub
+                </a>
+            </p>
         </footer>
     </div>
-
-    <script>
-        function runSearch() {
-            document.getElementById('search-screen').style.display = 'none';
-            document.getElementById('results-screen').style.display = 'block';
-        }
-        function showSearch() {
-            document.getElementById('results-screen').style.display = 'none';
-            document.getElementById('search-screen').style.display = 'block';
-        }
-        // Set default date to tomorrow
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        document.getElementById('travel-date').value = tomorrow.toISOString().split('T')[0];
-    </script>
 </body>
 </html>
