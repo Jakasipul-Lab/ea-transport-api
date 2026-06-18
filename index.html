@@ -31,73 +31,46 @@
         }
         .logo { font-size: 4rem; font-weight: 800; margin-bottom: 0.5rem; text-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         .tagline { font-size: 1.5rem; opacity: 0.95; margin-bottom: 3rem; }
+        .theme-toggle {
+            position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); border: none;
+            width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer;
+        }
         .cards {
-            display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
+            display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;
         }
         .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 24px;
-            padding: 2.5rem 1.5rem;
-            width: 320px;
-            transition: all 0.4s ease;
+            background: var(--card-bg); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 24px; padding: 2.8rem 2rem; width: 350px; transition: all 0.4s ease;
         }
-        .card:hover {
-            transform: translateY(-12px);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
-        }
+        .card:hover { transform: translateY(-12px); box-shadow: 0 25px 50px rgba(0,0,0,0.25); }
         .card h2 { font-size: 1.8rem; margin-bottom: 1rem; }
         .btn {
-            display: inline-block;
-            margin-top: 1.8rem;
-            padding: 12px 28px;
-            background: #1e40af;
-            color: white;
-            font-weight: 600;
-            border-radius: 50px;
-            text-decoration: none;
-            transition: all 0.3s;
-            font-size: 14px;
+            display: inline-block; margin-top: 1.8rem; padding: 14px 36px; background: #1e40af; color: white;
+            font-weight: 600; border-radius: 50px; text-decoration: none; transition: all 0.3s;
         }
-        .nav-hub {
-            margin-top: 4rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.2);
-        }
-        .nav-hub a {
-            color: white;
-            text-decoration: none;
-            margin: 0 15px;
-            font-weight: 600;
-            opacity: 0.8;
-        }
+        .btn:hover { background: #2563eb; transform: scale(1.05); }
+        .nav-hub { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.2); }
+        .nav-hub a { color: white; text-decoration: none; margin: 0 15px; font-weight: 600; opacity: 0.8; }
+        footer { margin-top: 3rem; opacity: 0.6; font-size: 14px; }
     </style>
 </head>
 <body>
     <div class="container">
+        <button class="theme-toggle" id="themeToggle">🌙</button>
         <h1 class="logo">OSARE</h1>
         <p class="tagline">East Africa’s Smart Transit Super Search Hub</p>
 
         <div class="cards">
-            <!-- TIER 1: INTERCITY -->
             <div class="card">
                 <h2>🚄 SafariRoutes</h2>
                 <p>Long-distance travel: SGR, Buses & Intercity ticketing.</p>
-                <a href="/help" class="btn">Book Intercity Trip</a>
+                <a href="/help" class="btn">Plan Your Route</a>
             </div>
-
-            <!-- TIER 2: LOCAL -->
             <div class="card">
                 <h2>🚌 Jakasipul Hub</h2>
                 <p>Matatu, Local Routes & Real-time Commuter info.</p>
                 <a href="/support" class="btn">Local Assistance</a>
             </div>
-
-            <!-- TIER 3: PREMIUM AVIATION -->
             <div class="card" style="border-color: #ffb300;">
                 <h2>✈️ Aviation Hub</h2>
                 <p>Hire Light Aircraft, Private Charters & Safari Circuits.</p>
@@ -109,11 +82,21 @@
             <a href="/about">🏢 Our Offices</a>
             <a href="/help">❓ User Guide</a>
             <a href="/support">🛡️ Safety Hub</a>
+            <a href="/admin">📊 Admin Portal</a>
         </div>
 
-        <footer style="margin-top: 3rem; opacity: 0.6;">
+        <footer>
             <p>© 2026 Osare • Built by Nakinson Owang’o</p>
         </footer>
     </div>
+    <script>
+        const toggle = document.getElementById('themeToggle');
+        toggle.addEventListener('click', () => {
+            const current = document.body.getAttribute('data-theme');
+            const next = current === 'light' ? 'dark' : 'light';
+            document.body.setAttribute('data-theme', next);
+            toggle.textContent = next === 'light' ? '☀️' : '🌙';
+        });
+    </script>
 </body>
 </html>
