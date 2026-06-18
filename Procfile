@@ -1,1 +1,1 @@
-$(cat /root/workspace/final_procfile.b64)
+d2ViOiB1dmljb3JuIG1haW46YXBwIC0taG9zdCAwLjAuMC4wIC0tcG9ydCAkUE9SVAo=
