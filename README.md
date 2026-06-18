@@ -7,12 +7,17 @@ Osare is a unified transit search and booking platform for East Africa that aggr
 Public transit data in East Africa is highly fragmented. The SGR uses a closed system, while long-distance buses and Matatus are managed by dozens of independent SACCOs. This lack of centralized data leads to travel uncertainty, wasted time, and missed revenue for operators.
 
 ## 3. Osare Solution
-OSARE solves the fragmentation problem by acting as a high-performance aggregator. By combining official APIs, secure web scrapers, and crowdsourced telemetry, we provide a "Super Search" engine that delivers real-time options to any traveler's smartphone.
+OSARE solves the fragmentation problem by acting as a high-performance aggregator. By combining official APIs, secure web scrapers, and crowdsourced telemetry, we provide a "Super Search" engine that delivers real-time options to any traveler's smartphone. To ensure operational excellence, **Osare will start with 2–3 anchor partners per category** before scaling coverage across the entire region.
 
 ## 4. Data Acquisition Architecture
-- **SGR Layer (Madaraka Express)**: Utilizing headless web scrapers (Playwright/Puppeteer) to securely query real-time availability and schedules from the official portal.
-- **Long-Distance Bus Layer**: Driving a "Marketing Channel" pitch to major lines (EasyCoach, Modern Coast) for read-only API access to their live inventory.
-- **Matatu Layer (Informal Transport)**: Partnering with SACCO management platforms to pipe live GPS location data from vehicles directly into our map interface.
+### SGR Layer (Madaraka Express)
+Utilizing headless web scrapers (Playwright/Puppeteer) to securely query real-time availability and schedules from the official portal.
+
+### Bus Layer
+Driving a "Marketing Channel" pitch to major lines (EasyCoach, Modern Coast) for read-only API access to their live inventory.
+
+### Matatu Layer (Informal Transport)
+Partnering with SACCO management platforms to pipe live GPS location data from vehicles directly into our map interface.
 
 ## 5. User Experience Flow
 1. **Search**: Simple input for origin, destination, and date.
@@ -25,10 +30,7 @@ OSARE solves the fragmentation problem by acting as a high-performance aggregato
 - **Vendor Payouts**: 100% of the base fare goes to the operator, ensuring high partnership retention.
 - **Premium Tiers**: 10% commission on high-value aviation charters and specialized safari circuits.
 
-## 7. Execution Roadmap (Pilot Phase)
-To ensure operational excellence, **Osare will start with 2–3 anchor partners per category** before scaling coverage across the entire region. This focused approach allows us to refine the "Human Handshake" at key stations and ensure 100% reliability for our first wave of travelers.
-
-## 8. Risks & Mitigation
+## 7. Risks & Mitigation
 - **Data Connectivity**: Mitigation via the "Momentum Engine" fallback system and Neon Serverless Postgres for 100% database uptime.
 - **Operator Resistance**: Mitigation via our regional representative network on the ground in Kisumu, Nairobi, and Kampala.
 - **Tech Handshake**: Secure cryptographic hashing to prevent ticket tampering or revenue leakage.
