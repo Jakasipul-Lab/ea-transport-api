@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="OSARE Super Search Engine")
+app = FastAPI(title="OSARE Transit")
 
 app.add_middleware(
     CORSMiddleware,
@@ -16,7 +16,6 @@ app.add_middleware(
 def home():
     return FileResponse("index.html")
 
-# Fallback to keep links working during transition
 @app.get("/{path:path}", response_class=HTMLResponse)
 def catch_all(path: str):
     return FileResponse("index.html")
