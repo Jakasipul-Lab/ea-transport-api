@@ -3,58 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Hub • EA SafariRoutes</title>
+    <title>Admin Command Center • OSARE</title>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: #f4f7f6; display: flex; }
-        .sidebar { width: 260px; height: 100vh; background: #1b5e20; color: white; position: fixed; padding: 30px 20px; }
-        .main-content { margin-left: 300px; padding: 40px; width: 100%; }
-        .nav-link { color: white; text-decoration: none; display: block; padding: 12px; border-radius: 6px; margin-bottom: 10px; font-weight: bold; background: rgba(255,255,255,0.05); transition: background 0.3s; }
-        .nav-link:hover { background: rgba(255,255,255,0.2); }
-        .btn-cmd { padding: 12px 25px; background: #2e7d32; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-right: 10px; transition: transform 0.3s; }
-        .btn-cmd:hover { transform: scale(1.05); }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; margin-bottom: 40px; }
-        .stat-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 5px solid #2e7d32; }
-        .stat-card h3 { margin: 0; color: #666; font-size: 14px; text-transform: uppercase; }
-        .stat-card .value { font-size: 32px; font-weight: bold; color: #2e7d32; margin-top: 10px; display: block; }
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
-        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background: #f8f9fa; color: #1b5e20; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f4f7f6; display: flex; }
+        .sidebar { width: 280px; height: 100vh; background: #1e3a8a; color: white; position: fixed; padding: 40px 20px; }
+        .main-content { margin-left: 320px; padding: 50px; width: calc(100% - 320px); }
+        .btn-cmd { padding: 12px 25px; background: #1e3a8a; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-right: 10px; }
+        .stat-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-bottom: 6px solid #1e3a8a; }
+        .value { font-size: 36px; font-weight: bold; color: #1e3a8a; margin-top: 15px; display: block; }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <h2>SafariRoutes</h2>
-        <p style="opacity:0.7; font-size:11px;">REGIONAL COMMAND</p>
-        <hr style="opacity:0.1; margin: 20px 0;">
-        <a href="/" class="nav-link">🏠 Back to Site</a>
-        <a href="/admin" class="nav-link" style="background:rgba(255,255,255,0.2)">📊 Dashboard</a>
-        <a href="/verify" class="nav-link">✅ Verify Codes</a>
-        <a href="/support" class="nav-link">🛡️ Safety Hub</a>
+        <h2>OSARE</h2>
+        <p style="opacity:0.6; font-size:11px;">REGIONAL SALES COMMAND</p>
+        <a href="/" style="color:white; display:block; margin-top:30px; text-decoration:none;">← Back to Super Search</a>
     </div>
-
     <div class="main-content">
-        <div class="action-bar" style="margin-bottom:40px;">
-            <button class="btn-cmd" onclick="alert('Verifying M-PESA Reference... Done! Payment Linked.')">💳 Verify M-PESA Ref</button>
-            <button class="btn-cmd" onclick="alert('Generating Monthly Commission CSV... Download Started.')">📑 Download CSV</button>
-            <button class="btn-cmd" style="background:#555" onclick="alert('System Health: Neon DB Connected | Render Engine: Optimal')">⚙️ System Health</button>
+        <div style="margin-bottom:40px;">
+            <button class="btn-cmd" onclick="alert('System Health: Optimal | Neon DB Connected')">⚙️ System Health</button>
+            <button class="btn-cmd" onclick="alert('Preparing M-PESA Verification...')">💳 Verify M-PESA Ref</button>
+            <button class="btn-cmd" onclick="alert('Generating Report...')">📑 Download CSV</button>
         </div>
-
-        <h1>Sales Command Overview</h1>
-        <p>Real-time monitoring of East African transport commissions.</p>
-        
-        <div class="stats-grid">
-            <div class="stat-card"><h3>Total Sales</h3><span class="value">$12,482</span></div>
-            <div class="stat-card"><h3>Net 5% Fee</h3><span class="value">$624.10</span></div>
-            <div class="stat-card"><h3>Active Station Reps</h3><span class="value">4</span></div>
+        <h1>Executive Overview</h1>
+        <div class="stat-card">
+            <h3>Total Commission Revenue (5-10%)</h3>
+            <span class="value">KES 0.00</span>
         </div>
-
-        <h2>Recent Inter-City Transactions</h2>
-        <table>
-            <thead><tr><th>Passenger</th><th>Route</th><th>Status</th></tr></thead>
-            <tbody>
-                <tr><td><strong>Amiri Swahili</strong></td><td>DAR ➔ DOM</td><td><span style="color:#2e7d32; font-weight:bold;">PAID</span></td></tr>
-            </tbody>
-        </table>
     </div>
 </body>
 </html>

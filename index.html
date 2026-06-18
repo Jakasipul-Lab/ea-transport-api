@@ -3,104 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EA SafariRoutes - Official Ticketing</title>
+    <title>OSARE - East Africa Transit Super Search</title>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; }
-        .container { max-width: 600px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-        .header { text-align: center; border-bottom: 2px solid #2e7d32; padding-bottom: 10px; margin-bottom: 20px; }
-        h1 { color: #2e7d32; margin: 0; font-size: 26px; }
-        .route-card { border: 1px solid #eee; padding: 15px; margin-bottom: 15px; border-radius: 8px; background: #fff; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid #2e7d32; }
-        .btn { padding: 12px 24px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-bottom: 10px; }
-        .payment-modal { display: none; background: #fffde7; border: 2px solid #fbc02d; padding: 20px; border-radius: 12px; margin-top: 20px; text-align: left; }
-        .btn-mpesa { background: #2e7d32; }
-        .btn-airtel { background: #ff0000; }
-        .btn-mtn { background: #ffcc00; color: black; }
-        .success-box { display: none; background: #e8f5e9; border: 2px solid #2e7d32; padding: 25px; border-radius: 12px; text-align: center; margin-top: 20px; }
-        .code { font-size: 32px; font-weight: bold; color: #1b5e20; letter-spacing: 4px; display: block; margin: 15px 0; }
+        :root {
+            --bg: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            --card-bg: rgba(255,255,255,0.1);
+            --text: white;
+        }
+        [data-theme="light"] {
+            --bg: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+            --card-bg: rgba(255,255,255,0.95);
+            --text: #1e3a8a;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background 0.4s;
+        }
+        .container { max-width: 1000px; margin: 0 auto; padding: 2rem; text-align: center; }
+        .logo { font-size: 4rem; font-weight: 800; margin-bottom: 0.5rem; text-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .tagline { font-size: 1.5rem; opacity: 0.95; }
+        .theme-toggle { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; }
+        .search-demo { max-width: 600px; margin: 2.5rem auto; background: var(--card-bg); backdrop-filter: blur(12px); border-radius: 20px; padding: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .search-input { width: 100%; padding: 16px 20px; font-size: 1.1rem; border: none; border-radius: 50px; background: rgba(255,255,255,0.9); color: #1e3a8a; }
+        .cards { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem; }
+        .card { background: var(--card-bg); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2); border-radius: 24px; padding: 2.8rem 2rem; width: 380px; transition: all 0.4s ease; }
+        .card:hover { transform: translateY(-12px); box-shadow: 0 25px 50px rgba(0,0,0,0.25); }
+        .btn { display: inline-block; margin-top: 1.8rem; padding: 14px 36px; background: #1e40af; color: white; font-weight: 600; border-radius: 50px; text-decoration: none; transition: all 0.3s; }
+        footer { margin-top: 5rem; opacity: 0.85; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>EA SafariRoutes</h1>
-            <p>Authorized Digital Ticketing Gateway</p>
+        <button class="theme-toggle" id="themeToggle">🌙</button>
+        <h1 class="logo">OSARE</h1>
+        <p class="tagline">East Africa’s Smart Transit Super Search Engine</p>
+
+        <div class="search-demo">
+            <input type="text" id="searchInput" class="search-input" placeholder="Where are you going? e.g. Nairobi to Mombasa">
+            <small style="display:block; margin-top: 10px; opacity: 0.8;">Try it — real search coming soon</small>
         </div>
 
-        <div id="main-view">
-            <p>Select your route to generate a booking code:</p>
-            <div id="route-list"><p>Connecting to regional servers...</p></div>
+        <div class="cards">
+            <div class="card">
+                <h2>🚄 Easafari Routes</h2>
+                <p>Long-distance travel: SGR, Modern Coast, EasyCoach & more</p>
+                <a href="#" class="btn" onclick="alert('Opening Ticket Gateway...')">Open Easafari Routes</a>
+            </div>
+            <div class="card">
+                <h2>🚌 Jakasipul Hub</h2>
+                <p>Matatu, Local Commuter Routes & Real-time Tracking</p>
+                <a href="#" class="btn" onclick="alert('Opening Local Hub...')">Open Jakasipul Hub</a>
+            </div>
         </div>
 
-        <div id="payment-view" class="payment-modal">
-            <h3 style="margin-top:0;">💳 Payment Gateway</h3>
-            <p>Total Fare (incl. 5% fee): <strong id="total-amt">0</strong> <span id="curr-code"></span></p>
-            <hr>
-            <p>Select your payment method below:</p>
-            
-            <button class="btn btn-mpesa" onclick="startPayment('MPESA')">📱 Pay via M-PESA</button>
-            <button class="btn btn-airtel" onclick="startPayment('AIRTEL')">📱 Pay via Airtel Money</button>
-            <button class="btn btn-mtn" onclick="startPayment('MTN')">📱 Pay via MTN Mobile Money</button>
-
-            <p style="font-size:12px; color:#666; margin-top:15px;">
-                <strong>Instructions:</strong> Use your name as the reference. Once you receive the confirmation SMS from your provider, click the button below to issue your ticket.
-            </p>
-            <button class="btn" style="background:#555;" onclick="finalize()">I Have Received SMS - Issue My Ticket</button>
-        </div>
-
-        <div id="success-view" class="success-box">
-            <h2 style="color:#2e7d32; margin-top:0;">Success! ✅</h2>
-            <p>Your SafariRoutes Tracking Code:</p>
-            <span class="code" id="final-code">-------</span>
-            <p><small>Present this code and your payment SMS to the clerk for your seat assignment.</small></p>
-            <button class="btn" onclick="location.reload()">Book Another Trip</button>
-        </div>
-
-        <div style="margin-top:40px; text-align:center; font-size:14px; border-top:1px solid #eee; padding-top:20px;">
-            <a href="/support" style="color:#2e7d32; text-decoration:none; font-weight:bold; display:block; margin-bottom:10px;">⚠️ SAFETY & SUPPORT HUB</a>
-            <a href="/help" style="color:#2e7d32; text-decoration:none; margin:0 10px;">User Guide</a>
-            <a href="/about" style="color:#2e7d32; text-decoration:none; margin:0 10px;">Our Offices</a>
-            <a href="/admin" style="color:#2e7d32; text-decoration:none; margin:0 10px;">Admin</a>
-        </div>
+        <footer>
+            <p>© 2026 Osare • Built by Nakinson Owang’o</p>
+            <div style="margin-top:20px;">
+                <a href="/admin" style="color:white; margin:0 10px;">Admin</a>
+                <a href="/support" style="color:white; margin:0 10px;">Support</a>
+                <a href="/help" style="color:white; margin:0 10px;">Help</a>
+            </div>
+        </footer>
     </div>
-
     <script>
-        let allRoutes = [];
-        let selectedRoute = null;
-        async function load() {
-            const res = await fetch('/api/routes');
-            allRoutes = await res.json();
-            const list = document.getElementById('route-list');
-            list.innerHTML = '';
-            allRoutes.forEach(r => {
-                const card = document.createElement('div');
-                card.className = 'route-card';
-                card.innerHTML = '<div><strong>' + r.origin + ' to ' + r.destination + '</strong><br><small>' + r.operator + '</small></div><button class="btn" style="width:auto; margin:0;" onclick="startBooking(\'' + r.route_id + '\')">Select</button>';
-                list.appendChild(card);
-            });
-        }
-        function startBooking(id) {
-            selectedRoute = allRoutes.find(x => x.route_id === id);
-            document.getElementById('total-amt').innerText = Math.round(selectedRoute.base_price * 1.05).toLocaleString();
-            document.getElementById('curr-code').innerText = selectedRoute.currency;
-            document.getElementById('main-view').style.display = 'none';
-            document.getElementById('payment-view').style.display = 'block';
-        }
-        function startPayment(method) {
-            alert('Initiating ' + method + ' payment... Please check your phone for a prompt or use the operator Paybill at the station.');
-        }
-        async function finalize() {
-            const name = prompt('Enter passenger name (As on ID):') || 'Guest';
-            const res = await fetch('/api/book', { 
-                method: 'POST', 
-                headers: { 'Content-Type': 'application/json' }, 
-                body: JSON.stringify({ route_id: selectedRoute.route_id, operator: selectedRoute.operator, passenger_name: name, base_price: selectedRoute.base_price }) 
-            });
-            const data = await res.json();
-            document.getElementById('payment-view').style.display = 'none';
-            document.getElementById('success-view').style.display = 'block';
-            document.getElementById('final-code').innerText = data.code;
-        }
-        load();
+        const toggle = document.getElementById('themeToggle');
+        toggle.addEventListener('click', () => {
+            const isLight = document.body.getAttribute('data-theme') === 'light';
+            document.body.setAttribute('data-theme', isLight ? 'dark' : 'light');
+            toggle.textContent = isLight ? '🌙' : '☀️';
+        });
     </script>
 </body>
 </html>
