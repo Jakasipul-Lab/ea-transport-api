@@ -1,9 +1,26 @@
 import os
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+import databases
 
-app = FastAPI()
+# Database connection URL
+DATABASE_URL = os.environ.get("NEON_URL")
+
+# Define the lifespan to handle database connection safely
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup: Connect to DB
+    database = databases.Database(DATABASE_URL)
+    await database.connect()
+    app.state.database = database
+    yield
+    # Shutdown: Disconnect from DB
+    await database.disconnect()
+
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -11,6 +28,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+class SearchRequest(BaseModel):
+    destination: str
 
 @app.get("/", response_class=HTMLResponse)
 def home():
@@ -21,23 +41,14 @@ def catch_all(path: str):
     if os.path.exists(path):
         return FileResponse(path)
     return FileResponse("index.html")
-# --- ADD-ON: Transport Search Feature ---
-from pydantic import BaseModel
-import databases
-
-db = databases.Database(os.environ.get("NEON_URL"))
-
-class SearchRequest(BaseModel):
-    destination: str
 
 @app.post("/api/search")
 async def search_transport(req: SearchRequest):
-    await db.connect()
+    # Use the database instance from app.state
     query = "SELECT * FROM transport_options WHERE destination = :dest"
-    results = await db.fetch_all(query=query, values={"dest": req.destination})
-    await db.disconnect()
+    results = await app.state.database.fetch_all(query=query, values={"dest": req.destination})
     return [dict(row) for row in results]
-# --- END ADD-ON ---
+
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 10000))
