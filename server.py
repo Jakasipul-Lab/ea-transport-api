@@ -13,6 +13,8 @@ DATABASE_URL = os.environ.get("NEON_URL")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup: Connect to DB
+    import os
+print(f"DEBUG: DATABASE_URL is {os.environ.get('DATABASE_URL')}")
     database = databases.Database(DATABASE_URL)
     await database.connect()
     app.state.database = database
