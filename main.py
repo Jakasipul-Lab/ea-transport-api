@@ -1,1 +1,28 @@
-aW1wb3J0IG9zCmZyb20gZmFzdGFwaSBpbXBvcnQgRmFzdEFQSQpmcm9tIGZhc3RhcGkucmVzcG9uc2VzIGltcG9ydCBIVE1MUmVzcG9uc2UsIEZpbGVSZXNwb25zZQpmcm9tIGZhc3RhcGkubWlkZGxld2FyZS5jb3JzIGltcG9ydCBDT1JTTWlkZGxld2FyZQoKYXBwID0gRmFzdEFQSSgpCgphcHAuYWRkX21pZGRsZXdhcmUoCiAgICBDT1JTTWlkZGxld2FyZSwKICAgIGFsbG93X29yaWdpbnM9WyIqIl0sCiAgICBhbGxvd19tZXRob2RzPVsiKiJdLAogICAgYWxsb3dfaGVhZGVycz1bIioiXSwKKQoKQGFwcC5nZXQoIi8iLCByZXNwb25zZV9jbGFzcz1IVE1MUmVzcG9uc2UpCmRlZiBob21lKCk6CiAgICByZXR1cm4gRmlsZVJlc3BvbnNlKCJpbmRleC5odG1sIikKCkBhcHAuZ2V0KCIve3BhdGg6cGF0aH0iLCByZXNwb25zZV9jbGFzcz1IVE1MUmVzcG9uc2UpCmRlZiBjYXRjaF9hbGwocGF0aDogc3RyKToKICAgIGlmIG9zLnBhdGguZXhpc3RzKHBhdGgpOgogICAgICAgIHJldHVybiBGaWxlUmVzcG9uc2UocGF0aCkKICAgIHJldHVybiBGaWxlUmVzcG9uc2UoImluZGV4Lmh0bWwiKQoKaWYgX19uYW1lX18gPT0gIl9fbWFpbl9fIjoKICAgIGltcG9ydCB1dmljb3JuCiAgICBwb3J0ID0gaW50KG9zLmVudmlyb24uZ2V0KCJQT1JUIiwgMTAwMDApKQogICAgdXZpY29ybi5ydW4oYXBwLCBob3N0PSIwLjAuMC4wIiwgcG9ydD1wb3J0KQo=
+import os
+from fastapi import FastAPI
+from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/", response_class=HTMLResponse)
+def home():
+    return FileResponse("index.html")
+
+@app.get("/{path:path}", response_class=HTMLResponse)
+def catch_all(path: str):
+    if os.path.exists(path):
+        return FileResponse(path)
+    return FileResponse("index.html")
+
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.environ.get("PORT", 10000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
