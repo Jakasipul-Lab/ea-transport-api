@@ -1,1 +1,1 @@
-d2ViOiB1dmljb3JuIG1haW46YXBwIC0taG9zdCAwLjAuMC4wIC0tcG9ydCAkUE9SVAo=
+$(cat /root/workspace/proc.b64)
