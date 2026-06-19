@@ -1,1 +1,1 @@
-web: uvicorn main:app --host 0.0.0.0 --port $PORT
+d2ViOiB1dmljb3JuIG1haW46YXBwIC0taG9zdCAwLjAuMC4wIC0tcG9ydCAkUE9SVA==

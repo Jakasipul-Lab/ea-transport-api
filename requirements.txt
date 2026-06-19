@@ -1,2 +1,1 @@
-fastapi
-uvicorn
+ZmFzdGFwaQp1dmljb3Ju
