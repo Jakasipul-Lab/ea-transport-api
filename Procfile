@@ -1,1 +1,1 @@
-ZDJWaU9pQjFkbWxqYjNKdUlHMWhhVzQ2WVhCd0lDMHRhRzl6ZENBd0xqQXVNQzR3SUMwdGNHOXlkQ0FrVUU5U1ZBbz0=
+web: uvicorn main:app --host 0.0.0.0 --port $PORT
