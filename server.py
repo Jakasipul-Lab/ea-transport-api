@@ -10,18 +10,20 @@ import databases
 DATABASE_URL = os.environ.get("NEON_URL")
 
 # Define the lifespan to handle database connection safely
+# Place 'import os' at the very top of your server.py file
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup: Connect to DB
-    import os
-print(f"DEBUG: DATABASE_URL is {os.environ.get('DATABASE_URL')}")
+    # Ensure this print is indented with 4 spaces to match the lines below
+    print(f"DEBUG: DATABASE_URL is {os.environ.get('DATABASE_URL')}")
+    
     database = databases.Database(DATABASE_URL)
     await database.connect()
     app.state.database = database
     yield
     # Shutdown: Disconnect from DB
     await database.disconnect()
-
 app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
