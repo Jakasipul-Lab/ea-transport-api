@@ -31,6 +31,7 @@ app.add_middleware(
 
 class SearchRequest(BaseModel):
     destination: str
+    category: str = "tourist"  # This allows the search to handle different types
 
 @app.get("/", response_class=HTMLResponse)
 def home():
