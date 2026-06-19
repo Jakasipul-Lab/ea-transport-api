@@ -45,9 +45,12 @@ def catch_all(path: str):
 
 @app.post("/api/search")
 async def search_transport(req: SearchRequest):
-    # Use the database instance from app.state
-    query = "SELECT * FROM transport_options WHERE destination = :dest"
-    results = await app.state.database.fetch_all(query=query, values={"dest": req.destination})
+    # This queries your existing table, filtering by both destination and category
+    query = "SELECT * FROM transport_options WHERE destination = :dest AND category = :cat"
+    results = await app.state.database.fetch_all(
+        query=query, 
+        values={"dest": req.destination, "cat": req.category}
+    )
     return [dict(row) for row in results]
 
 if __name__ == "__main__":
