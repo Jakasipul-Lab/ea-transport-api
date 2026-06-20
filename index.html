@@ -126,11 +126,7 @@
                     </div>
                 </div>
             `).join('');
-       function showCode() {
-    const code = 'SR-' + Math.random().toString(36).substr(2, 6).toUpperCase();
-    document.getElementById('generatedCode').innerText = code;
-    document.getElementById('codeModal').style.display = 'flex';
-}
+    
         document.querySelectorAll('.tab').forEach(tab => {
             tab.onclick = () => {
                 document.querySelector('.tab.active').classList.remove('active');
