@@ -60,7 +60,26 @@ async def search_transport(req: SearchRequest):
         SELECT * FROM transport_options
         WHERE destination = :dest AND category = :cat
     """
+results = await app.state.database.fetch_all(
+        query=query,
+        values={
+            "dest": req.destination,
+            "cat": req.category
+        }
+    )
 
+    return [dict(row) for row in results]
+
+
+# ✅ STATS API (for admin dashboard)
+@app.get("/api/stats")
+async def stats():
+    query = "SELECT COUNT(*) as total FROM transport_options"
+    result = await app.state.database.fetch_one(query)
+
+    return {
+        "total": result["total"] if result else 0
+    }
     results = await app.state.database.fetch_all(
         query=query,
         values={
