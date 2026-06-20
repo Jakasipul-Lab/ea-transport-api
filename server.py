@@ -8,14 +8,9 @@ from pydantic import BaseModel
 # ✅ DATABASE
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
-# ✅ LIFESPAN (connect / disconnect DB safely)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("DEBUG: DATABASE_URL =", DATABASE_URL)
-
-    database = databases.Database(DATABASE_URL)
-    await database.connect()
-    app.state.database = database
+    yield
 
     yield
 
