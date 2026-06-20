@@ -52,7 +52,6 @@ def catch_all(path: str):
         return FileResponse(file_path)
 
     return FileResponse("index.html")
-
 # ✅ SEARCH API
 @app.post("/api/search")
 async def search_transport(req: SearchRequest):
