@@ -119,13 +119,12 @@
                         <p style="font-size: 0.7rem; font-weight: 800; color: var(--accent); text-transform: uppercase;">${item.type}</p>
                         <h3>${item.operator}</h3>
                         <p style="color: #64748b; font-size: 0.85rem;">${item.detail}</p>
-                    </div>
                     <div style="text-align: right;">
-                        <p class="price">${item.price}</p>
-                        <button class="btn-book" onclick="showCode()">Get Code</button>
-                    </div>
-                </div>
-            `).join('');
+    <p class="price">${item.price}</p>
+    <button class="btn-book" onclick="assist('${item.operator}', '${item.price}')">
+        Continue
+    </button>
+</div>
     function assist(operator, price) {
     const basePrice = parseInt(price.replace(/\D/g, '')) || 0;
 
