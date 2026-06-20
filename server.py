@@ -6,26 +6,26 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import databases
 
-# Database connection URL
-DATABASE_URL = os.environ.get("NEON_URL")
+# ✅ DATABASE
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
-# Define the lifespan to handle database connection safely
-# Place 'import os' at the very top of your server.py file
-
+# ✅ LIFESPAN (connect / disconnect DB safely)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: Connect to DB
-    # Ensure this print is indented with 4 spaces to match the lines below
-    print(f"DEBUG: DATABASE_URL is {os.environ.get('DATABASE_URL')}")
-    
+    print("DEBUG: DATABASE_URL =", DATABASE_URL)
+
     database = databases.Database(DATABASE_URL)
     await database.connect()
     app.state.database = database
+
     yield
-    # Shutdown: Disconnect from DB
+
     await database.disconnect()
+
+# ✅ APP
 app = FastAPI(lifespan=lifespan)
 
+# ✅ CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -33,30 +33,45 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ✅ REQUEST MODEL
 class SearchRequest(BaseModel):
     destination: str
-    category: str = "tourist"  # This allows the search to handle different types
+    category: str = "tourist"
 
+# ✅ HOME PAGE
 @app.get("/", response_class=HTMLResponse)
 def home():
     return FileResponse("index.html")
 
+# ✅ CATCH ALL (serves your pages like /admin, /verify)
 @app.get("/{path:path}", response_class=HTMLResponse)
 def catch_all(path: str):
-    if os.path.exists(path):
-        return FileResponse(path)
+    file_path = path + ".html"
+
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+
     return FileResponse("index.html")
 
+# ✅ SEARCH API
 @app.post("/api/search")
 async def search_transport(req: SearchRequest):
-    # This queries your existing table, filtering by both destination and category
-    query = "SELECT * FROM transport_options WHERE destination = :dest AND category = :cat"
+    query = """
+        SELECT * FROM transport_options
+        WHERE destination = :dest AND category = :cat
+    """
+
     results = await app.state.database.fetch_all(
-        query=query, 
-        values={"dest": req.destination, "cat": req.category}
+        query=query,
+        values={
+            "dest": req.destination,
+            "cat": req.category
+        }
     )
+
     return [dict(row) for row in results]
 
+# ✅ START (for local run only)
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 10000))
