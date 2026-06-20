@@ -4,7 +4,6 @@ from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import databases
 
 # ✅ DATABASE
 DATABASE_URL = os.environ.get("DATABASE_URL")
