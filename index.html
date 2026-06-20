@@ -97,7 +97,9 @@
             <p>Your SafariRoutes Lead Code has been generated:</p>
             <div style="font-size: 1.5rem; font-weight: 800; color: var(--primary); margin: 1rem 0;" id="generatedCode"></div>
             <p>Present this code to the operator.</p>
-            <button class="btn-book" style="width: 100%; margin-top: 1rem;" onclick="document.getElementById('codeModal').style.display='none'">Close</button>
+           <button class="btn-book" onclick="assist('${item.operator}', '${item.price}')">
+    Continue
+</button>
         </div>
     </div>
     <script>
