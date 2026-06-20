@@ -126,7 +126,17 @@
                     </div>
                 </div>
             `).join('');
-    
+    function assist(operator, price) {
+    const basePrice = parseInt(price.replace(/\D/g, '')) || 0;
+
+    document.getElementById('generatedCode').innerText =
+        operator + "\n\nPrice: " + basePrice + " KES\n\n" +
+        "✅ Book directly with the operator\n" +
+        "✅ Follow official instructions\n\n" +
+        "🌍 Explore full safari experiences below";
+
+    document.getElementById('codeModal').style.display = 'flex';
+}
         document.querySelectorAll('.tab').forEach(tab => {
             tab.onclick = () => {
                 document.querySelector('.tab.active').classList.remove('active');
