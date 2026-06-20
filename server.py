@@ -60,7 +60,8 @@ async def search_transport(req: SearchRequest):
         SELECT * FROM transport_options
         WHERE destination = :dest AND category = :cat
     """
-results = await app.state.database.fetch_all(
+
+    results = await app.state.database.fetch_all(
         query=query,
         values={
             "dest": req.destination,
