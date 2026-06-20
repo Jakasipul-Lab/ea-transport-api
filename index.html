@@ -127,9 +127,17 @@
         Continue
     </button>
 </div>
-   function assist(operator, price) {
+  function assist(operator, price) {
     const basePrice = parseInt(price.replace(/\D/g,'')) || 0;
 
+    document.getElementById('generatedCode').innerText =
+        operator + "\n\nPrice: " + basePrice + " KES\n\n" +
+        "✅ Proceed with booking directly with the operator\n" +
+        "✅ Follow official booking steps\n\n" +
+        "🌍 Explore Safari options next";
+
+    document.getElementById('codeModal').style.display = 'flex';
+}
     document.getElementById('generatedCode').innerText =
         operator + "\n\nPrice: " + basePrice + " KES\n\n" +
         "✅ Proceed with booking directly with the operator\n" +
