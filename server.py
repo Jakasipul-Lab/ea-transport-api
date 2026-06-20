@@ -25,12 +25,24 @@ class SearchRequest(BaseModel):
     destination: str
     category: str = "tourist"
 
-# ✅ HOME PAGE
+# ✅ HOME
 @app.get("/", response_class=HTMLResponse)
 def home():
     return FileResponse("index.html")
 
-# ✅ CATCH ALL (serves your pages like /admin, /verify)
+# ✅ API ROUTES FIRST
+@app.post("/api/search")
+async def search_transport(req: SearchRequest):
+    return [
+        {"id": 1, "operator": "SGR Train", "price": "1500 KES", "detail": "Fast train"},
+        {"id": 2, "operator": "EasyCoach", "price": "1200 KES", "detail": "Comfort bus"}
+    ]
+
+@app.get("/api/stats")
+async def stats():
+    return {"total": 10}
+
+# ✅ CATCH-ALL LAST (VERY IMPORTANT)
 @app.get("/{path:path}", response_class=HTMLResponse)
 def catch_all(path: str):
     file_path = path + ".html"
