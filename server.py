@@ -9,8 +9,6 @@ from pydantic import BaseModel
 async def lifespan(app: FastAPI):
     yield
 
-    await database.disconnect()
-
 # ✅ APP
 app = FastAPI(lifespan=lifespan)
 
