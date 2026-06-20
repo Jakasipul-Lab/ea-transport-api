@@ -56,20 +56,7 @@ async def search_transport(req: SearchRequest):
         values={"dest": req.destination, "cat": req.category}
     )
     return [dict(row) for row in results]
-@app.get("/api/search")
-def search(origin: str, destination: str, date: str):
-    return [
-        {
-            "id": 1,
-            "provider": "SGR",
-            "price": 1000
-        },
-        {
-            "id": 2,
-            "provider": "EasyCoach",
-            "price": 800
-        }
-    ]
+
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 10000))
