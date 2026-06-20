@@ -1,77 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard • OSARE</title>
-    <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: #f4f7f6; display: flex; }
-        .sidebar { width: 280px; height: 100vh; background: #1e3a8a; color: white; position: fixed; padding: 40px 20px; }
-        .main-content { margin-left: 320px; padding: 50px; width: calc(100% - 320px); }
-        .nav-link { color: white; text-decoration: none; display: block; padding: 15px; border-radius: 8px; margin-bottom: 12px; font-weight: bold; background: rgba(255,255,255,0.05); }
-        .btn-return { display: inline-block; padding: 10px 20px; background: white; color: #1e3a8a; text-decoration: none; border-radius: 6px; font-weight: bold; margin-bottom: 30px; border: 1px solid #1e3a8a; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; }
-        .stat-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-bottom: 6px solid #1e3a8a; }
-        .stat-card h3 { margin: 0; color: #888; font-size: 12px; text-transform: uppercase; }
-        .stat-card .value { font-size: 36px; font-weight: bold; color: #1e3a8a; margin-top: 15px; display: block; }
-    </style>
-</head>
 <body>
-   <div class="sidebar">
-    <h2>OSARE</h2>
-    <p style="opacity:0.6; font-size:11px; margin-bottom:50px;">
-        EXECUTIVE COMMAND CENTER
-    </p>
+    <div class="sidebar">
+        <h2>OSARE</h2>
+        <p style="opacity:0.6; font-size:11px; margin-bottom:50px;">
+            EXECUTIVE COMMAND CENTER
+        </p>
 
-    <a href="/admin" class="nav-link" style="background:rgba(255,255,255,0.2)">
-        📊 Sales Dashboard
-    </a>
+        <a href="/admin" class="nav-link" style="background:rgba(255,255,255,0.2)">
+            📊 Sales Dashboard
+        </a>
 
-    <a href="/support" class="nav-link">
-        🛡️ Safety Hub
-    </a>
+        <a href="/support" class="nav-link">
+            🛡️ Safety Hub
+        </a>
 
-    <!-- ✅ removed /verify (you don’t have it) -->
+        <hr style="opacity:0.1; margin: 40px 0;">
 
-    <hr style="opacity:0.1; margin: 40px 0;">
-
-    <a href="/" class="nav-link">
-        🏠 Back to Live Site
-    </a>
-</div>
-
-<div class="main-content">
-    <a href="/" class="btn-return">
-        ← Back to Super Search Hub
-    </a>
-
-    <h1>Regional Sales Command</h1>
-
-    <div class="stats-grid">
-        <div class="stat-card">
-            <h3>Gross Sales</h3>
-            <span class="value" id="total-bookings">$0</span>
-        </div>
-
-        <div class="stat-card">
-            <h3>Net 5% Commission</h3>
-            <span class="value">$0.00</span>
-        </div>
-
-        <div class="stat-card">
-            <h3>Active Station Reps</h3>
-            <span class="value">4</span>
-        </div>
+        <a href="/" class="nav-link">
+            🏠 Back to Live Site
+        </a>
     </div>
-</div>
+
     <div class="main-content">
-        <a href="/" class="btn-return">← Back to Super Search Hub</a>
+        <a href="/" class="btn-return">
+            ← Back to Super Search Hub
+        </a>
+
         <h1>Regional Sales Command</h1>
+
         <div class="stats-grid">
-            <div class="stat-card"><h3>Gross Sales</h3><span class="value" id="total-bookings">$0</span></div>
-            <div class="stat-card"><h3>Net 5% Commission</h3><span class="value">$0.00</span></div>
-            <div class="stat-card"><h3>Active Station Reps</h3><span class="value">4</span></div>
+            <div class="stat-card">
+                <h3>Gross Sales</h3>
+                <span class="value" id="total-bookings">$0</span>
+            </div>
+
+            <div class="stat-card">
+                <h3>Net 5% Commission</h3>
+                <span class="value">$0.00</span>
+            </div>
+
+            <div class="stat-card">
+                <h3>Active Station Reps</h3>
+                <span class="value">4</span>
+            </div>
         </div>
     </div>
 </body>
-</html>
