@@ -197,11 +197,10 @@ if __name__ == "__main__":
 # Ensure 'app' is defined above this point!
 app = FastAPI(lifespan=lifespan) 
 
-# ... your routes ...
-
-if __name__ == "__main__":
-    import uvicorn
-    # If on your local machine, this will default to 10000
-    port = int(os.environ.get("PORT", 10000))
-    # 'server:app' tells uvicorn where to find the file and the object
-    uvicorn server:app --reload --port 10000
+# --- Line 200 ---
+def some_function():
+    """This is a description of my function
+    that I forgot to close!
+    
+# --- Line 207 (SyntaxError here) ---
+uvicorn.run("server:app", host="0.0.0.0", port=port, reload=True)
