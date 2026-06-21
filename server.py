@@ -21,8 +21,16 @@ app.add_middleware(
 )
 import datetime
 
+import os
+
+# Get the directory where server.py is actually saved
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 def log_lead(destination, service_type):
-    with open("leads.txt", "a") as f:
+    # This creates/opens leads.txt in the same folder as server.py
+    file_path = os.path.join(BASE_DIR, "leads.txt")
+    
+    with open(file_path, "a") as f:
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         f.write(f"{timestamp} | Destination: {destination} | Service: {service_type}\n")
 # ✅ REQUEST MODEL
