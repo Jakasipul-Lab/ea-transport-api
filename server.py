@@ -187,6 +187,9 @@ async def stats():
         }
     )
 
+    def get_data_from_db():
+    results = db.execute("SELECT * FROM table")
+    # This return must be indented relative to the 'def' line
     return [dict(row) for row in results]
 
 # ✅ START (for local run only)
