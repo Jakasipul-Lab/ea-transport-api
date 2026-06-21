@@ -203,6 +203,8 @@ async def stats():
     query = "SELECT COUNT(*) as total FROM transport_options"
     result = await app.state.database.fetch_one(query)
     
+    # Return the data so the frontend can read it
+    return {"total_transport_options": result["total"]}   
     return {"total_transport_options": result["total"]}
     
     def get_data_from_db():
