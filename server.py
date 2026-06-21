@@ -19,7 +19,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+import datetime
 
+def log_lead(destination, service_type):
+    with open("leads.txt", "a") as f:
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        f.write(f"{timestamp} | Destination: {destination} | Service: {service_type}\n")
 # ✅ REQUEST MODEL
 class SearchRequest(BaseModel):
     destination: str
