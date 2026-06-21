@@ -139,17 +139,19 @@ async def track_and_redirect(destination: str, service_type: str):
         "safari": "https://wa.me/2547XXXXXXXX"
     }
     
-    url = partners.get(service_type, "/")
-    return RedirectResponse(url)
-
-# 3. Serving HTML Files
 @app.get("/{path:path}", response_class=FileResponse)
 async def catch_all(path: str):
+
     # Default to index.html if path is empty
     if not path or path == "/":
-       # If the file exists, serve it
+        return FileResponse("index.html")
+
+    # If the file exists, serve it
     if os.path.exists(path):
         return FileResponse(path)
+
+    # Otherwise fallback to index.html
+    return FileResponse("index.html")
     
     # Otherwise fallback
     return FileResponse("index.html")
