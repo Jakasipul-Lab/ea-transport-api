@@ -192,14 +192,14 @@ if __name__ == "__main__":
     # ... all your routes and logic above ...
 
 if __name__ == "__main__":
-   # ... all your code ...
+   #  all your code 
 
 # Ensure 'app' is defined above this point!
 app = FastAPI(lifespan=lifespan) 
 
 #  Line 200 
 def some_function():
-This is a description of my function that I forgot to close!
+ #  This is a description of my function that I forgot to close!
     pass
     
 # Line 207 (SyntaxError here) 
