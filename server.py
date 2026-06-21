@@ -187,9 +187,16 @@ async def stats():
         }
     )
 
-  def get_data_from_db():
-    pass # Correctly indented with 4 spaces
-
+ @app.get("/stats") # or whatever your decorator is
+async def stats():
+    # Everything here is indented 4 spaces
+    
+    def get_data_from_db():
+        # Everything here is indented 8 spaces (4 for the parent + 4 for the child)
+        pass 
+    
+    # Logic for stats() follows here, also at 4 spaces
+    return {"status": "ok"}
 # This line must be flush to the left (0 spaces)
 print("Done") # If this line has 1 space in front of it, you get the error
 
