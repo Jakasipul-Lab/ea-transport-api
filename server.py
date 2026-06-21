@@ -1,13 +1,38 @@
 import os
 import datetime
-from contextlib import asynccontextmanager
 from fastapi import FastAPI, RedirectResponse
-from fastapi.responses import HTMLResponse, FileResponse
-from pydantic import BaseModel
+from fastapi.responses import FileResponse
 
-# 1. SETUP: Define base directory so files are always found
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+app = FastAPI()
 
+# EDIT THIS LINE: Put the full path to your folder here
+# Example (Windows): "C:/Users/Name/Documents/osare_project"
+# Example (Mac): "/Users/Name/Documents/osare_project"
+DIRECTORY = "YOUR_FULL_PATH_HERE"
+
+def log_lead(destination, service_type):
+    file_path = os.path.join(DIRECTORY, "leads.txt")
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open(file_path, "a") as f:
+        f.write(f"{timestamp} | Destination: {destination} | Service: {service_type}\n")
+
+@app.get("/click-lead/{destination}/{service_type}")
+async def track_and_redirect(destination: str, service_type: str):
+    log_lead(destination, service_type)
+    partners = {
+        "car_hire": "https://wa.me/2547XXXXXXXX",
+        "safari": "https://wa.me/2547XXXXXXXX"
+    }
+    return RedirectResponse(partners.get(service_type, "/"))
+
+@app.get("/{path:path}")
+async def serve_files(path: str = "index.html"):
+    if path == "": path = "index.html"
+    file_path = os.path.join(DIRECTORY, path)
+    
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    return FileResponse(os.path.join(DIRECTORY, "index.html"))
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup: You could add database connection code here later
