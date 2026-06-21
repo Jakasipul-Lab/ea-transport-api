@@ -197,10 +197,16 @@ if __name__ == "__main__":
 # Ensure 'app' is defined above this point!
 app = FastAPI(lifespan=lifespan) 
 
-#  Line 200 
-def some_function():
- #  This is a description of my function that I forgot to close!
-    pass
-    
-# Line 207 (SyntaxError here) 
-uvicorn.run("server:app", host="0.0.0.0", port=port, reload=True)
+import os
+from fastapi import FastAPI
+import uvicorn
+
+app = FastAPI()
+
+@app.get("/")
+def home():
+    return {"status": "ok"}
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
