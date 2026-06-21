@@ -187,8 +187,20 @@ async def stats():
         }
     )
 
-  def get_data_from_db():
-    pass
+  @app.get("/{path:path}", response_class=FileResponse)
+async def catch_all(path: str):
+
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+
+    if not path or path == "/":
+        return FileResponse(os.path.join(base_dir, "index.html"))
+
+    file_path = os.path.join(base_dir, path)
+
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+
+    return FileResponse(os.path.join(base_dir, "index.html"))
     results = db.execute("SELECT * FROM table")
     # This return must be indented relative to the 'def' line
     return [dict(row) for row in results]
