@@ -190,9 +190,9 @@ async def stats():
         }
     )
 
- @app.get("/stats") # or whatever your decorator is
+ @app.get("/api/stats")
 async def stats():
-    # Everything here is indented 4 spaces
+    return {"total": 0}
     
     def get_data_from_db():
         # Everything here is indented 8 spaces (4 for the parent + 4 for the child)
