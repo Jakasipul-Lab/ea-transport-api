@@ -35,44 +35,45 @@ class SearchRequest(BaseModel):
 def home():
     return FileResponse("index.html")
 
-# ✅ API ROUTES FIRST
-@app.post("/api/search")
-async def search_transport(req: SearchRequest):
-    return [
-        {"id": 1, "operator": "SGR Train", "price": "1500 KES", "detail": "Fast train"},
-        {"id": 2, "operator": "EasyCoach", "price": "1200 KES", "detail": "Comfort bus"}
-    ]
-@app.route('/click-lead/<destination>/<service_type>')
-def track_and_redirect(destination, service_type):
-    # Log the event
+from fastapi import FastAPI, RedirectResponse
+from fastapi.responses import FileResponse, HTMLResponse
+import datetime
+import os
+
+app = FastAPI()
+
+# 1. Logging Function
+def log_lead(destination, service_type):
+    with open("leads.txt", "a") as f:
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        f.write(f"{timestamp} | Destination: {destination} | Service: {service_type}\n")
+
+# 2. Tracking Route (FastAPI style)
+@app.get("/click-lead/{destination}/{service_type}")
+async def track_and_redirect(destination: str, service_type: str):
     log_lead(destination, service_type)
     
-    # Define your partner WhatsApp links here
     partners = {
         "car_hire": "https://wa.me/2547XXXXXXXX",
         "safari": "https://wa.me/2547XXXXXXXX"
     }
     
-    return redirect(partners[service_type])
-@app.get("/api/stats")
-async def stats():
-    return {"total": 10}
+    url = partners.get(service_type, "/")
+    return RedirectResponse(url)
 
-# ✅ CATCH-ALL LAST (VERY IMPORTANT)
-@app.get("/{path:path}", response_class=HTMLResponse)
-def catch_all(path: str):
-    file_path = path + ".html"
-
-    if os.path.exists(file_path):
-        return FileResponse(file_path)
-
+# 3. Serving HTML Files
+@app.get("/{path:path}", response_class=FileResponse)
+async def catch_all(path: str):
+    # Default to index.html if path is empty
+    if not path or path == "/":
+        return FileResponse("index.html")
+    
+    # If the file exists, serve it
+    if os.path.exists(path):
+        return FileResponse(path)
+    
+    # Otherwise fallback
     return FileResponse("index.html")
-# ✅ SEARCH API
-@app.post("/api/search")
-async def search_transport(req: SearchRequest):
-    query = """
-        SELECT * FROM transport_options
-        WHERE destination = :dest AND category = :cat
     """
 
     results = await app.state.database.fetch_all(
