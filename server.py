@@ -156,9 +156,7 @@ async def catch_all(path: str):
     # Otherwise fallback to index.html
     return FileResponse("index.html")
     
-    # Otherwise fallback
-    return FileResponse("index.html")
-
+    # 1. First, perform your database operation
     results = await app.state.database.fetch_all(
         query=query,
         values={
@@ -166,6 +164,13 @@ async def catch_all(path: str):
             "cat": req.category
         }
     )
+
+    # 2. Check if you got results, if so, return them
+    if results:
+        return [dict(row) for row in results]
+
+    # 3. If no results found, perform the fallback
+    return FileResponse("index.html")
 
     return [dict(row) for row in results]
 
