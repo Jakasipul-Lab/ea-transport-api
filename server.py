@@ -204,4 +204,4 @@ if __name__ == "__main__":
     # If on your local machine, this will default to 10000
     port = int(os.environ.get("PORT", 10000))
     # 'server:app' tells uvicorn where to find the file and the object
-    uvicorn.run("server:app", host="0.0.0.0", port=port, reload=True)
+    uvicorn server:app --reload --port 10000
