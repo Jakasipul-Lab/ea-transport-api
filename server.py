@@ -142,14 +142,17 @@ async def track_and_redirect(destination: str, service_type: str):
 @app.get("/{path:path}", response_class=FileResponse)
 async def catch_all(path: str):
 
-    # Default to index.html if path is empty
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+
     if not path or path == "/":
-        return FileResponse("index.html")
+        return FileResponse(os.path.join(base_dir, "index.html"))
 
-    # If the file exists, serve it
-    if os.path.exists(path):
-        return FileResponse(path)
+    file_path = os.path.join(base_dir, path)
 
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+
+    return FileResponse(os.path.join(base_dir, "index.html"))
     # Otherwise fallback to index.html
     return FileResponse("index.html")
     
