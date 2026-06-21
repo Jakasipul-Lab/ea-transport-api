@@ -1,35 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Local Travel • OSARE</title>
+    <title>Travel Tools | OSARE</title>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; text-align: center; padding: 20px; background:#f4f7f6; color: #333; }
-        .container { max-width: 500px; margin: auto; }
-        .card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .btn { display:block; margin: 10px 0; padding: 15px; background:#1e3a8a; color:white; text-decoration:none; border-radius: 8px; font-weight: bold; }
-        .upsell { background: #e0f2fe; border: 2px dashed #1e3a8a; } /* Highlight for high-margin items */
-        h2 { margin-top: 0; font-size: 1.2rem; }
+        body { font-family: 'Segoe UI', sans-serif; text-align: center; padding: 40px; background:#f4f7f6; }
+        .container { max-width: 400px; margin: auto; }
+        .card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .btn-transport { display:block; margin: 10px 0; padding: 15px; background:#475569; color:white; text-decoration:none; border-radius: 8px; }
+        .btn-upsell { display:block; margin: 10px 0; padding: 15px; background:#16a34a; color:white; text-decoration:none; border-radius: 8px; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Your Travel Plan</h1>
+    <h1>Your Destination: Mombasa</h1>
     
-    <!-- TIER 1: TRANSPORT (The Traffic) -->
     <div class="card">
-        <h2>Book Your Transport</h2>
-        <a href="/book/sgr/nairobi-mombasa" class="btn">🚆 Nairobi → Mombasa (SGR)</a>
-        <a href="/book/sgr/nairobi-naivasha" class="btn">🚆 Nairobi → Naivasha (SGR)</a>
-        <a href="https://www.google.com/search?q=easycoach+nairobi+booking" class="btn">🚌 Bus Booking Options</a>
+        <h3>1. Get There (Transport)</h3>
+        <a href="https://www.google.com/search?q=EasyCoach+Nairobi+to+Mombasa+booking" class="btn-transport">🚌 Bus (EasyCoach)</a>
+        <a href="https://www.kenyarailways.co.ke" class="btn-transport">🚆 SGR (Madaraka Express)</a>
     </div>
 
-    <!-- TIER 2: UPSWELL (The Money Engine) -->
-    <div class="card upsell">
-        <h2>Enhance Your Trip</h2>
-        <p>Need a ride when you arrive?</p>
-        <a href="https://wa.me/2547XXXXXXXX?text=I need a car hire in Mombasa" class="btn" style="background: #25D366;">🚗 Rent a Car (WhatsApp)</a>
-        <a href="/safari/mombasa" class="btn" style="background: #ea580c;">🏝️ View Safari/Tour Packages</a>
+    <div class="card" style="border: 2px solid #16a34a;">
+        <h3>2. Enhance Your Stay (High Margin)</h3>
+        <p style="font-size: 0.9rem;">Verified partners in Mombasa:</p>
+        <a href="https://wa.me/2547XXXXXXXX?text=Hi, I need a car hire in Mombasa from Osare" class="btn-upsell">🚗 WhatsApp for Car Hire</a>
+        <a href="https://wa.me/2547XXXXXXXX?text=Hi, show me safari packages for Mombasa" class="btn-upsell">🏝️ WhatsApp for Safaris</a>
     </div>
 
     <a href="index.html">← Back to Main</a>
