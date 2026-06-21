@@ -147,15 +147,12 @@ async def track_and_redirect(destination: str, service_type: str):
 async def catch_all(path: str):
     # Default to index.html if path is empty
     if not path or path == "/":
-        return FileResponse("index.html")
-    
-    # If the file exists, serve it
+       # If the file exists, serve it
     if os.path.exists(path):
         return FileResponse(path)
     
     # Otherwise fallback
     return FileResponse("index.html")
-    """
 
     results = await app.state.database.fetch_all(
         query=query,
