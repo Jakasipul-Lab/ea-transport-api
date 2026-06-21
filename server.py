@@ -42,7 +42,18 @@ async def search_transport(req: SearchRequest):
         {"id": 1, "operator": "SGR Train", "price": "1500 KES", "detail": "Fast train"},
         {"id": 2, "operator": "EasyCoach", "price": "1200 KES", "detail": "Comfort bus"}
     ]
-
+@app.route('/click-lead/<destination>/<service_type>')
+def track_and_redirect(destination, service_type):
+    # Log the event
+    log_lead(destination, service_type)
+    
+    # Define your partner WhatsApp links here
+    partners = {
+        "car_hire": "https://wa.me/2547XXXXXXXX",
+        "safari": "https://wa.me/2547XXXXXXXX"
+    }
+    
+    return redirect(partners[service_type])
 @app.get("/api/stats")
 async def stats():
     return {"total": 10}
