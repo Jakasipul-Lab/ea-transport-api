@@ -199,8 +199,8 @@ app = FastAPI(lifespan=lifespan)
 
 #  Line 200 
 def some_function():
-    # This is a description of my function
-    that I forgot to close!
+    """This is a description of my function that I forgot to close!"""
+    pass
     
 # Line 207 (SyntaxError here) 
 uvicorn.run("server:app", host="0.0.0.0", port=port, reload=True)
