@@ -1,10 +1,58 @@
 import os
+import datetime
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, RedirectResponse
 from fastapi.responses import HTMLResponse, FileResponse
-from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+# 1. SETUP: Define base directory so files are always found
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup: You could add database connection code here later
+    yield
+
+app = FastAPI(lifespan=lifespan)
+
+# 2. LOGGING ENGINE
+def log_lead(destination, service_type):
+    file_path = os.path.join(BASE_DIR, "leads.txt")
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open(file_path, "a") as f:
+        f.write(f"{timestamp} | Destination: {destination} | Service: {service_type}\n")
+
+# 3. ROUTES
+@app.get("/click-lead/{destination}/{service_type}")
+async def track_and_redirect(destination: str, service_type: str):
+    log_lead(destination, service_type)
+    
+    # Update these numbers to your actual partner WhatsApp numbers
+    partners = {
+        "car_hire": "https://wa.me/2547XXXXXXXX",
+        "safari": "https://wa.me/2547XXXXXXXX"
+    }
+    
+    url = partners.get(service_type, "/")
+    return RedirectResponse(url)
+
+# 4. SERVE HTML (Catch-all)
+@app.get("/{path:path}", response_class=FileResponse)
+async def serve_files(path: str = ""):
+    # If path is empty, serve index.html
+    if not path:
+        path = "index.html"
+    
+    # Ensure it ends with .html if not provided
+    if not path.endswith(".html") and "." not in path:
+        path += ".html"
+        
+    full_path = os.path.join(BASE_DIR, path)
+    
+    if os.path.exists(full_path):
+        return FileResponse(full_path)
+    
+    return FileResponse(os.path.join(BASE_DIR, "index.html"))
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     yield
