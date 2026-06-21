@@ -187,14 +187,11 @@ async def stats():
         }
     )
 
-  @app.get("/{path:path}", response_class=FileResponse)
-async def catch_all(path: str):
+  def get_data_from_db():
+    pass # Correctly indented with 4 spaces
 
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-
-    if not path or path == "/":
-        return FileResponse(os.path.join(base_dir, "index.html"))
-
+# This line must be flush to the left (0 spaces)
+print("Done") # If this line has 1 space in front of it, you get the error
     file_path = os.path.join(base_dir, path)
 
     if os.path.exists(file_path):
