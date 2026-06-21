@@ -190,9 +190,15 @@ async def stats():
         }
     )
 
- @app.get("/api/stats")
+# ✅ STATS API (for admin dashboard)
+@app.get("/stats")
+@app.get("/api/stats")
 async def stats():
-    return {"total": 0}
+    # Everything here must be indented by exactly 4 spaces
+    query = "SELECT COUNT(*) as total FROM transport_options"
+    result = await app.state.database.fetch_one(query)
+    
+    return {"total_transport_options": result["total"]}
     
     def get_data_from_db():
         # Everything here is indented 8 spaces (4 for the parent + 4 for the child)
