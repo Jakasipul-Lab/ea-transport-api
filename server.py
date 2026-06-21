@@ -169,13 +169,16 @@ async def catch_all(path: str):
 
     return [dict(row) for row in results]
 
-
-# ✅ STATS API (for admin dashboard)
+# @app.get starts at 0 spaces
 @app.get("/api/stats")
+# async def starts at 0 spaces
 async def stats():
+    # Everything inside MUST start at 4 spaces
     query = "SELECT COUNT(*) as total FROM transport_options"
     result = await app.state.database.fetch_one(query)
-
+    
+    # Don't forget to return something! 
+    return {"total_transport_options": result["total"]}
     return {
         "total": result["total"] if result else 0
     }
