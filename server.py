@@ -227,16 +227,14 @@ def catch_all(path: str):
     # This return must be indented relative to the 'def' line
     return [dict(row) for row in results]
 
-# ✅ START (for local run only)
-    # ... all your routes and logic above ...
+from fastapi.responses import RedirectResponse
 
-# Ensure 'app' is defined above this point!
-app = FastAPI(lifespan=lifespan) 
+@app.get("/click-lead/{destination}/{service_type}")
+async def track_and_redirect(destination: str, service_type: str):
+    log_lead(destination, service_type)
 
-@app.get("/")
-def home():
-    return {"status": "ok"}
-
+    return RedirectResponse("/")
+``
 # ... all your functions and routes ...
 
 # The block below is the very last thing in the file
