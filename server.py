@@ -230,7 +230,13 @@ async def track_and_redirect(destination: str, service_type: str):
     return RedirectResponse("/")
 ``
 
-# The block below is the very last thing in the file
+Python
+import os
+import uvicorn
+
+# ... rest of your code ...
+
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))
-    uvicorn.run("server:app", host="0.0.0.0", port=port)
+    # Render provides a PORT environment variable. Default to 8000 if not set.
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("my_feature_server:app", host="0.0.0.0", port=port)
