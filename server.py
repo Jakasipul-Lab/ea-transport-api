@@ -236,9 +236,6 @@ def catch_all(path: str):
 if __name__ == "__main__":
     # ... all your routes and logic above ...
 
-if __name__ == "__main__":
-   #  all your code 
-
 # Ensure 'app' is defined above this point!
 app = FastAPI(lifespan=lifespan) 
 
