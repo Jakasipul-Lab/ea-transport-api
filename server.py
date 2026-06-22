@@ -27,13 +27,7 @@ async def serve_files(path: str = "index.html"):
     
     if os.path.exists(file_path):
         return FileResponse(file_path)
-    return FileResponse(os.path.join(DIRECTORY, "index.html"))
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Startup: You could add database connection code here later
-    yield
-
-app = FastAPI(lifespan=lifespan)
+    return FileResponse(os.path.join(DIRECTORY, "index.html")
 
 # 2. LOGGING ENGINE
 def log_lead(destination, service_type):
