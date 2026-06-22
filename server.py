@@ -1,21 +1,17 @@
 import os
 import datetime
-from fastapi import FastAPI, RedirectResponse
-from fastapi.responses import FileResponse
+from fastapi import FastAPI
+from fastapi.responses import FileResponse, RedirectResponse
 
 app = FastAPI()
 
-# EDIT THIS LINE: Put the full path to your folder here
-# Example (Windows): "C:/Users/Name/Documents/osare_project"
-# Example (Mac): "/Users/Name/Documents/osare_project"
-DIRECTORY = "YOUR_FULL_PATH_HERE"
+DIRECTORY = "."
 
 def log_lead(destination, service_type):
     file_path = os.path.join(DIRECTORY, "leads.txt")
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with open(file_path, "a") as f:
         f.write(f"{timestamp} | Destination: {destination} | Service: {service_type}\n")
-
 @app.get("/click-lead/{destination}/{service_type}")
 async def track_and_redirect(destination: str, service_type: str):
     log_lead(destination, service_type)
