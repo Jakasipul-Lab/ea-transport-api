@@ -235,7 +235,6 @@ async def track_and_redirect(destination: str, service_type: str):
 
     return RedirectResponse("/")
 ``
-# ... all your functions and routes ...
 
 # The block below is the very last thing in the file
 if __name__ == "__main__":
