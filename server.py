@@ -1,25 +1,61 @@
+
 import os
-import datetime
 from fastapi import FastAPI
 from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-# 1. FIXED: Added the root route so the main link works
-@app.get("/")
-def read_root():
-    return {
-        "message": "Welcome to the East Africa Transport API Backend",
-        "status": "online",
-        "timestamp": datetime.datetime.utcnow().isoformat()
-    }
+# ✅ CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-# 2. Your health check route
+# ✅ HEALTH CHECK (IMPORTANT)
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
 
-# 3. Add your NEON database routes below this line...
+# ✅ HOME
+@app.get("/")
+def home():
+    return {"status": "ok"}
+
+# ✅ CLICK LEAD (TRACK + REDIRECT)
+@app.get("/click-lead/{destination}/{service_type}")
+async def track_and_redirect(destination: str, service_type: str):
+    # placeholder logging
+    print(f"Lead: {destination} - {service_type}")
+
+    return RedirectResponse("/")
+
+# ✅ PLACEHOLDER TRANSPORT DATA ROUTE
+@app.get("/api/transport")
+async def get_transport_data():
+    return [
+        {"type": "bus", "price": 1200, "route": "Nairobi → Mombasa"},
+        {"type": "train", "price": 1500, "route": "Nairobi → Kisumu"},
+    ]
+
+# ✅ STATIC FILE ROUTING (HTML)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+@app.get("/{path:path}")
+def catch_all(path: str):
+    if not path or path == "/":
+        return FileResponse(os.path.join(BASE_DIR, "index.html"))
+
+    file_path = os.path.join(BASE_DIR, path + ".html")
+
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+
+    return FileResponse(os.path.join(BASE_DIR, "index.html"))
+
 
 DIRECTORY = "."
 
