@@ -216,9 +216,12 @@ async def stats():
 # This line must be flush to the left (0 spaces)
 print("Done") # If this line has 1 space in front of it, you get the error
 
-# This line must be flush to the left (0 spaces)
-print("Done") # If this line has 1 space in front of it, you get the error
+def catch_all(path: str):
+    print("Done")
+
     if os.path.exists(file_path):
+        return FileResponse(file_path)
+``
 
     if os.path.exists(file_path):
         return FileResponse(file_path)
