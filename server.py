@@ -228,17 +228,10 @@ def catch_all(path: str):
     return [dict(row) for row in results]
 
 # ✅ START (for local run only)
-if __name__ == "__main__":
     # ... all your routes and logic above ...
 
 # Ensure 'app' is defined above this point!
 app = FastAPI(lifespan=lifespan) 
-
-import os
-from fastapi import FastAPI
-import uvicorn
-
-app = FastAPI()
 
 @app.get("/")
 def home():
