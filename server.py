@@ -81,9 +81,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-import datetime
-
-import os
 
 # Get the directory where server.py is actually saved
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
