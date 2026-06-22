@@ -24,7 +24,6 @@ async def track_and_redirect(destination: str, service_type: str):
         "safari": "https://wa.me/2547XXXXXXXX"
     }
     return RedirectResponse(partners.get(service_type, "/"))
-
 @app.get("/{path:path}")
 async def serve_files(path: str = "index.html"):
     if path == "": path = "index.html"
