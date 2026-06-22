@@ -4,9 +4,22 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse, RedirectResponse
 
 app = FastAPI()
+
+# 1. FIXED: Added the root route so the main link works
+@app.get("/")
+def read_root():
+    return {
+        "message": "Welcome to the East Africa Transport API Backend",
+        "status": "online",
+        "timestamp": datetime.datetime.utcnow().isoformat()
+    }
+
+# 2. Your health check route
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
+
+# 3. Add your NEON database routes below this line...
 
 DIRECTORY = "."
 
