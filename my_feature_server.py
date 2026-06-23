@@ -1,3 +1,10 @@
+from fastapi import FastAPI
+from fastapi.responses import FileResponse, RedirectResponse # Added RedirectResponse here
+from fastapi.staticfiles import StaticFiles
+import os
+
+app = FastAPI()
+
 import os
 import datetime
 from fastapi import FastAPI
