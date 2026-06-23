@@ -54,7 +54,23 @@ def catch_all(path: path or path == "/":def catch_all(path: str):
     file_path = os.path.join(BASE_DIR, path + ".html")
 
 import os
+from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import RedirectResponse
+import datetime
+
+app = FastAPI()
+
+# --- THE CRASH-PROOF MOUNT ---
+# This ensures that if the folder is missing, your server starts anyway
+# rather than throwing a RuntimeError.
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_DIR = os.path.join(BASE_DIR, "static")
+
+if os.path.isdir(STATIC_DIR):
+    app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+else:
+    print(f"WARNING: 'static' folder not found at {STATIC_DIR}. Static files will not be served.")
 
 # --- REPLACE LINE 57 WITH THIS BLOCK ---
 # This looks for a 'static' folder in the same place as your server script
