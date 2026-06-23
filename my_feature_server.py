@@ -40,3 +40,17 @@ def get_transport_data():
         )
 
     return {"message": "API working correctly"}
+
+from fastapi.staticfiles import StaticFiles
+from fastapi import FastAPI
+
+app = FastAPI()
+
+# This tells the app to look in a folder named 'static' for your files
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+@app.get("/")
+async def read_root():
+    # You need to return the file or use a template engine
+    from fastapi.responses import FileResponse
+    return FileResponse('static/index.html')
