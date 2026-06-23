@@ -20,11 +20,10 @@ app.add_middleware(
 def health_check():
     return {"status": "ok"}
 
-# ✅ HOME
-@app.get("/")
+@app.api_route("/", methods=["GET", "HEAD"])
 def home():
-    return {"status": "ok"}
-
+    return FileResponse("frontend/index.html")
+``
 # ✅ CLICK LEAD (TRACK + REDIRECT)
 @app.get("/click-lead/{destination}/{service_type}")
 async def track_and_redirect(destination: str, service_type: str):
