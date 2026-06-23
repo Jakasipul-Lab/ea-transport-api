@@ -48,19 +48,19 @@ async def track_and_redirect(destination: str, service_type: str):
 
     return RedirectResponse("/")
 
+from fastapi.responses import FileResponse
+import os
+
 @app.get("/api/transport")
 async def get_transport_data():
     return [
         {"type": "bus", "price": 1200, "route": "Nairobi → Mombasa"},
         {"type": "train", "price": 1500, "route": "Nairobi → Kisumu"},
     ]
-from fastapi.responses import FileResponse
-import os
 
 @app.get("/{path:path}")
 def catch_all(path: str):
     return FileResponse(os.path.join(BASE_DIR, "osare.html"))
-``
     file_path = os.path.join(BASE_DIR, path + ".html")
 
 import os
