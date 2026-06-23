@@ -15,24 +15,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-from fastapi.responses import HTMLResponse
+# ✅ Base directory
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-@app.get("/", response_class=HTMLResponse)
+# ✅ Homepage (SIMPLE + SAFE)
+@app.get("/")
 def read_root():
-    return "<h1>✅ SERVER WORKS</h1>"
-``
+    return {"status": "ok"}
 
 # ✅ Health check
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
-
-# ✅ Logging function
-def log_lead(destination, service_type):
-    file_path = os.path.join(BASE_DIR, "leads.txt")
-    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    with open(file_path, "a") as f:
-        f.write(f"{timestamp} | Destination: {destination} | Service: {service_type}\n")
 
 # ✅ API route
 @app.get("/api/transport-data")
@@ -45,4 +39,4 @@ def get_transport_data():
             content={"error": "Database connection string is missing"}
         )
 
-    return {"message": "Database configuration detected"}
+    return {"message": "API working correctly"}
