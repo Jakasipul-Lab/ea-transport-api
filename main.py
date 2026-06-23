@@ -60,6 +60,16 @@ def get_about():
 def get_support():
     return FileResponse('support.html')
 
+# --- ADD THESE TWO LINES JUST ABOVE THE SERVER STARTUP BLOCK ---
+from safari_engine import router as safari_router
+app.include_router(safari_router)
+
+# Server startup - defined only once
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.environ.get("PORT", 10000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
+
 # Server startup - defined only once
 if __name__ == "__main__":
     import uvicorn
