@@ -1,20 +1,25 @@
 import os
 import datetime
 from fastapi import FastAPI
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-# 1. This allows JavaScript from easafariroutes.com or jakasipul-hub.app to connect
+# ✅ CORS config (FIXED)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-from fastapi.responses import FileResponse
+)
 
+# ✅ Homepage
+@app.get("/")
+def read_root():
+    return FileResponse("frontend/index.html")
+``
 @app.get("/")
 def read_root():
     return FileResponse("frontend/index.html")
