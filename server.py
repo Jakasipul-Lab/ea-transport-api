@@ -53,11 +53,13 @@ async def get_transport_data():
         {"type": "bus", "price": 1200, "route": "Nairobi → Mombasa"},
         {"type": "train", "price": 1500, "route": "Nairobi → Kisumu"},
     ]
+from fastapi.responses import FileResponse
+import os
 
 @app.get("/{path:path}")
-def catch_all(path: path or path == "/":def catch_all(path: str):
-        return FileResponse(os.path.join(BASE_DIR, "osare.html"))
-
+def catch_all(path: str):
+    return FileResponse(os.path.join(BASE_DIR, "osare.html"))
+``
     file_path = os.path.join(BASE_DIR, path + ".html")
 
 import os
