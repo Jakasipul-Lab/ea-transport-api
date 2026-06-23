@@ -1,4 +1,3 @@
 fastapi
-uvicorn[standard]
-databases[postgresql]
-pydantic
+uvicorn
+starlette
