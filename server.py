@@ -54,10 +54,17 @@ def catch_all(path: path or path == "/":def catch_all(path: str):
     file_path = os.path.join(BASE_DIR, path + ".html")
 
 import os
-from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import RedirectResponse
-import datetime
+
+# --- REPLACE YOUR MOUNT LINE WITH THIS ---
+# Force the app to look for 'static' in the current working directory
+static_dir = os.path.join(os.getcwd(), "static")
+
+if os.path.isdir(static_dir):
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
+else:
+    # This prevents the crash. You will see this in the logs if it's missing.
+    print(f"DEBUG: Static folder not found at {static_dir}. Server starting anyway.")
 
 app = FastAPI()
 
