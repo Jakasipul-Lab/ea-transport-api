@@ -1,15 +1,8 @@
-from fastapi import FastAPI
-from fastapi.responses import FileResponse, RedirectResponse # Added RedirectResponse here
-from fastapi.staticfiles import StaticFiles
-import os
-
-app = FastAPI()
-
 import os
 import datetime
 from fastapi import FastAPI
-from fastapi.responses import JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse, FileResponse, RedirectResponse
 
 app = FastAPI()
 
@@ -22,9 +15,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ✅ Base directory
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Your Logic
+def log_lead(destination, service_type):
+    # This writes to 'leads.txt' in your root project folder
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open("leads.txt", "a") as f:
+        f.write(f"{timestamp} | Destination: {destination} | Service: {service_type}\n")
 
+@app.get("/")
+def home():
+    return {"status": "ok", "message": "Server is running"}
 # ✅ Homepage (SIMPLE + SAFE)
 @app.get("/")
 def read_root():
