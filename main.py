@@ -9,6 +9,21 @@ app = FastAPI()
 def read_root():
     return FileResponse('index.html')
 
+from fastapi import Request
+from fastapi.templating import Jinja2Templates
+
+# Add this at the top of your file
+templates = Jinja2Templates(directory=".")
+
+@app.get("/search")
+def search(q: str, request: Request):
+    # This is where your search logic goes
+    # For now, it just prints what they searched for to the server logs
+    print(f"User searched for: {q}")
+    
+    # You can return a result page or simple text
+    return {"message": f"You searched for: {q}"}
+
 @app.get("/osare")
 def get_osare():
     return FileResponse('osare.html')
