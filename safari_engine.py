@@ -14,8 +14,9 @@ LEADS_FILE = "leads.txt"
 import os
 
 # By removing the hardcoded string, you eliminate the risk of accidental exposure.
-AT_USERNAME = os.getenv("AT_USERNAME", "sandbox")
-AT_API_KEY = os.getenv("AT_API_KEY") # No real key here!
+# AT_USERNAME = "sandbox"
+# AT_API_KEY = "your_actual_key_here" # REMOVED FOR SECURITY
+# AT_SMS_URL = "..."
 AT_SMS_URL = "https://api.sandbox.africastalking.com/version1/messaging/bulk"
 
 # 3. VERIFIED B2B PARTNERS REGISTRY
