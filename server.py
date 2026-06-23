@@ -54,6 +54,17 @@ def catch_all(path: path or path == "/":def catch_all(path: str):
 
 # Change line 57 to this:
 import os
+from fastapi.staticfiles import StaticFiles
+
+# ... your other code ...
+
+# REPLACE LINE 57 WITH THIS:
+static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
+
+if os.path.isdir(static_dir):
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
+else:
+    print(f"WARNING: Static directory not found at {static_dir}. Skipping.")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
 
