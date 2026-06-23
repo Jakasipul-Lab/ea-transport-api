@@ -52,7 +52,10 @@ def catch_all(path: path or path == "/":def catch_all(path: str):
     # ✅ fallback to your main UI
     return FileResponse(os.path.join(BASE_DIR, "osare.html"))
 
-DIRECTORY = "."
+# Change line 57 to this:
+import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
 
 def log_lead(destination, service_type):
     file_path = os.path.join(DIRECTORY, "leads.txt")
