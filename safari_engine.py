@@ -11,9 +11,12 @@ router = APIRouter()
 LEADS_FILE = "leads.txt"
 
 # 2. B2B NETWORK CONFIGURATION (Africa's Talking Gateway)
-AT_USERNAME = os.getenv("AT_USERNAME", "sandbox")  
-AT_API_KEY = os.getenv("AT_API_KEY", "your_api_key_here")
-AT_SMS_URL = "https://api.africastalking.com/version1/messaging/bulk"
+import os
+
+# By removing the hardcoded string, you eliminate the risk of accidental exposure.
+AT_USERNAME = os.getenv("AT_USERNAME", "sandbox")
+AT_API_KEY = os.getenv("AT_API_KEY") # No real key here!
+AT_SMS_URL = "https://api.sandbox.africastalking.com/version1/messaging/bulk"
 
 # 3. VERIFIED B2B PARTNERS REGISTRY
 PARTNERS_DB = {
