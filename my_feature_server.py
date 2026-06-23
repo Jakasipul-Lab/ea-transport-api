@@ -13,16 +13,11 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-)
+from fastapi.responses import FileResponse
 
-# 2. This fixes the {"detail":"Not Found"} error on your main link
 @app.get("/")
 def read_root():
-    return {
-        "message": "Welcome to the East Africa Transport API Backend",
-        "status": "online",
-        "timestamp": datetime.datetime.utcnow().isoformat()
-    }
+    return FileResponse("frontend/index.html")
 
 # 3. Your health check route
 @app.get("/health")
