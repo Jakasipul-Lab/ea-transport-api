@@ -1,11 +1,12 @@
 import os
 from fastapi import FastAPI
+from fastapi.responses import FileResponse # <--- You were missing this import!
 
 app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"message": "Server is running!"}
+    return FileResponse('index.html') # Changed from message to your index file
 
 @app.get("/osare")
 def get_osare():
