@@ -1,5 +1,13 @@
+# REPLACE your current line with this block:
 import os
 from fastapi.staticfiles import StaticFiles
+
+static_dir = os.path.join(os.getcwd(), "static")
+
+if os.path.isdir(static_dir):
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
+else:
+    print(f"CRITICAL ERROR: Folder 'static' not found in: {os.getcwd()}")
 
 # --- REPLACE YOUR CURRENT app.mount BLOCK WITH THIS ---
 static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
