@@ -1,8 +1,15 @@
-
 import os
-from fastapi import FastAPI
-from fastapi.responses import FileResponse, RedirectResponse
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+
+# --- REPLACE YOUR CURRENT app.mount BLOCK WITH THIS ---
+static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
+
+# Instead of crashing, we check if it exists first
+if os.path.exists(static_dir):
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
+else:
+    # This prevents the crash, allowing your server to start
+    print(f"DEBUG: Static folder not found at {static_dir}. Proceeding without static files.")
 
 app = FastAPI()
 
