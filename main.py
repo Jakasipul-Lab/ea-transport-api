@@ -28,6 +28,12 @@ def search(q: str, request: Request):
 def get_osare():
     return FileResponse('osare.html')
 
+@app.get("/search")
+def search(q: str):
+    # This is the logic that receives the 'q' from the search bar
+    # For now, it will just show the search result
+    return {"message": f"You searched for: {q}. Results page coming soon!"}
+
 @app.get("/local")
 def get_local():
     return FileResponse('local.html')
