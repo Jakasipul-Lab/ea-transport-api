@@ -16,10 +16,20 @@ from fastapi.templating import Jinja2Templates
 templates = Jinja2Templates(directory=".")
 
 @app.get("/search")
-def search(q: str, request: Request):
-    # This is where your search logic goes
-    # For now, it just prints what they searched for to the server logs
-    print(f"User searched for: {q}")
+def search(q: str):
+    # This single block handles searches coming from ANY of your pages
+    query = q.lower()
+    
+    if "safari" in query:
+        return FileResponse('safari.html')
+    elif "local" in query:
+        return FileResponse('local.html')
+    elif "osare" in query:
+        return FileResponse('osare.html')
+    else:
+        # If the search term doesn't match a specific page, 
+        # send them to a default page or back to the home page
+        return FileResponse('index.html')
     
     # You can return a result page or simple text
     return {"message": f"You searched for: {q}"}
