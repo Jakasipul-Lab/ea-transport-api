@@ -6,6 +6,14 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+import os
+import datetime
+from fastapi import FastAPI
+from fastapi.responses import JSONResponse, FileResponse
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
 # ✅ CORS config (FIXED)
 app.add_middleware(
     CORSMiddleware,
@@ -14,6 +22,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# ✅ Homepage
+@app.get("/")
+def read_root():
+    return FileResponse("frontend/index.html")
 
 # ✅ Homepage
 @app.get("/")
