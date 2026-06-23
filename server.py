@@ -87,7 +87,6 @@ STATIC_DIR = os.path.join(BASE_DIR, "static")
 @app.get("/{path:path}")
 def catch_all(path: str):
     return FileResponse(os.path.join(BASE_DIR, "osare.html"))
-``
 # --- REPLACE LINE 57 WITH THIS BLOCK ---
 # This looks for a 'static' folder in the same place as your server script
 static_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
