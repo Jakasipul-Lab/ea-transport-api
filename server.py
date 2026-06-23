@@ -40,21 +40,17 @@ async def get_transport_data():
         {"type": "train", "price": 1500, "route": "Nairobi → Kisumu"},
     ]
 
-# ✅ STATIC FILE ROUTING (HTML)
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
 @app.get("/{path:path}")
-def catch_all(path: str):
-    if not path or path == "/":
-        return FileResponse(os.path.join(BASE_DIR, "index.html"))
+def catch_all(path: path or path == "/":def catch_all(path: str):
+        return FileResponse(os.path.join(BASE_DIR, "osare.html"))
 
     file_path = os.path.join(BASE_DIR, path + ".html")
 
     if os.path.exists(file_path):
         return FileResponse(file_path)
 
-    return FileResponse(os.path.join(BASE_DIR, "index.html"))
-
+    # ✅ fallback to your main UI
+    return FileResponse(os.path.join(BASE_DIR, "osare.html"))
 
 DIRECTORY = "."
 
