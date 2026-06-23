@@ -47,7 +47,6 @@ async def track_and_redirect(destination: str, service_type: str):
 
     return RedirectResponse("/")
 
-# ✅ PLACEHOLDER TRANSPORT DATA ROUTE
 @app.get("/api/transport")
 async def get_transport_data():
     return [
