@@ -84,11 +84,22 @@ else:
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
 
+import os
+import datetime
+
 def log_lead(destination, service_type):
-    file_path = os.path.join(DIRECTORY, "leads.txt")
-    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    with open(file_path, "a") as f:
-        f.write(f"{timestamp} | Destination: {destination} | Service: {service_type}\n")
+    try:
+        # Use a safe temporary path if DIRECTORY is not defined
+        target_dir = os.environ.get("LOG_DIR", ".") 
+        file_path = os.path.join(target_dir, "leads.txt")
+        
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        with open(file_path, "a") as f:
+            f.write(f"{timestamp} | Destination: {destination} | Service: {service_type}\n")
+    except Exception as e:
+        # Instead of crashing, we print the error to the logs
+        print(f"CRITICAL: Failed to write to log file: {e}")
 @app.get("/click-lead/{destination}/{service_type}")
 async def track_and_redirect(destination: str, service_type: str):
     log_lead(destination, service_type)
