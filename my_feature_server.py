@@ -15,12 +15,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ✅ BASE DIR (needed for file paths)
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+from fastapi.responses import HTMLResponse
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 def read_root():
-    return FileResponse(...)
+    return "<h1>✅ SERVER WORKS</h1>"
+``
 
 # ✅ Health check
 @app.get("/health")
