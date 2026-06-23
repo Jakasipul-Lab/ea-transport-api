@@ -53,8 +53,17 @@ def catch_all(path: path or path == "/":def catch_all(path: str):
 
     file_path = os.path.join(BASE_DIR, path + ".html")
 
-    if os.path.exists(file_path):
-        return FileResponse(file_path)
+import os
+from fastapi.staticfiles import StaticFiles
+
+# --- REPLACE LINE 57 WITH THIS BLOCK ---
+# This looks for a 'static' folder in the same place as your server script
+static_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
+
+if os.path.exists(static_path):
+    app.mount("/static", StaticFiles(directory=static_path), name="static")
+else:
+    print(f"CRITICAL WARNING: The folder '{static_path}' does not exist. Skipping.")
 
     # ✅ fallback to your main UI
     return FileResponse(os.path.join(BASE_DIR, "osare.html"))
