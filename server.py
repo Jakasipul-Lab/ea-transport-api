@@ -16,10 +16,11 @@ static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
 if os.path.exists(static_dir):
     app.mount("/static", StaticFiles(directory=static_dir), name="static")
 else:
-    # This prevents the crash, allowing your server to start
-    print(f"DEBUG: Static folder not found at {static_dir}. Proceeding without static files.")
-
-app = FastAPI()
+    from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+from pathlib import Path
+import os
 
 # ✅ CORS
 app.add_middleware(
