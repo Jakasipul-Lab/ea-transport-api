@@ -84,11 +84,10 @@ app = FastAPI()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, "static")
 
-if os.path.isdir(STATIC_DIR):
-    app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
-else:
-    print(f"WARNING: 'static' folder not found at {STATIC_DIR}. Static files will not be served.")
-
+@app.get("/{path:path}")
+def catch_all(path: str):
+    return FileResponse(os.path.join(BASE_DIR, "osare.html"))
+``
 # --- REPLACE LINE 57 WITH THIS BLOCK ---
 # This looks for a 'static' folder in the same place as your server script
 static_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
