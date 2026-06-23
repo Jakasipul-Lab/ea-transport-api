@@ -18,10 +18,9 @@ app.add_middleware(
 # ✅ BASE DIR (needed for file paths)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# ✅ Homepage
 @app.get("/")
 def read_root():
-    return FileResponse(os.path.join(BASE_DIR, "frontend", "index.html"))
+    return FileResponse(...)
 
 # ✅ Health check
 @app.get("/health")
