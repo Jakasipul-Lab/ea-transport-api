@@ -20,8 +20,17 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # 3. Define routes
 @app.get("/search")
-async def handle_search(origin: str, destination: str):
-    return {"status": "success", "from": origin, "to": destination}
+async def process_search(origin: str, destination: str):
+    # This logs the search to your terminal/logs so you can see it
+    print(f"Search: {origin} to {destination}")
+    
+    # This serves your actual HTML file instead of the JSON text
+    file_path = os.path.join(BASE_DIR, "results.html")
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    
+    # Fallback to index if results.html is missing
+    return FileResponse(os.path.join(BASE_DIR, "index.html"))
 
 @app.get("/{path:path}")
 async def serve_files(path: str = "index.html"):
