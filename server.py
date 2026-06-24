@@ -7,6 +7,14 @@ def search_local(q: str):
     query = q.lower()
     now = datetime.datetime.now().strftime("%H:%M")
 
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def home():
+    return {"status": "working"}
+    
     results = []
 
     if "bus" in query:
