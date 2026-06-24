@@ -32,3 +32,35 @@ async def serve_index():
 async def serve_other_pages(page_name: str):
     # This specifically looks for your .html files
     return FileResponse(os.path.join(BASE_DIR, f"{page_name}.html"))
+
+from fastapi.responses import HTMLResponse
+import datetime
+
+@app.get("/search/local")
+def search_local(q: str):
+    query = q.lower()
+    now = datetime.datetime.now().strftime("%H:%M")
+
+    results = []
+
+    if "bus" in query:
+        results.append(f"🚌 Bus available now ({now})")
+
+    if "train" in query or "sgr" in query:
+        results.append(f"🚆 SGR available ({now})")
+
+    if "matatu" in query:
+        results.append(f"🚐 Matatu running ({now})")
+
+    if "car" in query or "taxi" in query:
+        results.append(f"🚗 Car hire available ({now})")
+
+    if not results:
+        results.append("No local transport found")
+
+    return HTMLResponse(f"""
+    <h2>Local Results for: {q}</h2>
+    {'<br>'.join(results)}
+    <br><br>
+    <a href="/local">← Back</a>
+    """)
