@@ -1,41 +1,22 @@
 import os
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
-# This automatically finds where your server.py is located
+# Point this to your root directory
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-from fastapi import FastAPI
-
-app = FastAPI()
+# If you have CSS or JS files, put them in a folder called 'static'
+# If you don't have that folder, you can delete this line:
+# app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/")
-async def root():
-    return {"message": "Server is alive"}
-
-@app.get("/search")
-async def handle_search(passengerName: str, origin: str, destination: str):
-    # Log the search so you can see it in Render Logs
-    print(f"Search received: {passengerName} from {origin} to {destination}")
-    
-    # After processing, send the user to the results page
-    # Make sure 'results.html' exists in your root folder
-    return FileResponse(os.path.join(BASE_DIR, "results.html"))
-
-@app.get("/{path:path}")
-async def serve_files(path: str = "index.html"):
-    # This construction ensures we look in the right place
-    file_path = os.path.join(BASE_DIR, path)
-    
-    # If the user goes to the root (/)
-    if path == "":
-        file_path = os.path.join(BASE_DIR, "index.html")
-
-    # Serve the file if it exists
-    if os.path.exists(file_path) and os.path.isfile(file_path):
-        return FileResponse(file_path)
-    
-    # Default to index.html for everything else (including search)
+async def serve_index():
     return FileResponse(os.path.join(BASE_DIR, "index.html"))
+
+@app.get("/{page_name}.html")
+async def serve_other_pages(page_name: str):
+    # This specifically looks for your .html files
+    return FileResponse(os.path.join(BASE_DIR, f"{page_name}.html"))
