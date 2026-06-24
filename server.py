@@ -27,6 +27,13 @@ async def track_and_redirect(destination: str, service_type: str):
     log_lead(destination, service_type)
     return RedirectResponse("/")
 
+from fastapi import Query
+
+@app.get("/api/search")
+async def search_tours(q: str = Query(..., description="The search term")):
+    # For now, let's just return the search term to verify the connection works
+    return {"message": f"You searched for: {q}", "results": []}
+
 @app.get("/{path:path}")
 async def serve_files(path: str = "index.html"):
     if not path or path == "/":
