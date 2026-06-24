@@ -7,6 +7,19 @@ def edit_page(tour_id: int):
     cursor.execute("SELECT * FROM tours WHERE id = ?", (tour_id,))
     row = cursor.fetchone()
 
+@app.get("/local")
+def get_local():
+    return FileResponse('local.html')
+
+@app.get("/safari")
+def get_safari():
+    return FileResponse('safari.html')
+
+@app.get("/about")
+def get_about():
+    return FileResponse('about.html')
+
+    
     from fastapi import Form
 
 from fastapi import Form
