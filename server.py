@@ -12,6 +12,18 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # If you don't have that folder, you can delete this line:
 # app.mount("/static", StaticFiles(directory="static"), name="static")
 
+@app.get("/safari")
+def get_safari():
+    return FileResponse("safari.html")
+
+@app.get("/local")
+def get_local():
+    return FileResponse("local.html")
+
+@app.get("/about")
+def get_about():
+    return FileResponse("about.html")
+
 @app.get("/")
 async def serve_index():
     return FileResponse(os.path.join(BASE_DIR, "index.html"))
