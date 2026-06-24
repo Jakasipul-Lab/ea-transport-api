@@ -16,6 +16,12 @@ def home():
 def local():
     return FileResponse("local.html")
 
+from fastapi.responses import FileResponse
+
+@app.get("/local.html")
+async def serve_local_html():
+    return FileResponse("local.html")
+
 from fastapi import FastAPI
 import datetime
 
