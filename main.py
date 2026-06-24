@@ -9,6 +9,22 @@ def edit_page(tour_id: int):
 
     from fastapi import Form
 
+from fastapi import Form
+
+@app.post("/update/{tour_id}")
+def update_tour(
+    tour_id: int,
+    name: str = Form(...),
+    price: int = Form(...)
+):
+    cursor.execute(
+        "UPDATE tours SET name=?, price=? WHERE id=?",
+        (name, price, tour_id)
+    )
+    conn.commit()
+
+    return {"message": "Tour updated successfully"}
+
 @app.get("/edit/{tour_id}")
 def edit_page(tour_id: int):
     cursor.execute("SELECT * FROM tours WHERE id=?", (tour_id,))
