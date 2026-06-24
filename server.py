@@ -15,12 +15,6 @@ app.add_middleware(
 )
 
 from fastapi import Query
-
-@app.get("/local")
-async def handle_search(q: str = Query(None)):
-    # 'q' captures whatever comes after '?q=' in your URL
-    if not q:
-        return FileResponse(os.path.join(BASE_DIR, "index.html"))
     
     # Logic to return a specific file based on the search term
     if "safari" in q.lower():
@@ -36,6 +30,21 @@ def log_lead(destination, service_type):
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with open(file_path, "a") as f:
         f.write(f"{timestamp} | Destination: {destination} | Service: {service_type}\n")
+
+from fastapi import Query
+
+@app.get("/local")
+async def handle_search(q: str = Query(None)):
+    # 'q' captures whatever comes after '?q=' in your URL
+    if not q:
+        return FileResponse(os.path.join(BASE_DIR, "index.html"))
+    
+    # Logic to return a specific file based on the search term
+    if "safari" in q.lower():
+        return FileResponse(os.path.join(BASE_DIR, "safari.html"))
+    
+    # Fallback if the search term doesn't match a specific file
+    return FileResponse(os.path.join(BASE_DIR, "index.html"))
 
 @app.get("/click-lead/{destination}/{service_type}")
 async def track_and_redirect(destination: str, service_type: str):
