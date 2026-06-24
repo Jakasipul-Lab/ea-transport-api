@@ -147,3 +147,16 @@
     </script>
 </body>
 </html>
+<script>
+    
+function handleSearch(event) {
+    event.preventDefault(); // Stop the page from refreshing
+    
+    // Get values from the inputs
+    const origin = document.getElementById('origin').value;
+    const destination = document.getElementById('destination').value;
+    
+    // Redirect to the backend route with the search data
+    window.location.href = `/search?origin=${origin}&destination=${destination}`;
+}
+</script>
