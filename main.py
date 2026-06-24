@@ -33,6 +33,23 @@ def search_local(q: str):
     query = q.lower()
     now = datetime.datetime.now().strftime("%H:%M")
 
+from fastapi import Response
+import urllib.parse
+
+@app.get("/click-lead/safari")
+def safari_lead(operator_id: str, transport: str, dest: str):
+    
+    # Simple WhatsApp message
+    message = f"Hello, I want a {transport} to {dest}. Found via OSARE."
+    encoded_message = urllib.parse.quote_plus(message)
+
+    # You can change this number to your real number
+    phone = "254700000000"
+
+    whatsapp_url = f"https://wa.me/{phone}?text={encoded_message}"
+
+    return Response(status_code=303, headers={"Location": whatsapp_url})
+    
     results = []
 
     if "bus" in query:
