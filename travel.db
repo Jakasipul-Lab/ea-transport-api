@@ -12,3 +12,16 @@ if count == 0:
     ('Dubai City Tour', 'Luxury Middle East Experience', 'dubai,uae,tour', 'asia', 1500, 'https://wa.me/254700000000?text=Dubai Tour')
     """)
     conn.commit()
+
+cursor.execute("""
+INSERT INTO tours (name, desc, keywords, region, price, link)
+VALUES (?, ?, ?, ?, ?, ?)
+""", (
+    "Serengeti Migration Safari",
+    "5 Day Wildebeest Migration Experience",
+    "serengeti,migration,tanzania,safari",
+    "africa",
+    2000,
+    "https://wa.me/254700000000?text=Serengeti Safari"
+))
+conn.commit()
