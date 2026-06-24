@@ -25,3 +25,7 @@ VALUES (?, ?, ?, ?, ?, ?)
     "https://wa.me/254700000000?text=Serengeti Safari"
 ))
 conn.commit()
+
+cursor.execute("""
+INSERT INTO tours ...
+""")
