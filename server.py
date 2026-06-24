@@ -11,6 +11,24 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 def home():
     return FileResponse(os.path.join(BASE_DIR, "index.html"))
 
+@app.get("/search/local", response_class=HTMLResponse)
+def search_local(q: str):
+    query = q.lower()
+    now = datetime.datetime.now().strftime("%H:%M")
+    results = ["...your logic here..."]
+    
+    # WRAP IN HTML TAGS
+    return f"""
+    <html>
+        <body>
+            <h2>Local Results for: {q}</h2>
+            <p>{'<br>'.join(results)}</p>
+            <br><br>
+            <a href="/local">← Back</a>
+        </body>
+    </html>
+    """
+
 @app.get("/local")
 @app.get("/local.html")
 def local():
