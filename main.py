@@ -2,6 +2,38 @@
 def search(q: str):
     query_words = q.lower().split()
 
+    @app.get("/edit/{tour_id}")
+def edit_page(tour_id: int):
+    cursor.execute("SELECT * FROM tours WHERE id = ?", (tour_id,))
+    row = cursor.fetchone()
+
+    if not row:
+        return {"error": "Tour not found"}
+
+    id, name, desc, keywords, region, price, link = row
+
+    return f"""
+    <html>
+    <body>
+        <h2>Edit Tour</h2>
+
+        <form action="/update/{id}" method="post">
+            Name: <input name="name" value="{name}"><br><br>
+            Description: <input name="desc" value="{desc}"><br><br>
+            Keywords: <input name="keywords" value="{keywords}"><br><br>
+            Region: <input name="region" value="{region}"><br><br>
+            Price: <input name="price" value="{price}"><br><br>
+            Link: <input name="link" value="{link}"><br><br>
+
+            <button type="submit">Update Tour</button>
+        </form>
+
+        <br><a href="/dashboard">← Back</a>
+    </body>
+    </html>
+    """
+``
+
     cursor.execute("SELECT * FROM tours")
     rows = cursor.fetchall()
 
