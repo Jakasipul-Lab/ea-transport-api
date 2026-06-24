@@ -7,6 +7,14 @@ app = FastAPI()
 # This automatically finds where your server.py is located
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+async def root():
+    return {"message": "Server is alive"}
+
 @app.get("/search")
 async def handle_search(passengerName: str, origin: str, destination: str):
     # Log the search so you can see it in Render Logs
