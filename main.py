@@ -9,6 +9,39 @@ def edit_page(tour_id: int):
 
     from fastapi import Form
 
+@app.get("/edit/{tour_id}")
+def edit_page(tour_id: int):
+    cursor.execute("SELECT * FROM tours WHERE id=?", (tour_id,))
+    row = cursor.fetchone()
+
+    if not row:
+        return "Tour not found"
+
+    id, name, desc, keywords, region, price, link = row
+
+    return f"""
+    <html>
+    <body>
+
+        <h2>Edit Tour</h2>
+
+        <form action="/update/{id}" method="post">
+            Name:<br>
+            <input name="name" value="{name}"><br><br>
+
+            Price:<br>
+            <input name="price" value="{price}"><br><br>
+
+            <button type="submit">Update</button>
+        </form>
+
+        <br>
+        <a href="/dashboard">← Back to Dashboard</a>
+
+    </body>
+    </html>
+    """
+
 @app.post("/update/{tour_id}")
 def update_tour(
     tour_id: int,
