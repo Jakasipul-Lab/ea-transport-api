@@ -12,27 +12,27 @@ BASE_DIR = os.path.dirname(__file__)
 def home():
     return FileResponse(os.path.join(BASE_DIR, "index.html"))
 
+from fastapi import FastAPI
+from fastapi.responses import FileResponse
+import datetime
+
+# 1. ALWAYS initialize the app first
+app = FastAPI() 
+
+# 2. Then define your routes
 @app.get("/local")
 def local():
     return FileResponse("local.html")
-
-from fastapi.responses import FileResponse
 
 @app.get("/local.html")
 async def serve_local_html():
     return FileResponse("local.html")
 
-from fastapi import FastAPI
-import datetime
-
-app = FastAPI()  # <--- This must be here!
-
 @app.get("/search/local")
 def search_local(q: str):
     query = q.lower()
     now = datetime.datetime.now().strftime("%H:%M")
-    return {"query": query, "time": now} # Don't forget to return something!
-
+    return {"query": query, "time": now}
 @app.get("/safari")
 def safari():
     return FileResponse("safari.html")
