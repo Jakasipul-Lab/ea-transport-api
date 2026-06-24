@@ -25,9 +25,14 @@ async def handle_search(origin: str, destination: str):
 
 @app.get("/{path:path}")
 async def serve_files(path: str = "index.html"):
+    # Fix the path to point to your file
     file_path = os.path.join(BASE_DIR, path)
-    if os.path.exists(file_path):
+    
+    # Only return the file if it actually exists AND is a file
+    if os.path.exists(file_path) and os.path.isfile(file_path):
         return FileResponse(file_path)
+    
+    # If the file doesn't exist, return your main page
     return FileResponse(os.path.join(BASE_DIR, "index.html"))
 
 # 4. Only start if run directly
