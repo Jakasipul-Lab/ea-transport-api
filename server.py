@@ -1,3 +1,15 @@
+@app.get("/search")
+async def process_search(origin: str, destination: str):
+    # This logs the search so you can see it in leads.txt or console
+    print(f"Search request: From {origin} to {destination}")
+    
+    # Logic to return a specific result page
+    # For example, if destination is Mombasa, serve a specific file:
+    if "mombasa" in destination.lower():
+        return FileResponse(os.path.join(BASE_DIR, "mombasa.html"))
+        
+    return FileResponse(os.path.join(BASE_DIR, "index.html"))
+
 import os
 import uvicorn
 import datetime
