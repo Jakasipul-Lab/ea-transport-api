@@ -1,1 +1,14 @@
 
+# ✅ Insert sample data (only once)
+cursor.execute("SELECT COUNT(*) FROM tours")
+count = cursor.fetchone()[0]
+
+if count == 0:
+    cursor.execute("""
+    INSERT INTO tours (name, desc, keywords, region, price, link)
+    VALUES
+    ('Masai Mara Safari', '3-Day Big Five Safari', 'safari,mara,kenya,wildlife', 'africa', 1200, 'https://wa.me/254700000000?text=Masai Mara Safari'),
+    ('Zanzibar Holiday', 'Luxury Beach Escape', 'zanzibar,beach,tanzania', 'africa', 900, 'https://wa.me/254700000000?text=Zanzibar Trip'),
+    ('Dubai City Tour', 'Luxury Middle East Experience', 'dubai,uae,tour', 'asia', 1500, 'https://wa.me/254700000000?text=Dubai Tour')
+    """)
+    conn.commit()
