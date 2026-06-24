@@ -28,11 +28,6 @@ def get_about():
 async def serve_index():
     return FileResponse(os.path.join(BASE_DIR, "index.html"))
 
-@app.get("/{page_name}.html")
-async def serve_other_pages(page_name: str):
-    # This specifically looks for your .html files
-    return FileResponse(os.path.join(BASE_DIR, f"{page_name}.html"))
-
 from fastapi.responses import HTMLResponse
 import datetime
 
