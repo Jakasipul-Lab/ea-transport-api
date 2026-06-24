@@ -57,6 +57,14 @@ async def serve_files(path: str = "index.html"):
         return FileResponse(file_path)
     return FileResponse(os.path.join(BASE_DIR, "index.html"))
 
+# ... (your imports)
+# ... (your middleware)
+# ... (your log_lead function)
+# ... (your routes)
+
+# Ensure this is the very last part of the file
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
+    # 'server' must match your filename (server.py)
+    # 'app' must match the variable name defined at the top
     uvicorn.run("server:app", host="0.0.0.0", port=port)
