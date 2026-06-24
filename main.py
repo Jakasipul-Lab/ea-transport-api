@@ -7,6 +7,28 @@ def edit_page(tour_id: int):
     cursor.execute("SELECT * FROM tours WHERE id = ?", (tour_id,))
     row = cursor.fetchone()
 
+    from fastapi import Form
+
+@app.post("/update/{tour_id}")
+def update_tour(
+    tour_id: int,
+    name: str = Form(...),
+    desc: str = Form(...),
+    keywords: str = Form(...),
+    region: str = Form(...),
+    price: int = Form(...),
+    link: str = Form(...)
+):
+    cursor.execute("""
+    UPDATE tours
+    SET name = ?, desc = ?, keywords = ?, region = ?, price = ?, link = ?
+    WHERE id = ?
+    """, (name, desc, keywords, region, price, link, tour_id))
+
+    conn.commit()
+
+    return {"message": "Tour updated successfully"}
+    
     if not row:
         return {"error": "Tour not found"}
 
