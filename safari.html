@@ -72,6 +72,11 @@ function personalizeContent() {
     if (!q.includes("transfer") && !q.includes("taxi")) {
         document.getElementById("transfer").style.display = "none";
     }
+
+    if (!q.includes("dubai")) {
+    document.getElementById("dubai").style.display = "none";
+}
+    
 }
 </script>
 
@@ -129,6 +134,10 @@ function personalizeContent() {
 </a>
 </div>
 
+<div class="card" id="dubai">
+...
+</div>
+    
 <br><br>
 
 <a href="/" style="color:#333;">← Back to Main Page</a>
