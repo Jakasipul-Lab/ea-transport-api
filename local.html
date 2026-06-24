@@ -1,54 +1,35 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Travel Tools | OSARE</title>
-    <style>
-        body { font-family: 'Segoe UI', sans-serif; text-align: center; padding: 40px; background:#f4f7f6; }
-        .container { max-width: 400px; margin: auto; }
-        .card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .btn-transport { display:block; margin: 10px 0; padding: 15px; background:#475569; color:white; text-decoration:none; border-radius: 8px; }
-        .btn-upsell { display:block; margin: 10px 0; padding: 15px; background:#16a34a; color:white; text-decoration:none; border-radius: 8px; font-weight: bold; }
-    </style>
-</head>
-<body>
+@app.get("/search/local")
+def search_local(q: str):
+    from fastapi.responses import HTMLResponse
+    import datetime
 
-<div class="container">
-    <h1>Your Destination</h1>
-    
-    <div class="card">
-        <h3>1. Get There</h3>
-        <a href="https://www.google.com/search?q=EasyCoach+booking" class="btn-transport">🚌 Bus (EasyCoach)</a>
-        <a href="https://www.kenyarailways.co.ke" class="btn-transport">🚆 SGR (Madaraka Express)</a>
-    </div>
+    query = q.lower()
+    now = datetime.datetime.now().strftime("%H:%M")
 
-    <div class="card" style="border: 2px solid #16a34a;">
+    print("USER SEARCH:", query)  # ✅ DEBUG (VERY IMPORTANT)
 
-        <!-- ✅ FIX 1: Correct LOCAL search endpoint -->
-        <form action="/search/local" method="get">
-            <input type="text" name="q" placeholder="Search bus, matatu, sgr..." required>
-            <button type="submit">Search</button>
-        </form>
+    results = []
 
-        <h3>2. Enhance Your Stay</h3>
-        <p style="font-size: 0.9rem;">Verified local partners:</p>
-        
-        <!-- ✅ FIX 2: Correct lead tracking links -->
-        <a href="/click-lead/safari?operator_id=mara_cruisers&transport=car+hire&dest=mombasa" class="btn-upsell">
-            🚗 WhatsApp for Car Hire
-        </a>
+    # ✅ Force keyword detection (robust)
+    if any(word in query for word in ["bus"]):
+        results.append(f"🚌 Bus services available ({now})")
 
-        <a href="/click-lead/safari?operator_id=mara_cruisers&transport=safari&dest=mombasa" class="btn-upsell">
-            🏝️ WhatsApp for Safaris
-        </a>
-    </div>
+    if any(word in query for word in ["matatu"]):
+        results.append(f"🚐 Matatu routes active ({now})")
 
-    <!-- ✅ Navigation -->
-    <div style="margin-top:30px;">
-        <a href="/">← Home</a> |
-        <a href="/dashboard">Dashboard</a>
-    </div>
+    if any(word in query for word in ["sgr", "train"]):
+        results.append(f"🚆 SGR departures today ({now})")
 
-</div>
+    if any(word in query for word in ["taxi", "car"]):
+        results.append(f"🚗 Car hire available ({now})")
 
-</body>
-</html>
+    # ✅ fallback
+    if not results:
+        results.append("❌ No transport found (try: bus, matatu, sgr, taxi)")
+
+    return HTMLResponse(f"""
+    <h2>Local Results for: {q}</h2>
+    {'<br>'.join(results)}
+    <br><br>
+    <a href="/local">← Back</a>
+    """)
