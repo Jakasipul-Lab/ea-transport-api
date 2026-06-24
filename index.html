@@ -61,22 +61,21 @@
         </a>
     </div>
 
-    <form class="search-box" id="searchForm">
-
-            <div class="input-group">
-                <label>Passenger Name</label>
-                <input type="text" id="passengerName" placeholder="Full Name" required>
-            </div>
-            <div class="input-group">
-                <label>From</label>
-                <input type="text" id="origin" placeholder="City" value="Nairobi" required>
-            </div>
-            <div class="input-group">
-                <label>To</label>
-                <input type="text" id="destination" placeholder="City" value="Mombasa" required>
-            </div>
-            <button type="submit" class="btn-search">Search</button>
-        </form>
+    <form class="search-box" id="searchForm" onsubmit="handleSearch(event)">
+    <div class="input-group">
+        <label>Passenger Name</label>
+        <input type="text" id="passengerName" placeholder="Full Name" required>
+    </div>
+    <div class="input-group">
+        <label>From</label>
+        <input type="text" id="origin" placeholder="City" value="Nairobi" required>
+    </div>
+    <div class="input-group">
+        <label>To</label>
+        <input type="text" id="destination" placeholder="City" value="Mombasa" required>
+    </div>
+    <button type="submit" class="btn-search">Search</button>
+</form>
         <div class="results-section" id="resultsSection">
             <div class="tabs" id="modeTabs">
                 <div class="tab active" data-type="all">All</div>
