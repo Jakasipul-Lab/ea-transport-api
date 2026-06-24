@@ -42,6 +42,10 @@ def track(destination: str, service_type: str):
 if __name__ == "__main__":
     print("Starting production tracking server on port 10000...")
     uvicorn.run(app, host="0.0.0.0", port=10000)
+
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to SafariRoutes! Use /track to get routed to our partners."}
     
     results = []
     if "bus" in query: results.append(f"🚌 Bus services available ({now})")
