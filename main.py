@@ -2,6 +2,27 @@ import os
 from fastapi import FastAPI
 from fastapi.responses import FileResponse, HTMLResponse
 
+import sqlite3
+
+# ✅ connect to database
+conn = sqlite3.connect("travel.db", check_same_thread=False)
+cursor = conn.cursor()
+
+# ✅ create table
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS tours (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    desc TEXT,
+    keywords TEXT,
+    region TEXT,
+    price INTEGER,
+    link TEXT
+)
+""")
+
+conn.commit()
+
 app = FastAPI()
 
 # ✅ STEP 3 — DATA ENGINE (ADD HERE)
