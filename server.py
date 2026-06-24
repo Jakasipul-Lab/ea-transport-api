@@ -14,6 +14,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from fastapi import Query
+
+@app.get("/local")
+async def handle_search(q: str = Query(None)):
+    # 'q' captures whatever comes after '?q=' in your URL
+    if not q:
+        return FileResponse(os.path.join(BASE_DIR, "index.html"))
+    
+    # Logic to return a specific file based on the search term
+    if "safari" in q.lower():
+        return FileResponse(os.path.join(BASE_DIR, "safari.html"))
+    
+    # Fallback if the search term doesn't match a specific file
+    return FileResponse(os.path.join(BASE_DIR, "index.html"))
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def log_lead(destination, service_type):
