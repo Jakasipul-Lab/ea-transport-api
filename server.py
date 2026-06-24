@@ -22,6 +22,15 @@ def log_lead(destination, service_type):
     with open(file_path, "a") as f:
         f.write(f"{timestamp} | Destination: {destination} | Service: {service_type}\n")
 
+# Place this BEFORE the serve_files route
+@app.get("/{page_name}")
+async def serve_specific_page(page_name: str):
+    file_path = os.path.join(BASE_DIR, f"{page_name}.html")
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    # Fallback to index if not found
+    return FileResponse(os.path.join(BASE_DIR, "index.html"))
+
 @app.get("/click-lead/{destination}/{service_type}")
 async def track_and_redirect(destination: str, service_type: str):
     log_lead(destination, service_type)
