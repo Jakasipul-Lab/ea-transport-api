@@ -23,23 +23,30 @@
 
     <div class="card" style="border: 2px solid #16a34a;">
 
-        <form action="/search" method="get">
-    <input type="text" name="q" placeholder="Search..." required>
-    <button type="submit">Search</button>
-</form>
+        <!-- ✅ FIX 1: Correct LOCAL search endpoint -->
+        <form action="/search/local" method="get">
+            <input type="text" name="q" placeholder="Search bus, matatu, sgr..." required>
+            <button type="submit">Search</button>
+        </form>
+
         <h3>2. Enhance Your Stay</h3>
         <p style="font-size: 0.9rem;">Verified local partners:</p>
         
-        <!-- These now go to your server to be logged -->
-        <a href="/click-lead/mombasa/car_hire" class="btn-upsell">🚗 WhatsApp for Car Hire</a>
-        <a href="/click-lead/mombasa/safari" class="btn-upsell">🏝️ WhatsApp for Safaris</a>
+        <!-- ✅ FIX 2: Correct lead tracking links -->
+        <a href="/click-lead/safari?operator_id=mara_cruisers&transport=car+hire&dest=mombasa" class="btn-upsell">
+            🚗 WhatsApp for Car Hire
+        </a>
+
+        <a href="/click-lead/safari?operator_id=mara_cruisers&transport=safari&dest=mombasa" class="btn-upsell">
+            🏝️ WhatsApp for Safaris
+        </a>
     </div>
 
+    <!-- ✅ Navigation -->
     <div style="margin-top:30px;">
-    <a href="/">← Home</a>
-    |
-    <a href="/dashboard">Dashboard</a>
-</div>
+        <a href="/">← Home</a> |
+        <a href="/dashboard">Dashboard</a>
+    </div>
 
 </div>
 
