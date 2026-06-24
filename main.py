@@ -64,3 +64,41 @@ def search(q: str):
     </body>
     </html>
     """)
+
+@app.get("/dashboard")
+def dashboard():
+    cursor.execute("SELECT * FROM tours")
+    rows = cursor.fetchall()
+
+    content = ""
+
+    for row in rows:
+        id, name, desc, keywords, region, price, link = row
+
+        content += f"""
+        <div class="card">
+            <h3>{name}</h3>
+            <p>{desc}</p>
+            <p>Region: {region}</p>
+            <p>Price: ${price}</p>
+            <a href="{link}" target="_blank">View Link</a><br><br>
+            <a href="/delete/{id}">❌ Delete</a>
+        </div>
+        """
+
+    return f"""
+    <html>
+    <head>
+        <style>
+            body {{ font-family: Arial; text-align:center; background:#f4f7f6; }}
+            .card {{ background:white; padding:20px; margin:20px auto; max-width:400px; border-radius:10px; }}
+        </style>
+    </head>
+
+    <body>
+        <h1>Admin Dashboard</h1>
+        <a href="/admin">➕ Add New Tour</a>
+        {content}
+    </body>
+    </html>
+    """
