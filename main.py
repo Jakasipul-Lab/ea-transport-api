@@ -1,31 +1,43 @@
-import os
 import datetime
-from fastapi import FastAPI
+import os
+import urllib.parse
+from fastapi import FastAPI, Response
 from fastapi.responses import FileResponse, HTMLResponse
 
 app = FastAPI()
 
 BASE_DIR = os.path.dirname(__file__)
 
+
+# --- PAGES ---
+
+
 # ✅ HOME
 @app.get("/")
 def home():
     return FileResponse(os.path.join(BASE_DIR, "index.html"))
+
 
 # ✅ LOCAL PAGE
 @app.get("/local")
 def local_page():
     return FileResponse(os.path.join(BASE_DIR, "local.html"))
 
+
 # ✅ SAFARI PAGE
 @app.get("/safari")
 def safari_page():
     return FileResponse(os.path.join(BASE_DIR, "safari.html"))
 
+
 # ✅ ABOUT PAGE
 @app.get("/about")
 def about_page():
     return FileResponse(os.path.join(BASE_DIR, "about.html"))
+
+
+# --- API OPERATIONS & MONETIZATION ---
+
 
 # ✅ ✅ LOCAL SEARCH (OPERATIONS)
 @app.get("/search/local")
@@ -33,23 +45,6 @@ def search_local(q: str):
     query = q.lower()
     now = datetime.datetime.now().strftime("%H:%M")
 
-from fastapi import Response
-import urllib.parse
-
-@app.get("/click-lead/safari")
-def safari_lead(operator_id: str, transport: str, dest: str):
-    
-    # Simple WhatsApp message
-    message = f"Hello, I want a {transport} to {dest}. Found via OSARE."
-    encoded_message = urllib.parse.quote_plus(message)
-
-    # You can change this number to your real number
-    phone = "254700000000"
-
-    whatsapp_url = f"https://wa.me/{phone}?text={encoded_message}"
-
-    return Response(status_code=303, headers={"Location": whatsapp_url})
-    
     results = []
 
     if "bus" in query:
@@ -67,40 +62,62 @@ def safari_lead(operator_id: str, transport: str, dest: str):
     if not results:
         results.append("No local transport found")
 
-    return HTMLResponse(f"""
+    return HTMLResponse(
+        f"""
     <h2>Local Results for: {q}</h2>
     {'<br>'.join(results)}
     <br><br>
     <a href="/local">← Back</a>
-    """)
+    """
+    )
+
 
 # ✅ ✅ SAFARI SEARCH (MONETIZATION)
 @app.get("/search/safari")
 def search_safari(q: str):
     query = q.lower()
-
     results = []
 
     if "safari" in query or "mara" in query:
-        results.append("""
+        results.append(
+            """
         <h3>Masai Mara Safari - $1200</h3>
         <a href="/click-lead/safari?operator_id=mara_cruisers&transport=4x4&dest=masai+mara">
         Book via WhatsApp</a>
-        """)
+        """
+        )
 
     if "zanzibar" in query or "beach" in query:
-        results.append("""
+        results.append(
+            """
         <h3>Zanzibar Beach Holiday - $900</h3>
         <a href="/click-lead/safari?operator_id=mara_cruisers&transport=flight&dest=zanzibar">
         Book via WhatsApp</a>
-        """)
+        """
+        )
 
     if not results:
         results.append("No safari results found")
 
-    return HTMLResponse(f"""
+    return HTMLResponse(
+        f"""
     <h2>Safari Results for: {q}</h2>
     {'<br><br>'.join(results)}
     <br><br>
     <a href="/safari">← Back</a>
-    """)
+    """
+    )
+
+
+# ✅ ✅ CLICK LEAD REDIRECT
+@app.get("/click-lead/safari")
+def safari_lead(operator_id: str, transport: str, dest: str):
+    # Simple WhatsApp message
+    message = f"Hello, I want a {transport} to {dest}. Found via OSARE."
+    encoded_message = urllib.parse.quote_plus(message)
+
+    # You can change this number to your real number
+    phone = "254700000000"
+    whatsapp_url = f"https://wa.me/{phone}?text={encoded_message}"
+
+    return Response(status_code=303, headers={"Location": whatsapp_url})
