@@ -1,3 +1,36 @@
+
+from fastapi.responses import HTMLResponse
+import datetime
+
+@app.get("/search/local")
+def search_local(q: str):
+    query = q.lower()
+    now = datetime.datetime.now().strftime("%H:%M")
+
+    results = []
+
+    if "bus" in query:
+        results.append(f"🚌 Bus available ({now})")
+
+    if "matatu" in query:
+        results.append(f"🚐 Matatu running ({now})")
+
+    if "sgr" in query or "train" in query:
+        results.append(f"🚆 SGR available ({now})")
+
+    if "taxi" in query or "car" in query:
+        results.append(f"🚗 Car hire available ({now})")
+
+    if not results:
+        results.append("❌ No transport found")
+
+    return HTMLResponse(f"""
+    <h2>Local Results for: {q}</h2>
+    {'<br>'.join(results)}
+    <br><br>
+    <a href="/local">← Back</a>
+    """)
+``
 import os
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
