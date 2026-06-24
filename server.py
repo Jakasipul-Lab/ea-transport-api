@@ -14,15 +14,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-from fastapi import Query
-    
-    # Logic to return a specific file based on the search term
-    if "safari" in q.lower():
-        return FileResponse(os.path.join(BASE_DIR, "safari.html"))
-    
-    # Fallback if the search term doesn't match a specific file
-    return FileResponse(os.path.join(BASE_DIR, "index.html"))
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def log_lead(destination, service_type):
@@ -31,32 +22,10 @@ def log_lead(destination, service_type):
     with open(file_path, "a") as f:
         f.write(f"{timestamp} | Destination: {destination} | Service: {service_type}\n")
 
-from fastapi import Query
-
-@app.get("/local")
-async def handle_search(q: str = Query(None)):
-    # 'q' captures whatever comes after '?q=' in your URL
-    if not q:
-        return FileResponse(os.path.join(BASE_DIR, "index.html"))
-    
-    # Logic to return a specific file based on the search term
-    if "safari" in q.lower():
-        return FileResponse(os.path.join(BASE_DIR, "safari.html"))
-    
-    # Fallback if the search term doesn't match a specific file
-    return FileResponse(os.path.join(BASE_DIR, "index.html"))
-
 @app.get("/click-lead/{destination}/{service_type}")
 async def track_and_redirect(destination: str, service_type: str):
     log_lead(destination, service_type)
     return RedirectResponse("/")
-
-from fastapi import Query
-
-@app.get("/api/search")
-async def search_tours(q: str = Query(..., description="The search term")):
-    # For now, let's just return the search term to verify the connection works
-    return {"message": f"You searched for: {q}", "results": []}
 
 @app.get("/{path:path}")
 async def serve_files(path: str = "index.html"):
