@@ -76,6 +76,54 @@ function personalizeContent() {
     if (!q.includes("dubai")) {
     document.getElementById("dubai").style.display = "none";
 }
+
+@app.get("/search/safari")
+def search_safari(q: str):
+    query = q.lower()
+
+    results = []
+
+    if "safari" in query or "mara" in query:
+        results.append(f"""
+        <div class="card">
+            <h3>Masai Mara Safari</h3>
+            <p>3-Day Big Five Safari Experience</p>
+            <a href="https://wa.me/254700000000?text=I want Masai Mara Safari">Book via WhatsApp</a>
+        </div>
+        """)
+
+    if "zanzibar" in query or "beach" in query:
+        results.append(f"""
+        <div class="card">
+            <h3>Zanzibar Beach Holiday</h3>
+            <p>Luxury coastal relaxation</p>
+            <a href="https://wa.me/254700000000?text=I want Zanzibar Holiday">Book via WhatsApp</a>
+        </div>
+        """)
+
+    if "transfer" in query or "transport" in query:
+        results.append(f"""
+        <div class="card">
+            <h3>Airport Transfers</h3>
+            <p>Nairobi • Dar • Entebbe</p>
+            <a href="https://wa.me/254700000000?text=I need airport transfer">Request via WhatsApp</a>
+        </div>
+        """)
+
+    if not results:
+        results.append("<p>No results found</p>")
+
+    return HTMLResponse(f"""
+    <html>
+    <body>
+        <h2>Results for: {q}</h2>
+        {''.join(results)}
+        <br><br>
+        <a href="/safari">← Back</a>
+    </body>
+    </html>
+    """)
+
     
 }
 </script>
