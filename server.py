@@ -16,6 +16,17 @@ def home():
 def local():
     return FileResponse("local.html")
 
+from fastapi import FastAPI
+import datetime
+
+app = FastAPI()  # <--- This must be here!
+
+@app.get("/search/local")
+def search_local(q: str):
+    query = q.lower()
+    now = datetime.datetime.now().strftime("%H:%M")
+    return {"query": query, "time": now} # Don't forget to return something!
+
 @app.get("/safari")
 def safari():
     return FileResponse("safari.html")
