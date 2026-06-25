@@ -1,40 +1,13 @@
-from fastapi.responses import HTMLResponse
-import datetime
+<!DOCTYPE html>
+<html>
+<body>
 
-@app.get("/search/local")
-def search_local(q: str):
-    query = q.lower()
-    now = datetime.datetime.now().strftime("%H:%M")
+<h2>Local Search</h2>
 
-    print("USER SEARCH:", query)  # ✅ debug
+<form action="/search/local">
+    <input type="text" name="q" placeholder="bus, sgr, taxi">
+    <button type="submit">Search</button>
+</form>
 
-    results = []
-
-    # ✅ Transport detection
-    if "bus" in query:
-        results.append(f"🚌 Bus services available ({now})")
-
-    if "matatu" in query:
-        results.append(f"🚐 Matatu routes active ({now})")
-
-    if "sgr" in query or "train" in query:
-        results.append(f"🚆 SGR departures today ({now})")
-
-    if "taxi" in query or "car" in query:
-        results.append(f"🚗 Car hire available ({now})")
-
-    # ✅ fallback
-    if not results:
-        results.append("❌ No transport found (try: bus, matatu, sgr, taxi)")
-
-    # ✅ RETURN CLEAN HTML
-    return HTMLResponse(f"""
-    <html>
-    <body>
-        <h2>Local Results for: {q}</h2>
-        {'<br>'.join(results)}
-        <br><br>
-        <a href="/local">← Back</a>
-    </body>
-    </html>
-    """)
+</body>
+</html>
