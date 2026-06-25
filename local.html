@@ -2,10 +2,18 @@
 <html>
 <body>
 
-<h2>Local Search</h2>
+<h2>Choose Transport</h2>
 
-<form action="/search/local">
-    <input type="text" name="q" placeholder="bus, sgr, taxi">
+<button onclick="window.location='/search/local?q=bus'">🚌 Bus</button>
+<button onclick="window.location='/search/local?q=train'">🚆 Train</button>
+<button onclick="window.location='/search/local?q=taxi'">🚗 Taxi</button>
+
+<br><br>
+
+<h4>Or search manually:</h4>
+
+/search/local
+    <input type="text" name="q" placeholder="type your option">
     <button type="submit">Search</button>
 </form>
 
