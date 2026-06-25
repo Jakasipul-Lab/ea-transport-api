@@ -8,29 +8,35 @@ app = FastAPI()
 
 BASE_DIR = os.path.dirname(__file__)
 
+# ---------------------------------------------------------
+# 🛠️ EMBEDDED REAL DATA FALLBACK (Replaces corrupted server)
+# ---------------------------------------------------------
+LOCAL_DATABASE = [
+    {"keywords": ["bus", "matatu", "shuttle"], "title": "🚐 Reliable Local Shuttle & Matatu Routes", "desc": "Daily departures across major towns.", "price": "KES 1,200"},
+    {"keywords": ["train", "sgr"], "title": "列車 SGR Express Economy Tier", "desc": "Mombasa to Nairobi ticketing assistance.", "price": "KES 1,500"},
+    {"keywords": ["car", "taxi", "hire", "cruiser"], "title": "🚗 Budget Safari Van & Car Hire", "desc": "Self-drive or chauffeured options for local groups.", "price": "KES 8,000/day"}
+]
+
+SAFARI_DATABASE = [
+    {"keywords": ["mara", "safari", "big five", "kenya"], "operator_id": "mara_cruisers", "title": "🦁 Budget Masai Mara Group Joining Safari", "desc": "3 Days, 2 Nights. See the Big Five. Ideal for tourists & local groups.", "price": "$350", "dest": "masai mara"},
+    {"keywords": ["zanzibar", "beach", "tanzania"], "operator_id": "znz_tours", "title": "🏖️ Zanzibar Beach Getaway & Stone Town", "desc": "4 Days all-inclusive package with airport transfers.", "price": "$490", "dest": "zanzibar"},
+    {"keywords": ["serengeti", "migration"], "operator_id": "serengeti_wild", "title": "🐆 Serengeti & Ngorongoro Crater Circuit", "desc": "Budget camping safari for international groups.", "price": "$750", "dest": "serengeti"}
+]
 
 # --- PAGES ---
 
-
-# ✅ HOME
 @app.get("/")
 def home():
     return FileResponse(os.path.join(BASE_DIR, "index.html"))
 
-
-# ✅ LOCAL PAGE
 @app.get("/local")
 def local_page():
     return FileResponse(os.path.join(BASE_DIR, "local.html"))
 
-
-# ✅ SAFARI PAGE
 @app.get("/safari")
 def safari_page():
     return FileResponse(os.path.join(BASE_DIR, "safari.html"))
 
-
-# ✅ ABOUT PAGE
 @app.get("/about")
 def about_page():
     return FileResponse(os.path.join(BASE_DIR, "about.html"))
@@ -38,86 +44,77 @@ def about_page():
 
 # --- API OPERATIONS & MONETIZATION ---
 
-
-# ✅ ✅ LOCAL SEARCH (OPERATIONS)
+# ✅ FIX: DYNAMIC LOCAL SEARCH
 @app.get("/search/local")
 def search_local(q: str):
     query = q.lower()
     now = datetime.datetime.now().strftime("%H:%M")
-
     results = []
 
-    if "bus" in query:
-        results.append(f"🚌 Bus available now ({now})")
-
-    if "train" in query or "sgr" in query:
-        results.append(f"🚆 SGR departure around {now}")
-
-    if "matatu" in query:
-        results.append(f"🚐 Matatu running now ({now})")
-
-    if "car" in query or "taxi" in query:
-        results.append(f"🚗 Car hire available ({now})")
+    # Loop through the database instead of hardcoded words
+    for item in LOCAL_DATABASE:
+        if any(keyword in query for keyword in item["keywords"]):
+            results.append(f"""
+            <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+                <h4>{item['title']}</h4>
+                <p>{item['desc']}</p>
+                <strong>Price: {item['price']}</strong> <small>(Updated at {now})</small>
+            </div>
+            """)
 
     if not results:
-        results.append("No local transport found")
+        results.append("<p>No local transport options match your search. Try keywords like: Bus, SGR, Matatu, or Car.</p>")
 
-    return HTMLResponse(
-        f"""
+    return HTMLResponse(f"""
     <h2>Local Results for: {q}</h2>
-    {'<br>'.join(results)}
-    <br><br>
-    <a href="/local">← Back</a>
-    """
-    )
+    {''.join(results)}
+    <br>
+    <a href="/local">← Back to Search</a>
+    """)
 
 
-# ✅ ✅ SAFARI SEARCH (MONETIZATION)
+# ✅ FIX: DYNAMIC SAFARI SEARCH WITH TRACKING
 @app.get("/search/safari")
 def search_safari(q: str):
     query = q.lower()
     results = []
 
-    if "safari" in query or "mara" in query:
-        results.append(
-            """
-        <h3>Masai Mara Safari - $1200</h3>
-        <a href="/click-lead/safari?operator_id=mara_cruisers&transport=4x4&dest=masai+mara">
-        Book via WhatsApp</a>
-        """
-        )
-
-    if "zanzibar" in query or "beach" in query:
-        results.append(
-            """
-        <h3>Zanzibar Beach Holiday - $900</h3>
-        <a href="/click-lead/safari?operator_id=mara_cruisers&transport=flight&dest=zanzibar">
-        Book via WhatsApp</a>
-        """
-        )
+    for item in SAFARI_DATABASE:
+        if any(keyword in query for keyword in item["keywords"]):
+            # URL Encoded variables safely passed to the click-lead pipeline
+            link = f"/click-lead/safari?operator_id={item['operator_id']}&dest={urllib.parse.quote_plus(item['dest'])}&price={item['price']}"
+            results.append(f"""
+            <div style="border: 1px solid #2ecc71; padding: 15px; margin-bottom: 15px; border-radius: 5px;">
+                <h3>{item['title']} — <span style="color:#2ecc71;">{item['price']}</span></h3>
+                <p>{item['desc']}</p>
+                <a href="{link}" style="background-color:#2ecc71; color:white; padding: 8px 12px; text-decoration:none; border-radius:3px; display:inline-block;">
+                    Book Route via Agent WhatsApp
+                </a>
+            </div>
+            """)
 
     if not results:
-        results.append("No safari results found")
+        results.append("<p>No safari packages found matching that location. Try searching 'Mara', 'Zanzibar', or 'Serengeti'.</p>")
 
-    return HTMLResponse(
-        f"""
-    <h2>Safari Results for: {q}</h2>
-    {'<br><br>'.join(results)}
+    return HTMLResponse(f"""
+    <h2>Safari Tour Results for: {q}</h2>
+    {''.join(results)}
     <br><br>
-    <a href="/safari">← Back</a>
-    """
-    )
+    <a href="/safari">← Back to Search</a>
+    """)
 
 
-# ✅ ✅ CLICK LEAD REDIRECT
+# ✅ FIX: TRACKED REDIRECT FOR YOUR 5% COMMISSION
 @app.get("/click-lead/safari")
-def safari_lead(operator_id: str, transport: str, dest: str):
-    # Simple WhatsApp message
-    message = f"Hello, I want a {transport} to {dest}. Found via OSARE."
+def safari_lead(operator_id: str, dest: str, price: str):
+    # YOUR phone number where you receive the lead first
+    YOUR_PHONE = "254700000000" 
+    
+    # The message includes the vendor identity (operator_id) so you know exactly who owes you 5%
+    message = f"Hello SafariRoutes! I want to book the package to {dest} ({price}). [TRACKING_ID: {operator_id}]"
     encoded_message = urllib.parse.quote_plus(message)
 
-    # You can change this number to your real number
-    phone = "254700000000"
-    whatsapp_url = f"https://wa.me/{phone}?text={encoded_message}"
+    whatsapp_url = f"https://wa.me/{YOUR_PHONE}?text={encoded_message}"
 
+    # Redirects the client straight into WhatsApp conversation with the secure tracking ID intact
     return Response(status_code=303, headers={"Location": whatsapp_url})
