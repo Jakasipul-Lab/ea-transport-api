@@ -1,35 +1,64 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Safari Tours</title>
+<title>Safari Experiences</title>
 
 <style>
 body {
     font-family: Arial;
-    text-align: center;
+    margin: 0;
     background: #eef7f1;
 }
 
+.header {
+    background: #27ae60;
+    padding: 20px;
+    color: white;
+    text-align: center;
+}
+
 .container {
-    margin-top: 40px;
+    padding: 20px;
 }
 
 .card {
     background: white;
-    padding: 20px;
-    margin: 15px auto;
-    width: 85%;
     border-radius: 12px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    margin: 20px auto;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.card-content {
+    padding: 15px;
+    text-align: center;
+}
+
+.card h3 {
+    margin: 10px 0;
+}
+
+.price {
+    color: #27ae60;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 button {
     width: 90%;
-    padding: 15px;
-    margin: 10px;
+    padding: 12px;
+    margin: 10px 0;
     font-size: 16px;
     border: none;
-    border-radius: 10px;
+    border-radius: 8px;
     background: #27ae60;
     color: white;
     cursor: pointer;
@@ -39,10 +68,14 @@ button:hover {
     background: #1e8449;
 }
 
-input {
-    padding: 10px;
-    width: 60%;
-    margin-top: 10px;
+.badge {
+    background: red;
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 5px;
+    position: absolute;
+    margin: 10px;
 }
 </style>
 
@@ -50,44 +83,47 @@ input {
 
 <body>
 
+<div class="header">
+    <h2>🌍 Explore Safari Experiences</h2>
+    <p>Your gateway to Africa adventures</p>
+</div>
+
 <div class="container">
 
-<h2>🌍 Choose Your Experience</h2>
-
+<!-- 🦁 MASAI MARA -->
 <div class="card">
-    <h3>🦁 Wildlife Safari</h3>
-    <p>See lions, elephants, and the Big Five</p>
-    <button onclick="window.location='/search/safari?q=mara'">
-        Explore Masai Mara
-    </button>
+    <span class="badge">Popular</span>
+    <img src="https://source.unsplash.com/400x200/?lion,safari">
+
+    <div class="card-content">
+        <h3>🦁 Masai Mara Safari</h3>
+        <p>See lions, elephants & the Big Five</p>
+        <p class="price">From $350</p>
+
+        <button onclick="window.location='/search/safari?q=mara'">
+            ✅ Check Availability
+        </button>
+    </div>
 </div>
 
+<!-- 🏖️ ZANZIBAR -->
 <div class="card">
-    <h3>🏖️ Beach Holiday</h3>
-    <p>Relax in Zanzibar beaches & resorts</p>
-    <button onclick="window.location='/search/safari?q=zanzibar'">
-        Explore Zanzibar
-    </button>
+    <img src="https://source.unsplash.com/400x200/?zanzibar,beach">
+
+    <div class="card-content">
+        <h3>🏖️ Zanzibar Beach Holiday</h3>
+        <p>Relax on white-sand beaches</p>
+        <p class="price">From $490</p>
+
+        <button onclick="window.location='/search/safari?q=zanzibar'">
+            ✅ Check Availability
+        </button>
+    </div>
 </div>
 
+<!-- 🐆 SERENGETI -->
 <div class="card">
-    <h3>🐆 Migration Safari</h3>
-    <p>Witness the great Serengeti migration</p>
-    <button onclick="window.location='/search/safari?q=serengeti'">
-        Explore Serengeti
-    </button>
-</div>
+    <img src="https://source.unsplash.com/400x200/?serengeti,wildlife">
 
-<div class="card">
-    <h4>Search manually:</h4>
-
-/search/safari
-        <input type="text" name="q" placeholder="e.g. safari, beach">
-        <button type="submit">Search</button>
-    </form>
-</div>
-
-</div>
-
-</body>
-</html>
+    <div class="card-content">
+        <h3>🐆 Serengeti Migration Safari</h3>
