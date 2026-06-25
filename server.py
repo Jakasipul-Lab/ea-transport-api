@@ -8,6 +8,36 @@ app = FastAPI()
 BASE_DIR = os.path.dirname(__file__)
 
 # --------------------------------------
+# ✅ SMART MATCH FUNCTION (ADD THIS HERE)
+# --------------------------------------
+
+def smart_match(query, keywords):
+    query = query.lower()
+    words = query.split()
+
+    groups = [
+        ["safari", "wildlife", "tour", "trip"],
+        ["transport", "bus", "taxi", "train"],
+        ["beach", "holiday", "zanzibar", "resort"]
+    ]
+
+    score = 0
+
+    # direct + partial match
+    for word in words:
+        for keyword in keywords:
+            if word in keyword or keyword in word:
+                score += 1
+
+    # intent matching
+    for group in groups:
+        if any(w in words for w in group) and any(k in keywords for k in group):
+            score += 1
+
+    return score > 0
+
+
+# --------------------------------------
 # ✅ SMART DATA (expanded keywords)
 # --------------------------------------
 
