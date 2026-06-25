@@ -1,33 +1,93 @@
 <!DOCTYPE html>
 <html>
+<head>
+<title>Safari Tours</title>
+
+<style>
+body {
+    font-family: Arial;
+    text-align: center;
+    background: #eef7f1;
+}
+
+.container {
+    margin-top: 40px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    margin: 15px auto;
+    width: 85%;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+button {
+    width: 90%;
+    padding: 15px;
+    margin: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    background: #27ae60;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1e8449;
+}
+
+input {
+    padding: 10px;
+    width: 60%;
+    margin-top: 10px;
+}
+</style>
+
+</head>
+
 <body>
 
-<h2>Find Your Safari Experience</h2>
+<div class="container">
 
-<button onclick="window.location='/search/safari?q=mara'">
-🦁 Wildlife Safari (Masai Mara)
-</button>
+<h2>🌍 Choose Your Experience</h2>
 
-<br><br>
+<div class="card">
+    <h3>🦁 Wildlife Safari</h3>
+    <p>See lions, elephants, and the Big Five</p>
+    <button onclick="window.location='/search/safari?q=mara'">
+        Explore Masai Mara
+    </button>
+</div>
 
-<button onclick="window.location='/search/safari?q=zanzibar'">
-🏖️ Beach Holiday (Zanzibar)
-</button>
+<div class="card">
+    <h3>🏖️ Beach Holiday</h3>
+    <p>Relax in Zanzibar beaches & resorts</p>
+    <button onclick="window.location='/search/safari?q=zanzibar'">
+        Explore Zanzibar
+    </button>
+</div>
 
-<br><br>
+<div class="card">
+    <h3>🐆 Migration Safari</h3>
+    <p>Witness the great Serengeti migration</p>
+    <button onclick="window.location='/search/safari?q=serengeti'">
+        Explore Serengeti
+    </button>
+</div>
 
-<button onclick="window.location='/search/safari?q=serengeti'">
-🐆 Migration Safari (Serengeti)
-</button>
-
-<br><br>
-
-<h4>Or search manually:</h4>
+<div class="card">
+    <h4>Search manually:</h4>
 
 /search/safari
-    <input type="text" name="q" placeholder="type location or experience">
-    <button type="submit">Search</button>
-</form>
+        <input type="text" name="q" placeholder="e.g. safari, beach">
+        <button type="submit">Search</button>
+    </form>
+</div>
+
+</div>
 
 </body>
 </html>
