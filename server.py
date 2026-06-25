@@ -6,6 +6,14 @@ from fastapi.responses import FileResponse, HTMLResponse
 
 app = FastAPI()
 
+@app.get("/local.html")
+def local_page_html():
+    return FileResponse(os.path.join(BASE_DIR, "local.html"))
+
+@app.get("/local")
+def local_page():
+    return FileResponse(os.path.join(BASE_DIR, "local.html"))
+
 BASE_DIR = os.path.dirname(__file__)
 
 # --------------------------------------
