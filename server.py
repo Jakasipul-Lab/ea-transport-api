@@ -25,6 +25,10 @@ def log_lead(destination, service_type):
     with open(file_path, "a") as f:
         f.write(f"[{timestamp}] Destination: {destination}, Service: {service_type}\n")
 
+@app.get("/")
+def home():
+    return {"message": "SafariRoutes is active. Use /track to get routed."}
+
 @app.get("/track")
 def track(destination: str, service_type: str):
     log_lead(destination, service_type)
