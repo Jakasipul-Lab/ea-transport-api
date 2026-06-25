@@ -1,21 +1,76 @@
 <!DOCTYPE html>
 <html>
+<head>
+<title>Local Transport</title>
+
+<style>
+body {
+    font-family: Arial;
+    text-align: center;
+    background: #f4f6f8;
+}
+
+.container {
+    margin-top: 40px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    margin: 10px auto;
+    width: 80%;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+button {
+    width: 80%;
+    padding: 15px;
+    margin: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background: #3498db;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #2980b9;
+}
+
+input {
+    padding: 10px;
+    width: 60%;
+    margin-top: 10px;
+}
+</style>
+
+</head>
+
 <body>
 
-<h2>Choose Transport</h2>
+<div class="container">
 
-<button onclick="window.location='/search/local?q=bus'">🚌 Bus</button>
-<button onclick="window.location='/search/local?q=train'">🚆 Train</button>
-<button onclick="window.location='/search/local?q=taxi'">🚗 Taxi</button>
+<h2>🚍 Choose Your Transport</h2>
 
-<br><br>
+<div class="card">
+    <button onclick="window.location='/search/local?q=bus'">🚌 Bus Travel</button>
+    <button onclick="window.location='/search/local?q=train'">🚆 Train (SGR)</button>
+    <button onclick="window.location='/search/local?q=taxi'">🚗 Taxi / Car Hire</button>
+</div>
 
-<h4>Or search manually:</h4>
+<div class="card">
+    <h4>Or type your choice:</h4>
 
 /search/local
-    <input type="text" name="q" placeholder="type your option">
-    <button type="submit">Search</button>
-</form>
+        <input type="text" name="q" placeholder="e.g. bus, taxi">
+        <button type="submit">Search</button>
+    </form>
+</div>
+
+</div>
 
 </body>
 </html>
+``
