@@ -7,6 +7,14 @@ from fastapi.responses import FileResponse, HTMLResponse
 app = FastAPI()
 BASE_DIR = os.path.dirname(__file__)
 
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def read_root():
+    return {"message": "Hello from Synology!"}
+
 # --------------------------------------
 # ✅ DATA (simple + reliable)
 # --------------------------------------
