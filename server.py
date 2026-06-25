@@ -5,25 +5,42 @@ from fastapi import FastAPI, Response
 from fastapi.responses import FileResponse, HTMLResponse
 
 app = FastAPI()
-
-@app.get("/local.html")
-def local_page_html():
-    return FileResponse(os.path.join(BASE_DIR, "local.html"))
-
-@app.get("/local")
-def local_page():
-    return FileResponse(os.path.join(BASE_DIR, "local.html"))
-
 BASE_DIR = os.path.dirname(__file__)
 
 # --------------------------------------
-# ✅ DATA (fallback database)
+# ✅ SMART DATA (expanded keywords)
 # --------------------------------------
 
 LOCAL_DATABASE = [
-    {"keywords": ["bus", "matatu", "shuttle"], "title": "🚐 Local Shuttle & Matatu", "desc": "Daily routes across towns.", "price": "KES 1,200"},
-    {"keywords": ["train", "sgr"], "title": "🚆 SGR Train Service", "desc": "Mombasa ↔ Nairobi tickets.", "price": "KES 1,500"},
-    {"keywords": ["car", "taxi"], "title": "🚗 Car Hire Service", "desc": "Self-drive & chauffeur options.", "price": "KES 8,000/day"}
+    {
+        "keywords": ["bus", "matatu", "transport", "travel", "ride", "shuttle"],
+        "title": "🚐 Local Shuttle & Matatu Transport",
+        "desc": "Daily transport across cities and towns.",
+        "price": "KES 1,200"
+    },
+    {
+        "keywords": ["train", "sgr", "rail", "mombasa", "nairobi"],
+        "title": "🚆 SGR Train Transport",
+        "desc": "Nairobi ↔ Mombasa railway booking.",
+        "price": "KES 1,500"
+    },
+    {
+        "keywords": ["taxi", "car", "hire", "vehicle", "uber"],
+        "title": "🚗 Taxi & Car Hire",
+        "desc": "Affordable ride and car hire services.",
+        "price": "KES 8,000/day"
+    }
 ]
 
 SAFARI_DATABASE = [
+    {
+        "keywords": ["mara", "safari", "kenya", "wildlife", "tour", "trip", "holiday"],
+        "operator_id": "mara001",
+        "title": "🦁 Masai Mara Safari",
+        "desc": "3 Days Big Five safari experience.",
+        "price": "$350",
+        "dest": "mara"
+    },
+    {
+        "keywords": ["zanzibar", "beach", "tanzania", "holiday", "island", "vacation"],
+        "operator_id": "znz001",
