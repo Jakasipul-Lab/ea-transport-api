@@ -2,10 +2,30 @@
 <html>
 <body>
 
-<h2>Safari Search</h2>
+<h2>Find Your Safari Experience</h2>
 
-<form action="/search/safari">
-    <input type="text" name="q" placeholder="mara, zanzibar">
+<button onclick="window.location='/search/safari?q=mara'">
+🦁 Wildlife Safari (Masai Mara)
+</button>
+
+<br><br>
+
+<button onclick="window.location='/search/safari?q=zanzibar'">
+🏖️ Beach Holiday (Zanzibar)
+</button>
+
+<br><br>
+
+<button onclick="window.location='/search/safari?q=serengeti'">
+🐆 Migration Safari (Serengeti)
+</button>
+
+<br><br>
+
+<h4>Or search manually:</h4>
+
+/search/safari
+    <input type="text" name="q" placeholder="type location or experience">
     <button type="submit">Search</button>
 </form>
 
