@@ -10,6 +10,14 @@ COPY requirements.txt .
 # 4. Install the libraries listed in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
+version: '3.8'
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    restart: always
+
 # 5. Copy the rest of your code into the container
 COPY . .
 
