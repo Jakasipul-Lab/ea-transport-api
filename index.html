@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OSARE - East Africa Transit & Safari Hub</title>
+    <title>OSARE - East Africa Transit & Booking Hub</title>
     <style>
         :root { 
             --primary: #1e3a8a; 
             --accent: #3b82f6; 
             --success: #10b981;
             --orange: #f97316;
+            --whatsapp: #25d366;
             --bg: #f8fafc;
             --text: #1e293b;
         }
@@ -19,57 +20,57 @@
         .hero { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; padding: 3.5rem 2rem; text-align: center; }
         .container { max-width: 1100px; margin: 2rem auto; padding: 0 20px; }
         
-        /* Tier Switching Navigation Tabs */
+        /* Tier Nav Tabs */
         .tier-nav { display: flex; justify-content: center; gap: 1rem; margin-bottom: 2.5rem; }
         .tier-btn { padding: 12px 24px; font-size: 1.1rem; font-weight: bold; border: none; border-radius: 50px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        
         .tier-btn.local { background: #e2e8f0; color: var(--primary); }
         .tier-btn.local.active { background: var(--primary); color: white; }
-        
         .tier-btn.safari { background: #e2e8f0; color: var(--orange); }
         .tier-btn.safari.active { background: var(--orange); color: white; }
 
         .tier-section { display: none; }
         .tier-section.active { display: block; animation: fadeIn 0.4s ease; }
-
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        h2 { margin: 1.5rem 0 1rem 0; font-size: 1.6rem; color: #0f172a; display: flex; align-items: center; gap: 8px; }
+        h2 { margin: 1.5rem 0 0.5rem 0; font-size: 1.6rem; color: #0f172a; }
         p.subtitle { color: #64748b; margin-bottom: 1.5rem; font-size: 0.95rem; }
 
-        /* Tier 1: Form Grid Styles */
-        .search-box-form { background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.2rem; align-items: end; }
+        /* Forms Layout */
+        .booking-form-box { background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; margin-bottom: 1.5rem; }
         .input-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: #64748b; }
         .input-group input, .input-group select { width: 100%; padding: 0.85rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem; background: #f8fafc; }
-        .btn-search-local { background: var(--primary); color: white; border: none; padding: 0.85rem; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; height: 3.2rem; font-size: 1rem; }
-        .btn-search-local:hover { background: #172554; }
 
-        /* Tier 2: Visual Experience Grids */
-        .visual-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-        .image-card { background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 3px solid transparent; }
+        /* Tier 2: Premium Visual Grids */
+        .visual-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .image-card { background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 3px solid transparent; position: relative; }
         .image-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); border-color: var(--orange); }
         .image-card.selected { border-color: var(--success); box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2); }
-        .card-img-holder { width: 100%; height: 180px; background-color: #e2e8f0; }
+        .card-img-holder { width: 100%; height: 190px; background-color: #e2e8f0; position: relative; }
         .card-img-holder img { width: 100%; height: 100%; object-fit: cover; }
-        .card-info { padding: 1.2rem; text-align: center; }
-        .card-info h3 { font-size: 1.2rem; font-weight: 700; color: #0f172a; }
-        .card-info p { font-size: 0.9rem; color: #64748b; margin-top: 0.25rem; }
+        
+        /* Pricing Badge Highlights */
+        .badge-discount { position: absolute; top: 12px; right: 12px; background: #ef4444; color: white; padding: 6px 12px; font-size: 0.8rem; font-weight: bold; border-radius: 20px; text-transform: uppercase; }
 
-        /* Sticky Action Footer Bar for Tour Bookings */
-        .action-bar { background: white; padding: 1.5rem; border-radius: 14px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); display: flex; gap: 1rem; align-items: center; justify-content: space-between; margin-top: 2rem; border-left: 5px solid var(--orange); }
+        .card-info { padding: 1.2rem; }
+        .card-info h3 { font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 0.25rem; }
+        .card-info p { font-size: 0.9rem; color: #64748b; margin-bottom: 0.75rem; }
+        .card-pricing { display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #e2e8f0; padding-top: 0.75rem; font-size: 0.9rem; }
+        .price-tag { font-weight: bold; color: var(--orange); font-size: 1.1rem; }
+
+        /* Dynamic Sticky Action Footer Bar */
+        .action-bar { background: white; padding: 1.5rem; border-radius: 14px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); display: flex; gap: 1rem; align-items: center; justify-content: space-between; margin-top: 2rem; border-left: 5px solid var(--whatsapp); }
         .selection-display { font-weight: 600; color: #0f172a; font-size: 1.05rem; }
-        .btn-submit-safari { background: var(--orange); color: white; border: none; padding: 1rem 2.5rem; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; }
-        .btn-submit-safari:hover { background: #ea580c; }
+        .btn-whatsapp { background: var(--whatsapp); color: white; border: none; padding: 1rem 2.5rem; border-radius: 8px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
+        .btn-whatsapp:hover { background: #1ebd56; transform: scale(1.02); }
 
-        /* Responsive Mobile Layout Structure overrides */
         @media (max-width: 600px) {
-            .tier-nav { flex-direction: row; font-size: 0.9rem; }
+            .tier-nav { font-size: 0.9rem; }
             .tier-btn { padding: 10px 16px; font-size: 0.95rem; flex: 1; justify-content: center; }
-            .search-box-form { grid-template-columns: 1fr; padding: 1.2rem; gap: 1rem; }
-            .btn-search-local { width: 100%; }
-            .visual-grid { grid-template-columns: 1fr; gap: 1.2rem; }
-            .action-bar { flex-direction: column; text-align: center; padding: 1.2rem; }
-            .btn-submit-safari { width: 100%; }
+            .form-row { grid-template-columns: 1fr; gap: 1rem; }
+            .visual-grid { grid-template-columns: 1fr; }
+            .action-bar { flex-direction: column; text-align: center; }
+            .btn-whatsapp { width: 100%; justify-content: center; }
         }
     </style>
 </head>
@@ -77,91 +78,144 @@
 
     <div class="hero">
         <h1 style="font-size: 2.6rem; font-weight: 800; letter-spacing: -0.5px;">OSARE</h1>
-        <p style="opacity: 0.9; margin-top: 4px; font-size: 1.1rem;">East Africa's Connected Transit & Safari Network</p>
+        <p style="opacity: 0.9; margin-top: 4px; font-size: 1.1rem;">Instant East African Commuter Enquiries & Premium Safari Leads</p>
     </div>
     
     <div class="container">
         
-        <!-- The Core Navigation System controlling the Tiers -->
         <div class="tier-nav">
             <button class="tier-btn local active" onclick="switchTier('local')">🚆 Local Commute</button>
-            <button class="tier-btn safari" onclick="switchTier('safari')">🌍 Safari Routes</button>
+            <button class="tier-btn safari" onclick="switchTier('safari')">🌍 Tourist Safaris</button>
         </div>
 
         <!-- ================= TIER 1 SECTION: LOCAL TRAVEL ================= -->
         <div id="localSection" class="tier-section active">
-            <h2>Compare Local Transit Routes</h2>
-            <p class="subtitle">Find real-time schedules sorted from affordable Matatus and public buses to regional trains and quick flights.</p>
+            <h2>Compare Local Transits</h2>
+            <p class="subtitle">Schedules sorted automatically from budget Matatus up to SGR Trains and flights.</p>
             
-            <form class="search-box-form" onsubmit="executeLocalSearch(event)">
-                <div class="input-group">
-                    <label>From</label>
-                    <input type="text" id="localOrigin" placeholder="Departure City (e.g., Nairobi)" value="Nairobi" required>
+            <form class="booking-form-box" onsubmit="executeLocalSearch(event)">
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Departure Terminal</label>
+                        <input type="text" id="localOrigin" value="Nairobi" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Arrival Destination</label>
+                        <input type="text" id="localDestination" value="Mombasa" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Budget Plan</label>
+                        <select id="budgetTier">
+                            <option value="all">Show All Price Options</option>
+                            <option value="cheap">Cheap (Matatu / Sacco)</option>
+                            <option value="moderate">Moderate (Express Buses)</option>
+                            <option value="expensive">Premium (SGR Train / Flight)</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label>To</label>
-                    <input type="text" id="localDestination" placeholder="Arrival City (e.g., Mombasa)" value="Mombasa" required>
-                </div>
-                <div class="input-group">
-                    <label>Preferred Budget Level</label>
-                    <select id="budgetTier">
-                        <option value="all">Show All Rates</option>
-                        <option value="cheap">Cheap (Matatu / Sacco GPS)</option>
-                        <option value="moderate">Moderate (Regional Express Bus)</option>
-                        <option value="expensive">Premium (SGR Train / Flights)</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn-search-local">Search Transits</button>
+                <button type="submit" style="background: var(--primary); color:white; width:100%; padding:12px; border:none; border-radius:8px; font-weight:bold; font-size:1rem; cursor:pointer;">Search Routes</button>
             </form>
         </div>
 
         <!-- ================= TIER 2 SECTION: SAFARI & TOURIST AGENCIES ================= -->
         <div id="safariSection" class="tier-section">
-            <h2>Hire a Verified Safari Car Agency</h2>
-            <p class="subtitle">Select your curated package experience below. Secure booking leads directly generate an automated 5% premium platform fee invoice wrapper.</p>
+            <h2>Explore Premium Savannah Experiences</h2>
+            <p class="subtitle">Click on a card image to select the offer details, fill your preferred payment profile, and tap down below to book via instant automated WhatsApp dispatcher.</p>
             
-            <div class="visual-grid">
-                <!-- Agency Option 1 -->
-                <div class="image-card" onclick="selectSafariAgency('Maasai Mara Big Five Expedition', 'Mara-Cruiser')">
-                    <div class="card-img-holder">
-                        <img src="https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=600" alt="Big Five Wildlife Tracking">
+            <!-- Step 2A: Client Credentials Capture Form -->
+            <div class="booking-form-box">
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Your Full Name</label>
+                        <input type="text" id="touristName" placeholder="e.g., John Doe" required>
                     </div>
-                    <div class="card-info">
-                        <h3>Big Five Tracking Agency</h3>
-                        <p>4x4 Land Cruiser Car Hire & Tour Guides</p>
-                    </div>
-                </div>
-
-                <!-- Agency Option 2 -->
-                <div class="image-card" onclick="selectSafariAgency('Mombasa Luxury Hotel Transit Shuttles', 'Mombasa-Hotels')">
-                    <div class="card-img-holder">
-                        <img src="https://images.unsplash.com/photo-1589979482837-e74f2e145060?w=600" alt="Mombasa Coastal Destination Hotels">
-                    </div>
-                    <div class="card-info">
-                        <h3>Luxury Resort Operators</h3>
-                        <p>Coastal Destination Hotel Transfers & Shuttles</p>
+                    <div class="input-group">
+                        <label>Preferred Payment Method</label>
+                        <select id="paymentMode">
+                            <option value="M-Pesa Express Mobile">M-Pesa Mobile Money</option>
+                            <option value="International Credit/Debit Card">Credit / Debit Card</option>
+                            <option value="Bank Wire Transfer">Direct Bank Transfer</option>
+                            <option value="Cash Payments on Arrival">Cash Payment on Arrival</option>
+                        </select>
                     </div>
                 </div>
             </div>
 
-            <!-- Client Leads Action submission engine containing your 5% commercial markup hook -->
-            <form id="safariAgencyForm" onsubmit="executeSafariSearch(event)">
-                <input type="hidden" id="selectedAgency" value="">
+            <!-- Step 2B: Visual Visual Options Matrix -->
+            <div class="visual-grid">
+                <!-- Card 1: Savannah Group Tour -->
+                <div class="image-card" onclick="selectSafariAgency('Savannah Group Tour', 'Savannah Experts Ltd', '+254712345678', '150 USD per person')">
+                    <span class="badge-discount">Save 10%</span>
+                    <div class="card-img-holder">
+                        <img src="https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=600" alt="Savannah Group Safari">
+                    </div>
+                    <div class="card-info">
+                        <h3>Savannah Group Touring</h3>
+                        <p>Join budget-friendly group custom cruisers tracking the Big Five.</p>
+                        <div class="card-pricing">
+                            <span>Operator: Savannah Experts</span>
+                            <span class="price-tag">$150 / Person</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Light Aircraft Flight Hire -->
+                <div class="image-card" onclick="selectSafariAgency('Light Aircraft Flight Charter', 'Air Transit Kenya', '+254789111222', '850 USD total flight')">
+                    <span class="badge-discount">Promo Rate</span>
+                    <div class="card-img-holder">
+                        <img src="https://images.unsplash.com/photo-1589979482837-e74f2e145060?w=600" alt="Light Aircraft Charter">
+                    </div>
+                    <div class="card-info">
+                        <h3>Light Aircraft Luxury Hire</h3>
+                        <p>Skip the roads. Charter direct light flights straight to the bush air-strips.</p>
+                        <div class="card-pricing">
+                            <span>Operator: Air Transit KE</span>
+                            <span class="price-tag">$850 Flight Private</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Holiday Luxury Resorts -->
+                <div class="image-card" onclick="selectSafariAgency('Mara Luxury Eco-Resort Package', 'Serene Lodges Group', '+254733444555', '320 USD per night')">
+                    <span class="badge-discount">Price Drop</span>
+                    <div class="card-img-holder">
+                        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600" alt="Holiday Luxury Resorts">
+                    </div>
+                    <div class="card-info">
+                        <h3>Holiday Resort Stayovers</h3>
+                        <p>Premium wild luxury lodge bookings boasting magnificent sunset verandas.</p>
+                        <div class="card-pricing">
+                            <span>Operator: Serene Lodges</span>
+                            <span class="price-tag">$320 / Night</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Client Action Submission Bar -->
+            <form id="safariAgencyForm" onsubmit="dispatchWhatsAppLead(event)">
+                <!-- Hidden variables mapping selected metadata -->
+                <input type="hidden" id="selectedPackageName" value="">
+                <input type="hidden" id="selectedVendorName" value="">
+                <input type="hidden" id="selectedVendorPhone" value="">
+                <input type="hidden" id="selectedPrice" value="">
                 
                 <div class="action-bar">
-                    <div class="selection-display" id="safariStatusMessage">Tap a tourist package image block above to select an operator agency</div>
-                    <button type="submit" class="btn-submit-safari">Request Agency Lead</button>
+                    <div class="selection-display" id="safariStatusMessage">Choose an experience image block above to configure your itinerary...</div>
+                    <button type="submit" class="btn-whatsapp">
+                        <svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="currentColor" d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.817 9.817 0 0 0 12.04 2m.01 1.67c2.2 0 4.26.86 5.82 2.42a8.17 8.17 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.24 8.24-1.48 0-2.93-.4-4.21-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.188 8.188 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.27-8.24m-3.9 5.43c-.15-.33-.32-.34-.46-.34-.12 0-.27-.01-.41-.01-.15 0-.38.06-.58.28-.2.22-.77.75-.77 1.83 0 1.08.79 2.13.9 2.27.11.15 1.55 2.37 3.76 3.32.53.22.94.36 1.26.46.53.17 1.01.14 1.39.09.42-.06 1.29-.53 1.47-1.04.19-.51.19-.95.13-1.04-.06-.09-.2-.15-.42-.26-.22-.11-1.29-.64-1.49-.71-.2-.07-.35-.11-.49.11-.14.22-.55.71-.68.85-.12.15-.25.17-.47.06-.22-.11-.93-.34-1.77-1.09-.65-.58-1.09-1.3-1.22-1.51-.13-.22-.01-.34.1-.45.1-.1.22-.26.33-.38.11-.13.15-.22.22-.37.07-.15.04-.27-.02-.38-.06-.11-.5-1.21-.69-1.66z"/></svg>
+                        Book via WhatsApp
+                    </button>
                 </div>
             </form>
         </div>
 
         <footer style="margin-top: 5rem; opacity: 0.5; text-align: center; font-size: 0.85rem;">
-            © 2026 Osare Hub • Built by nakinson osare • Marketplace Model: 5% Platform Split Protected
+            © 2026 Osare Hub • Built by nakinson osare • Marketplace Model: 5% Lead Attribution Active
         </footer>
     </div>
 
     <script>
-        // Tab switching machine between Local & Tourist segments
         function switchTier(tier) {
             document.querySelectorAll('.tier-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tier-section').forEach(sec => sec.classList.remove('active'));
@@ -175,37 +229,60 @@
             }
         }
 
-        // Action handles for Tier 1 Local queries
         function executeLocalSearch(event) {
             event.preventDefault();
             const origin = document.getElementById('localOrigin').value;
             const destination = document.getElementById('localDestination').value;
             const budget = document.getElementById('budgetTier').value;
-            
-            // Redirect parameters straight into your server.py routes backend endpoints
             window.location.href = `/search?tier=local&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&budget=${budget}`;
         }
 
-        // Action handles for Tier 2 Safari Agency queries
-        function selectSafariAgency(agencyName, codeKey) {
+        // Store active vendor targets when tourist switches cards
+        function selectSafariAgency(packageName, vendorName, vendorPhone, basePrice) {
             document.querySelectorAll('.image-card').forEach(card => card.classList.remove('selected'));
             event.currentTarget.classList.add('selected');
             
-            document.getElementById('selectedAgency').value = codeKey;
-            document.getElementById('safariStatusMessage').innerText = "Selected: " + agencyName + " (5% Commission Active)";
+            document.getElementById('selectedPackageName').value = packageName;
+            document.getElementById('selectedVendorName').value = vendorName;
+            document.getElementById('selectedVendorPhone').value = vendorPhone;
+            document.getElementById('selectedPrice').value = basePrice;
+            
+            document.getElementById('safariStatusMessage').innerText = "Selected: " + packageName + " handled by " + vendorName;
         }
 
-        function executeSafariSearch(event) {
+        // Compiles data matrix into formatted message payload string
+        function dispatchWhatsAppLead(event) {
             event.preventDefault();
-            const agency = document.getElementById('selectedAgency').value;
             
-            if (!agency) {
-                alert("Please tap and select one of the tourism agency options above first!");
+            const clientName = document.getElementById('touristName').value.trim();
+            const chosenPay = document.getElementById('paymentMode').value;
+            const pkgName = document.getElementById('selectedPackageName').value;
+            const vendorName = document.getElementById('selectedVendorName').value;
+            const vendorPhone = document.getElementById('selectedVendorPhone').value; 
+            const priceVal = document.getElementById('selectedPrice').value;
+
+            if (!clientName) {
+                alert("Please type your name in the input block first so the operator knows who you are!");
                 return;
             }
+            if (!pkgName) {
+                alert("Please tap to choose your savannah tour or light aircraft photo card above first!");
+                return;
+            }
+
+            // Create professional pre-filled template message
+            const messageText = `Hello ${vendorName},\n\n` +
+                                `My name is *${clientName}*. I found your services through the *OSARE Marketplace Platform* and want to book the following package:\n\n` +
+                                `📦 *Package:* ${pkgName}\n` +
+                                `💰 *Quoted Rate:* ${priceVal} (5% OSARE Referral Tracked)\n` +
+                                `💳 *Preferred Payment Mode:* ${chosenPay}\n\n` +
+                                `Please confirm availability and share your payment instructions/invoice detail coordinates here. Thank you!`;
+
+            // Clean encoding string to guarantee browsers handle line-breaks safely
+            const encodedText = encodeURIComponent(messageText);
             
-            // Forwards lead tracking queries back into server.py script pipeline blocks
-            window.location.href = `/search?tier=safari&agency_id=${encodeURIComponent(agency)}&commission=0.05`;
+            // Fires direct official web/app API forwarder link instantly
+            window.open(`https://wa.me/${vendorPhone}?text=${encodedText}`, '_blank');
         }
     </script>
 </body>
