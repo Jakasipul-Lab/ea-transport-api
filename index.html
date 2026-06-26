@@ -41,6 +41,12 @@
         .input-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: #64748b; }
         .input-group input, .input-group select { width: 100%; padding: 0.85rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem; background: #f8fafc; }
 
+        /* Search Results Styles */
+        .results-box { background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-top: 1.5rem; display: none; }
+        .results-table { width: 100%; border-collapse: collapse; margin-top: 1rem; text-align: left; }
+        .results-table th, .results-table td { padding: 12px; border-bottom: 1px solid #e2e8f0; }
+        .results-table th { background-color: #f1f5f9; color: var(--primary); font-weight: 600; }
+        
         /* Tier 2: Premium Visual Grids */
         .visual-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
         .image-card { background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 3px solid transparent; position: relative; }
@@ -49,7 +55,6 @@
         .card-img-holder { width: 100%; height: 190px; background-color: #e2e8f0; position: relative; }
         .card-img-holder img { width: 100%; height: 100%; object-fit: cover; }
         
-        /* Pricing Badge Highlights */
         .badge-discount { position: absolute; top: 12px; right: 12px; background: #ef4444; color: white; padding: 6px 12px; font-size: 0.8rem; font-weight: bold; border-radius: 20px; text-transform: uppercase; }
 
         .card-info { padding: 1.2rem; }
@@ -115,6 +120,26 @@
                 </div>
                 <button type="submit" style="background: var(--primary); color:white; width:100%; padding:12px; border:none; border-radius:8px; font-weight:bold; font-size:1rem; cursor:pointer;">Search Routes</button>
             </form>
+
+            <!-- THIS IS NEW: The Interactive Live Results Display area -->
+            <div id="searchResultsBox" class="results-box">
+                <h3 id="resultsHeading" style="color: var(--primary); margin-bottom: 0.5rem;">Available Transits</h3>
+                <div style="overflow-x: auto;">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>Mode</th>
+                                <th>Operator</th>
+                                <th>Price Range</th>
+                                <th>Frequency / Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsTableBody">
+                            <!-- Injected dynamically by Javascript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
         <!-- ================= TIER 2 SECTION: SAFARI & TOURIST AGENCIES ================= -->
@@ -122,7 +147,6 @@
             <h2>Explore Premium Savannah Experiences</h2>
             <p class="subtitle">Click on a card image to select the offer details, fill your preferred payment profile, and tap down below to book via instant automated WhatsApp dispatcher.</p>
             
-            <!-- Step 2A: Client Credentials Capture Form -->
             <div class="booking-form-box">
                 <div class="form-row">
                     <div class="input-group">
@@ -141,7 +165,6 @@
                 </div>
             </div>
 
-            <!-- Step 2B: Visual Visual Options Matrix -->
             <div class="visual-grid">
                 <!-- Card 1: Savannah Group Tour -->
                 <div class="image-card" onclick="selectSafariAgency('Savannah Group Tour', 'Savannah Experts Ltd', '+254712345678', '150 USD per person')">
@@ -192,9 +215,7 @@
                 </div>
             </div>
 
-            <!-- Client Action Submission Bar -->
             <form id="safariAgencyForm" onsubmit="dispatchWhatsAppLead(event)">
-                <!-- Hidden variables mapping selected metadata -->
                 <input type="hidden" id="selectedPackageName" value="">
                 <input type="hidden" id="selectedVendorName" value="">
                 <input type="hidden" id="selectedVendorPhone" value="">
@@ -216,6 +237,14 @@
     </div>
 
     <script>
+        // Mock Database of regional transits to display on click
+        const travelDatabase = [
+            { type: 'cheap', mode: '🚐 Matatu / Sacco', operator: '2NK / Super Metro', price: 'KES 1,200 - 1,500', duration: 'Leaves when full (Daily)' },
+            { type: 'moderate', mode: '🚌 Express Bus', operator: 'Modern Coast / Mash East Africa', price: 'KES 2,000 - 2,500', duration: 'Scheduled Day & Night options' },
+            { type: 'expensive', mode: '🚆 SGR Madaraka Express Train', operator: 'Kenya Railways', price: 'KES 1,500 (Economy) - 4,500 (First Class)', duration: '8:00 AM / 3:00 PM Daily' },
+            { type: 'expensive', mode: '✈️ Domestic Regional Flight', operator: 'Jambojet / Safarilink', price: 'KES 6,500 - 9,000', duration: '1 Hour Flight time' }
+        ];
+
         function switchTier(tier) {
             document.querySelectorAll('.tier-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tier-section').forEach(sec => sec.classList.remove('active'));
@@ -229,15 +258,48 @@
             }
         }
 
+        // Updated local search logic that shows data directly without crashing
         function executeLocalSearch(event) {
             event.preventDefault();
+            
             const origin = document.getElementById('localOrigin').value;
             const destination = document.getElementById('localDestination').value;
-            const budget = document.getElementById('budgetTier').value;
-            window.location.href = `/search?tier=local&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&budget=${budget}`;
+            const selectedBudget = document.getElementById('budgetTier').value;
+            
+            const resultsBox = document.getElementById('searchResultsBox');
+            const tableBody = document.getElementById('resultsTableBody');
+            const heading = document.getElementById('resultsHeading');
+            
+            // Clear prior results rows
+            tableBody.innerHTML = "";
+            
+            // Filter options dynamically
+            const filteredData = travelDatabase.filter(item => {
+                if (selectedBudget === 'all') return true;
+                return item.type === selectedBudget;
+            });
+            
+            heading.innerText = `Available Options: ${origin} to ${destination}`;
+            
+            if (filteredData.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color: #ef4444; padding: 20px;">No specific operators match your criteria right now. Please adjust budget plan filters.</td></tr>`;
+            } else {
+                filteredData.forEach(item => {
+                    const row = `<tr>
+                        <td style="font-weight: 600;">${item.mode}</td>
+                        <td>${item.operator}</td>
+                        <td style="color: var(--orange); font-weight: 600;">${item.price}</td>
+                        <td>${item.duration}</td>
+                    </tr>`;
+                    tableBody.innerHTML += row;
+                });
+            }
+            
+            // Show the table smoothly
+            resultsBox.style.display = 'block';
+            resultsBox.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Store active vendor targets when tourist switches cards
         function selectSafariAgency(packageName, vendorName, vendorPhone, basePrice) {
             document.querySelectorAll('.image-card').forEach(card => card.classList.remove('selected'));
             event.currentTarget.classList.add('selected');
@@ -250,7 +312,6 @@
             document.getElementById('safariStatusMessage').innerText = "Selected: " + packageName + " handled by " + vendorName;
         }
 
-        // Compiles data matrix into formatted message payload string
         function dispatchWhatsAppLead(event) {
             event.preventDefault();
             
@@ -270,7 +331,6 @@
                 return;
             }
 
-            // Create professional pre-filled template message
             const messageText = `Hello ${vendorName},\n\n` +
                                 `My name is *${clientName}*. I found your services through the *OSARE Marketplace Platform* and want to book the following package:\n\n` +
                                 `📦 *Package:* ${pkgName}\n` +
@@ -278,10 +338,7 @@
                                 `💳 *Preferred Payment Mode:* ${chosenPay}\n\n` +
                                 `Please confirm availability and share your payment instructions/invoice detail coordinates here. Thank you!`;
 
-            // Clean encoding string to guarantee browsers handle line-breaks safely
             const encodedText = encodeURIComponent(messageText);
-            
-            // Fires direct official web/app API forwarder link instantly
             window.open(`https://wa.me/${vendorPhone}?text=${encodedText}`, '_blank');
         }
     </script>
