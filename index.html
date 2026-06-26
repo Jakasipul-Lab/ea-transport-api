@@ -3,144 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OSARE - East Africa Transit Super Search</title>
+    <title>OSARE - East Africa Transit Visual Search</title>
     <style>
-        :root { --primary: #1e3a8a; --accent: #3b82f6; --success: #10b981; }
+        :root { 
+            --primary: #1e3a8a; 
+            --accent: #3b82f6; 
+            --success: #10b981;
+            --bg: #f8fafc;
+            --text: #1e293b;
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
-        body { background: #f8fafc; color: #1e293b; line-height: 1.6; }
-        .hero { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; padding: 3rem 2rem; text-align: center; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 3rem; }
         
-        .container {
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 20px;
+        .hero { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; padding: 3rem 2rem; text-align: center; }
+        .container { max-width: 1100px; margin: 2rem auto; padding: 0 20px; }
+        
+        h2 { margin: 2rem 0 1rem 0; font-size: 1.5rem; color: var(--primary); border-left: 4px solid var(--accent); padding-left: 10px; }
+
+        /* Flexible Grid for Visual Experience Cards */
+        .visual-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 1.5rem; 
+            margin-bottom: 2rem;
         }
 
-        .btn-return {
-            display: inline-block;
-            padding: 10px 20px;
-            background: #1e3a8a;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: bold;
+        /* Clickable Card Styling */
+        .image-card { 
+            background: white; 
+            border-radius: 12px; 
+            overflow: hidden; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            cursor: pointer; 
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 3px solid transparent;
         }
-        .btn-return:hover { background: #3b82f6; }
+        .image-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12); 
+            border-color: var(--accent);
+        }
+        .image-card.selected {
+            border-color: var(--success);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+        }
 
-        .search-box { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; align-items: end; }
-        .input-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: #64748b; }
-        .input-group input { width: 100%; padding: 0.8rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem; }
-        .btn-search { background: var(--primary); color: white; border: none; padding: 0.8rem 2rem; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; height: 3.2rem; }
-        .results-section { margin-top: 2rem; display: none; }
-        .tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; overflow-x: auto; padding-bottom: 0.5rem; }
-        .tab { padding: 0.6rem 1.2rem; background: #e2e8f0; border-radius: 50px; cursor: pointer; font-weight: 600; font-size: 0.85rem; white-space: nowrap; }
-        .tab.active { background: var(--primary); color: white; }
-        .result-card { background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
-        .price { font-size: 1.4rem; font-weight: 800; color: var(--primary); }
-        .btn-book { background: var(--success); color: white; border: none; padding: 0.6rem 1rem; border-radius: 6px; font-weight: 600; cursor: pointer; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 100; }
-        .modal-content { background: white; padding: 2rem; border-radius: 12px; width: 90%; max-width: 400px; text-align: center; }
+        /* Card Image Aspect Controls */
+        .card-img-holder {
+            width: 100%;
+            height: 180px;
+            background-color: #e2e8f0;
+        }
+        .card-img-holder img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+        }
 
-        /* Mobile Layout Optimization */
+        .card-info { padding: 1.2rem; text-align: center; }
+        .card-info h3 { font-size: 1.2rem; font-weight: 700; color: #0f172a; }
+        .card-info p { font-size: 0.9rem; color: #64748b; margin-top: 0.25rem; }
+
+        /* Submission Action Bar */
+        .action-bar { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; gap: 1rem; align-items: center; justify-content: space-between; margin-top: 2rem; }
+        .selection-display { font-weight: 600; color: var(--primary); font-size: 1.1rem; }
+        .btn-submit { background: var(--success); color: white; border: none; padding: 1rem 2.5rem; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; }
+        .btn-submit:hover { background: #059669; }
+
+        /* Complete Mobile Scaling Overrides */
         @media (max-width: 600px) {
-            .container { padding: 10px; margin: 1rem auto; }
-            .search-box { grid-template-columns: 1fr !important; padding: 1.5rem 1rem; gap: 1.2rem; }
-            .input-group input { font-size: 16px !important; padding: 0.9rem; }
-            .btn-search { width: 100%; height: 3.5rem; }
-            .result-card { flex-direction: column; align-items: flex-start; gap: 1rem; }
-            .result-card div { text-align: left !important; width: 100%; }
+            .container { padding: 0 12px; }
+            .visual-grid { grid-template-columns: 1fr; gap: 1.2rem; }
+            .card-img-holder { height: 160px; }
+            .action-bar { flex-direction: column; text-align: center; padding: 1.2rem; }
+            .btn-submit { width: 100%; padding: 1rem; }
         }
     </style>
 </head>
 <body>
+
     <div class="hero">
-        <h1 style="font-size: 2.5rem; font-weight: 800;">OSARE</h1>
-        <p>East Africa's Transit Super Search</p>
+        <h1 style="font-size: 2.3rem; font-weight: 800;">OSARE</h1>
+        <p>Tap an experience image to check transit routes instantly</p>
     </div>
     
     <div class="container">
-        <div style="text-align:center; margin-bottom:25px;">
-            <a href="/local" style="display:inline-block; margin:10px; padding:12px 18px; background:#1e3a8a; color:white; text-decoration:none; border-radius:8px; font-weight:bold;">
-                🚆 Local Travel
-            </a>
-            <a href="/safari" style="display:inline-block; margin:10px; padding:12px 18px; background:#3b82f6; color:white; text-decoration:none; border-radius:8px; font-weight:bold;">
-                🌍 Safari Travel
-            </a>
+        
+        <h2>Select Your Destination</h2>
+        <div class="visual-grid">
+            <div class="image-card" onclick="selectExperience('Maasai Mara Big Five Safari', 'Maasai Mara')">
+                <div class="card-img-holder">
+                    <img src="/static/images/lion.jpg" alt="Big Five Wildlife" onerror="this.src='https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=600'">
+                </div>
+                <div class="card-info">
+                    <h3>The Big Five Experience</h3>
+                    <p>Maasai Mara Routes & Transits</p>
+                </div>
+            </div>
+
+            <div class="image-card" onclick="selectExperience('Mombasa Beach Hotels', 'Mombasa')">
+                <div class="card-img-holder">
+                    <img src="/static/images/mombasa.jpg" alt="Mombasa Coastal Getaway" onerror="this.src='https://images.unsplash.com/photo-1589979482837-e74f2e145060?w=600'">
+                </div>
+                <div class="card-info">
+                    <h3>Coastal & Hotel Resorts</h3>
+                    <p>Diani, Malindi & Mombasa Connections</p>
+                </div>
+            </div>
         </div>
 
-        <form class="search-box" id="searchForm" onsubmit="handleSearch(event)">
-            <div class="input-group">
-                <label>Passenger Name</label>
-                <input type="text" id="passengerName" placeholder="Full Name" required>
+        <form id="safariSearchForm" onsubmit="executeSearch(event)">
+            <input type="hidden" id="selectedDestination" value="">
+            
+            <div class="action-bar">
+                <div class="selection-display" id="statusMessage">Please tap a photo card above to choose your route</div>
+                <button type="submit" class="btn-submit">Find Travel Deals</button>
             </div>
-            <div class="input-group">
-                <label>From</label>
-                <input type="text" id="origin" placeholder="City" value="Nairobi" required>
-            </div>
-            <div class="input-group">
-                <label>To</label>
-                <input type="text" id="destination" placeholder="City" value="Mombasa" required>
-            </div>
-            <button type="submit" class="btn-search">Search</button>
         </form>
 
-        <div class="results-section" id="resultsSection">
-            <div class="tabs" id="modeTabs">
-                <div class="tab active" data-type="all">All</div>
-                <div class="tab" data-type="train">SGR Train</div>
-                <div class="tab" data-type="bus">Bus</div>
-                <div class="tab" data-type="matatu">Matatu (Sacco GPS)</div>
-                <div class="tab" data-type="flight">Light Aircraft</div>
-            </div>
-            <div id="resultsList"></div>
-        </div>
-
-        <footer style="margin-top:4rem; opacity:0.8; text-align: center; padding-bottom: 2rem;">
+        <footer style="margin-top:4rem; opacity:0.6; text-align: center;">
             © 2026 Osare • Built by nakinson osare
         </footer>
     </div>
 
-    <div class="modal" id="codeModal">
-        <div class="modal-content">
-            <h2>Success!</h2>
-            <p>Your SafariRoutes Lead Code has been generated:</p>
-            <div style="font-size: 1.5rem; font-weight: 800; color: var(--primary); margin: 1rem 0;" id="generatedCode"></div>
-            <p>Present this code to the operator.</p>
-            <button class="btn-book" onclick="closeModal()">Continue</button>
-        </div>
-    </div>
-
     <script>
-        const searchForm = document.getElementById('searchForm');
-        const resultsSection = document.getElementById('resultsSection');
-        const resultsList = document.getElementById('resultsList');
-
-        function handleSearch(event) {
-            event.preventDefault(); 
-            const origin = document.getElementById('origin').value;
-            const destination = document.getElementById('destination').value;
-            window.location.href = `/search?origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}`;
+        function selectExperience(displayName, targetParam) {
+            document.querySelectorAll('.image-card').forEach(card => card.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            
+            document.getElementById('selectedDestination').value = targetParam;
+            document.getElementById('statusMessage').innerText = "Selected Target: " + displayName;
         }
 
-        function assist(operator, price) {
-            document.getElementById('generatedCode').innerText = "SR-" + Math.floor(100000 + Math.random() * 900000);
-            document.getElementById('codeModal').style.display = 'flex';
+        function executeSearch(event) {
+            event.preventDefault();
+            const chosenPlace = document.getElementById('selectedDestination').value;
+            
+            if (!chosenPlace) {
+                alert("Please click one of the safari image blocks above first!");
+                return;
+            }
+            
+            // Fires selection variables straight back into your FastAPI query string parser
+            window.location.href = `/search?origin=Nairobi&destination=${encodeURIComponent(chosenPlace)}`;
         }
-
-        function closeModal() {
-            document.getElementById('codeModal').style.display = 'none';
-        }
-
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.onclick = () => {
-                document.querySelector('.tab.active').classList.remove('active');
-                tab.classList.add('active');
-                const type = tab.dataset.type;
-                document.querySelectorAll('.result-card').forEach(card => {
-                    card.style.display = (type === 'all' || card.dataset.type === type) ? 'flex' : 'none';
-                });
-            };
-        });
     </script>
 </body>
 </html>
