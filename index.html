@@ -1,211 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OSARE - East Africa Transit & Booking Hub</title>
-
-<style>
-:root { 
-    --primary: #1e3a8a; 
-    --accent: #3b82f6; 
-    --success: #10b981;
-    --orange: #f97316;
-    --whatsapp: #25d366;
-    --bg: #f8fafc;
-    --text: #1e293b;
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
-
-body { background: var(--bg); color: var(--text); }
-
-/* ✅ NAVIGATION */
-.navbar {
-    background:white;
-    padding:10px;
-    text-align:center;
-    box-shadow:0 2px 10px rgba(0,0,0,0.1);
-}
-.navbar a {
-    margin:0 10px;
-    text-decoration:none;
-    color:var(--primary);
-    font-weight:bold;
-}
-
-/* EXISTING DESIGN KEPT */
-.hero {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSARE - East Africa Transit Super Search</title>
+    <style>
+.btn-return {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #1e3a8a;
     color: white;
-    padding: 3.5rem 2rem;
-    text-align: center;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
 }
 
-.container { max-width:1100px; margin:2rem auto; padding:0 20px; }
-
-.tier-nav { display:flex; justify-content:center; gap:1rem; margin-bottom:2rem; }
-
-.tier-btn {
-    padding:10px 20px;
-    font-weight:bold;
-    border:none;
-    border-radius:50px;
-    cursor:pointer;
+.btn-return:hover {
+    background: #3b82f6;
 }
-.tier-btn.active { background: var(--primary); color:white; }
+        :root { --primary: #1e3a8a; --accent: #3b82f6; --success: #10b981; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background: #f8fafc; color: #1e293b; line-height: 1.6; }
+        .hero { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; padding: 3rem 2rem; text-align: center; }
+        .container {
+    
+ max-width: 1000px;
+    margin: 2rem auto;
+    padding: 20px;
 
-.tier-section { display:none; }
-.tier-section.active { display:block; }
-
-.booking-form-box {
-    background:white;
-    padding:1.5rem;
-    border-radius:12px;
-    margin-bottom:1rem;
 }
-
-.form-row { display:flex; flex-wrap:wrap; gap:10px; }
-
-.input-group { flex:1; min-width:200px; }
-
-.input-group input, .input-group select {
-    width:100%; padding:8px;
-}
-
-.results-box { display:none; margin-top:1rem; }
-
-.results-table { width:100%; border-collapse:collapse; }
-
-.results-table th, .results-table td {
-    padding:10px;
-    border-bottom:1px solid #ddd;
-}
-
-.btn-inline-book {
-    background:var(--whatsapp);
-    color:white;
-    padding:6px 10px;
-    text-decoration:none;
-    border-radius:5px;
-}
-
-</style>
+        .search-box { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; align-items: end; }
+        .input-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: #64748b; }
+        .input-group input { width: 100%; padding: 0.8rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem; }
+        .btn-search { background: var(--primary); color: white; border: none; padding: 0.8rem 2rem; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; height: 3.2rem; }
+        .results-section { margin-top: 2rem; display: none; }
+        .tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; overflow-x: auto; padding-bottom: 0.5rem; }
+        .tab { padding: 0.6rem 1.2rem; background: #e2e8f0; border-radius: 50px; cursor: pointer; font-weight: 600; font-size: 0.85rem; white-space: nowrap; }
+        .tab.active { background: var(--primary); color: white; }
+        .result-card { background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
+        .price { font-size: 1.4rem; font-weight: 800; color: var(--primary); }
+        .btn-book { background: var(--success); color: white; border: none; padding: 0.6rem 1rem; border-radius: 6px; font-weight: 600; cursor: pointer; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 100; }
+        .modal-content { background: white; padding: 2rem; border-radius: 12px; width: 90%; max-width: 400px; text-align: center; }
+    </style>
 </head>
-
 <body>
-
-<!-- ✅ FIXED NAVIGATION -->
-<div class="navbar">
-    <a href="index.html">Home</a>
-    <a href="safari.html">Safari</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="about.html">About</a>
-</div>
-
-<div class="hero">
-    <h1>OSARE</h1>
-    <p>Instant East African Travel Booking Platform</p>
-</div>
-
+    <div class="hero">
+        <h1 style="font-size: 2.5rem; font-weight: 800;">OSARE</h1>
+        <p>East Africa's Transit Super Search</p>
+    </div>
 <div class="container">
 
-<div class="tier-nav">
-    <button class="tier-btn active" onclick="switchTier('local')">Local Travel</button>
-    <button class="tier-btn" onclick="switchTier('safari')">Safari</button>
-</div>
+    <div style="text-align:center; margin-bottom:25px;">
+        <a href="/local" style="display:inline-block; margin:10px; padding:12px 18px; background:#1e3a8a; color:white; text-decoration:none; border-radius:8px; font-weight:bold;">
+            🚆 Local Travel
+        </a>
 
-<!-- LOCAL -->
-<div id="localSection" class="tier-section active">
+        <a href="/safari" style="display:inline-block; margin:10px; padding:12px 18px; background:#3b82f6; color:white; text-decoration:none; border-radius:8px; font-weight:bold;">
+            🌍 Safari Travel
+        </a>
+    </div>
 
-<form class="booking-form-box" onsubmit="executeLocalSearch(event)">
-<div class="form-row">
-
-<div class="input-group">
-<input type="text" id="localPassengerName" placeholder="Your Name" required>
-</div>
-
-<div class="input-group">
-<input type="text" id="localOrigin" value="Nairobi">
-</div>
-
-<div class="input-group">
-<input type="text" id="localDestination" value="Mombasa">
-</div>
-
-</div>
-
-<button type="submit">Search Routes</button>
+    <form class="search-box" id="searchForm" onsubmit="handleSearch(event)">
+    <div class="input-group">
+        <label>Passenger Name</label>
+        <input type="text" id="passengerName" placeholder="Full Name" required>
+    </div>
+    <div class="input-group">
+        <label>From</label>
+        <input type="text" id="origin" placeholder="City" value="Nairobi" required>
+    </div>
+    <div class="input-group">
+        <label>To</label>
+        <input type="text" id="destination" placeholder="City" value="Mombasa" required>
+    </div>
+    <button type="submit" class="btn-search">Search</button>
 </form>
+        <div class="results-section" id="resultsSection">
+            <div class="tabs" id="modeTabs">
+                <div class="tab active" data-type="all">All</div>
+                <div class="tab" data-type="train">SGR Train</div>
+                <div class="tab" data-type="bus">Bus</div>
+                <div class="tab" data-type="matatu">Matatu (Sacco GPS)</div>
+                <div class="tab" data-type="flight">Light Aircraft</div>
+            </div>
+            <div id="resultsList"></div>
+        </div>
+        <footer style="margin-top:4rem; opacity:0.8; text-align: center; padding-bottom: 2rem;">
+            © 2026 Osare • Built by nakinson osare
+        </footer>
+    </div>
+    <div class="modal" id="codeModal">
+        <div class="modal-content">
+            <h2>Success!</h2>
+            <p>Your SafariRoutes Lead Code has been generated:</p>
+            <div style="font-size: 1.5rem; font-weight: 800; color: var(--primary); margin: 1rem 0;" id="generatedCode"></div>
+            <p>Present this code to the operator.</p>
+           <button class="btn-book" onclick="assist('${item.operator}', '${item.price}')">
+    Continue
+</button>
+        </div>
+    </div>
+    <script>
+        const searchForm = document.getElementById('searchForm');
+        const resultsSection = document.getElementById('resultsSection');
+        const resultsList = document.getElementById('resultsList');
+        searchForm.onsubmit = (e) => {
+            e.preventDefault();
+            const results = [
+                { type: 'train', operator: 'Madaraka Express (TRC)', price: '1,500 KSH', detail: '08:00 AM • First Class' },
+                { type: 'bus', operator: 'Mash East Africa', price: '1,800 KSH', detail: '09:00 PM • VIP Seats' },
+                { type: 'matatu', operator: 'North Rift Sacco', price: '1,200 KSH', detail: 'GPS: 4 seats left • Wilson Station' },
+                { type: 'flight', operator: 'Safarilink Aviation', price: '8,500 KSH', detail: '10:15 AM • Wilson-Mombasa' }
+            ];
+            resultsSection.style.display = 'block';
+            resultsList.innerHTML = results.map(item => `
+    <div class="result-card" data-type="${item.type}">
+        <div>
+            <p style="font-size: 0.7rem; font-weight: 800; color: var(--accent); text-transform: uppercase;">
+                ${item.type}
+            </p>
+            <h3>${item.operator}</h3>
+            <p style="color: #64748b; font-size: 0.85rem;">
+                ${item.detail}
+            </p>
+        </div>
 
-<div id="searchResultsBox" class="results-box">
-<table class="results-table">
-<thead>
-<tr>
-<th>Mode</th>
-<th>Operator</th>
-<th>Price</th>
-<th>Duration</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody id="resultsTableBody"></tbody>
-</table>
-</div>
-
-</div>
-
-<!-- SAFARI -->
-<div id="safariSection" class="tier-section">
-<h2>Safari Placeholder ✅</h2>
-<p>Page works. You can build here.</p>
-</div>
-
-</div>
-
-<script>
-
-const travelDatabase = [
-{ type:'cheap', mode:'Matatu', operator:'Super Metro', price:'1500', duration:'Hourly', phone:'254712345678' },
-{ type:'moderate', mode:'Bus', operator:'Mash EA', price:'2500', duration:'Daily', phone:'254712345678' },
-{ type:'expensive', mode:'Train', operator:'SGR', price:'4500', duration:'Daily', phone:'254712345678' }
-];
-
-function switchTier(t) {
-document.querySelectorAll('.tier-section').forEach(s=>s.classList.remove('active'));
-document.getElementById(t+"Section").classList.add('active');
+        <div style="text-align: right;">
+            <p class="price">${item.price}</p>
+            <button class="btn-book" onclick="assist('${item.operator}', '${item.price}')">
+                Continue
+            </button>
+        </div>
+    </div>
 }
-
-function executeLocalSearch(e){
-e.preventDefault();
-
-const tbody = document.getElementById('resultsTableBody');
-tbody.innerHTML = "";
-
-travelDatabase.forEach(item=>{
-
-let msg = `Booking ${item.mode}`;
-let url = `https://wa.me/${item.phone}?text=${encodeURIComponent(msg)}`;
-
-let row = `
-<tr>
-<td>${item.mode}</td>
-<td>${item.operator}</td>
-<td>KES ${item.price}</td>
-<td>${item.duration}</td>
-<td>
-<a href="${url}">
-</td>
-</tr>`;
-
-tbody.innerHTML += row;
-
-});
-
-document.getElementById('searchResultsBox').style.display='block';
-}
-
-</script>
-
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.onclick = () => {
+                document.querySelector('.tab.active').classList.remove('active');
+                tab.classList.add('active');
+                const type = tab.dataset.type;
+                document.querySelectorAll('.result-card').forEach(card => {
+                    card.style.display = (type === 'all' || card.dataset.type === type) ? 'flex' : 'none';
+                });
+            };
+        });
+    </script>
 </body>
 </html>
+<script>
+    
+function handleSearch(event) {
+    event.preventDefault(); // Stop the page from refreshing
+    
+    // Get values from the inputs
+    const origin = document.getElementById('origin').value;
+    const destination = document.getElementById('destination').value;
+    
+    // Redirect to the backend route with the search data
+    window.location.href = `/search?origin=${origin}&destination=${destination}`;
+}
+</script>
