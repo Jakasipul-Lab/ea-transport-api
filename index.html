@@ -44,9 +44,13 @@
         /* Search Results Styles */
         .results-box { background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-top: 1.5rem; display: none; }
         .results-table { width: 100%; border-collapse: collapse; margin-top: 1rem; text-align: left; }
-        .results-table th, .results-table td { padding: 12px; border-bottom: 1px solid #e2e8f0; }
+        .results-table th, .results-table td { padding: 14px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
         .results-table th { background-color: #f1f5f9; color: var(--primary); font-weight: 600; }
         
+        /* Inline Row Action Buttons */
+        .btn-inline-book { background: var(--whatsapp); color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: 0.2s; text-decoration: none; }
+        .btn-inline-book:hover { background: #1ebd56; transform: scale(1.03); }
+
         /* Tier 2: Premium Visual Grids */
         .visual-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
         .image-card { background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 3px solid transparent; position: relative; }
@@ -101,6 +105,10 @@
             <form class="booking-form-box" onsubmit="executeLocalSearch(event)">
                 <div class="form-row">
                     <div class="input-group">
+                        <label>Your Name (For Booking)</label>
+                        <input type="text" id="localPassengerName" placeholder="e.g., Jane Smith" required>
+                    </div>
+                    <div class="input-group">
                         <label>Departure Terminal</label>
                         <input type="text" id="localOrigin" value="Nairobi" required>
                     </div>
@@ -118,10 +126,10 @@
                         </select>
                     </div>
                 </div>
-                <button type="submit" style="background: var(--primary); color:white; width:100%; padding:12px; border:none; border-radius:8px; font-weight:bold; font-size:1rem; cursor:pointer;">Search Routes</button>
+                <button type="submit" style="background: var(--primary); color:white; width:100%; padding:12px; border:none; border-radius:8px; font-weight:bold; font-size:1rem; cursor:pointer;">Search Routes & Rates</button>
             </form>
 
-            <!-- THIS IS NEW: The Interactive Live Results Display area -->
+            <!-- Interactive Live Results Display area -->
             <div id="searchResultsBox" class="results-box">
                 <h3 id="resultsHeading" style="color: var(--primary); margin-bottom: 0.5rem;">Available Transits</h3>
                 <div style="overflow-x: auto;">
@@ -132,10 +140,11 @@
                                 <th>Operator</th>
                                 <th>Price Range</th>
                                 <th>Frequency / Duration</th>
+                                <th>Action Link</th>
                             </tr>
                         </thead>
                         <tbody id="resultsTableBody">
-                            <!-- Injected dynamically by Javascript -->
+                            <!-- Injected dynamically by Javascript with custom WhatsApp parameters -->
                         </tbody>
                     </table>
                 </div>
@@ -237,12 +246,13 @@
     </div>
 
     <script>
-        // Mock Database of regional transits to display on click
+        // Real-world target routing database. 
+        // TIP: Change the phone fields below to YOUR real WhatsApp number or your specific partner vendor numbers!
         const travelDatabase = [
-            { type: 'cheap', mode: '🚐 Matatu / Sacco', operator: '2NK / Super Metro', price: 'KES 1,200 - 1,500', duration: 'Leaves when full (Daily)' },
-            { type: 'moderate', mode: '🚌 Express Bus', operator: 'Modern Coast / Mash East Africa', price: 'KES 2,000 - 2,500', duration: 'Scheduled Day & Night options' },
-            { type: 'expensive', mode: '🚆 SGR Madaraka Express Train', operator: 'Kenya Railways', price: 'KES 1,500 (Economy) - 4,500 (First Class)', duration: '8:00 AM / 3:00 PM Daily' },
-            { type: 'expensive', mode: '✈️ Domestic Regional Flight', operator: 'Jambojet / Safarilink', price: 'KES 6,500 - 9,000', duration: '1 Hour Flight time' }
+            { type: 'cheap', mode: '🚐 Matatu / Sacco', operator: 'Super Metro Sacco', price: 'KES 1,500', duration: 'Hourly Departures', phone: '+254712345678' },
+            { type: 'moderate', mode: '🚌 Express Luxury Bus', operator: 'Mash East Africa', price: 'KES 2,500', duration: '8:00 AM & 9:30 PM', phone: '+254712345678' },
+            { type: 'expensive', mode: '🚆 SGR Madaraka Express', operator: 'Kenya Railways Desk', price: 'KES 1,500 - 4,500', duration: 'Daily 3:00 PM Express', phone: '+254712345678' },
+            { type: 'expensive', mode: '✈️ Regional Coastal Flight', operator: 'Jambojet Airways', price: 'KES 8,500', duration: 'Multiple Flights Daily', phone: '+254712345678' }
         ];
 
         function switchTier(tier) {
@@ -258,10 +268,10 @@
             }
         }
 
-        // Updated local search logic that shows data directly without crashing
         function executeLocalSearch(event) {
             event.preventDefault();
             
+            const passengerName = document.getElementById('localPassengerName').value.trim();
             const origin = document.getElementById('localOrigin').value;
             const destination = document.getElementById('localDestination').value;
             const selectedBudget = document.getElementById('budgetTier').value;
@@ -270,10 +280,8 @@
             const tableBody = document.getElementById('resultsTableBody');
             const heading = document.getElementById('resultsHeading');
             
-            // Clear prior results rows
             tableBody.innerHTML = "";
             
-            // Filter options dynamically
             const filteredData = travelDatabase.filter(item => {
                 if (selectedBudget === 'all') return true;
                 return item.type === selectedBudget;
@@ -282,20 +290,29 @@
             heading.innerText = `Available Options: ${origin} to ${destination}`;
             
             if (filteredData.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color: #ef4444; padding: 20px;">No specific operators match your criteria right now. Please adjust budget plan filters.</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: #ef4444; padding: 20px;">No exact routes found for this filter combination.</td></tr>`;
             } else {
                 filteredData.forEach(item => {
+                    // Create unique WhatsApp URL variables inline for each row
+                    const customMessage = `Hello ${item.operator},\n\nMy name is *${passengerName}*. I am booking transit from *${origin}* to *${destination}* via *OSARE Concierge Services*.\n\nOption: ${item.mode}\nRate: ${item.price}\n\nPlease check remaining seat slots for today.`;
+                    const encodedText = encodeURIComponent(customMessage);
+                    const whatsappUrl = `https://wa.me/${item.phone}?text=${encodedText}`;
+
                     const row = `<tr>
                         <td style="font-weight: 600;">${item.mode}</td>
                         <td>${item.operator}</td>
                         <td style="color: var(--orange); font-weight: 600;">${item.price}</td>
                         <td>${item.duration}</td>
+                        <td>
+                            <a href="${whatsappUrl}" target="_blank" class="btn-inline-book">
+                                💬 Reserve Space
+                            </a>
+                        </td>
                     </tr>`;
                     tableBody.innerHTML += row;
                 });
             }
             
-            // Show the table smoothly
             resultsBox.style.display = 'block';
             resultsBox.scrollIntoView({ behavior: 'smooth' });
         }
@@ -323,11 +340,11 @@
             const priceVal = document.getElementById('selectedPrice').value;
 
             if (!clientName) {
-                alert("Please type your name in the input block first so the operator knows who you are!");
+                alert("Please type your name in the input block first!");
                 return;
             }
             if (!pkgName) {
-                alert("Please tap to choose your savannah tour or light aircraft photo card above first!");
+                alert("Please select a tour option card above!");
                 return;
             }
 
