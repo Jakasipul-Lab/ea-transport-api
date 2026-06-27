@@ -3,26 +3,77 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OSARE - Booking Hub</title>
+<title>OSARE Home</title>
 
 <style>
-body { font-family: Arial; background:#f8fafc; margin:0; }
-.hero { background:#1e3a8a; color:white; padding:2rem; text-align:center; }
-.container { max-width:900px; margin:2rem auto; padding:0 15px; }
+body { font-family: Arial; margin:0; background:#f8fafc; }
 
-table { width:100%; border-collapse:collapse; margin-top:1rem; }
-th,td { padding:12px; border:1px solid #ddd; }
+.navbar {
+    background:white;
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+    box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+.navbar a {
+    margin:0 10px;
+    text-decoration:none;
+    color:#1e3a8a;
+    font-weight:bold;
+}
+
+.hero {
+    background:#1e3a8a;
+    color:white;
+    padding:2rem;
+    text-align:center;
+}
+
+.container {
+    max-width:900px;
+    margin:2rem auto;
+    padding:0 15px;
+}
+
+table {
+    width:100%;
+    border-collapse:collapse;
+}
+
+th, td {
+    padding:10px;
+    border:1px solid #ddd;
+}
+
 th { background:#1e3a8a; color:white; }
 
-.btn { background:#25d366; color:white; padding:8px 12px; text-decoration:none; border-radius:5px; font-weight:bold; }
+.btn {
+    background:#25d366;
+    color:white;
+    padding:6px 10px;
+    text-decoration:none;
+    border-radius:5px;
+}
 </style>
 </head>
 
 <body>
 
+<div class="navbar">
+    <div>OSARE</div>
+    <div>
+        <a href="./index.html">Home</a>
+        <a href="./safari.html">Safari</a>
+        <  href="./dashboard.html">Dashboard</a>
+        <a href="./about.html">About</a>
+        <a href="./migration.html">Migration</a>
+    </div>
+</div>
+
 <div class="hero">
-    <h1>OSARE Booking</h1>
-    <p>Click reserve → WhatsApp + Dashboard tracking</p>
+    <h1>OSARE Booking Hub</h1>
+    <p>Test system: Reserve → WhatsApp + track commission</p>
 </div>
 
 <div class="container">
@@ -31,47 +82,53 @@ th { background:#1e3a8a; color:white; }
 
 <table>
 <tr>
-    <th>Mode</th>
-    <th>Operator</th>
-    <th>Price</th>
-    <th>Action</th>
+<th>Mode</th>
+<th>Operator</th>
+<th>Price</th>
+<th>Action</th>
 </tr>
 
 <tbody id="tableBody"></tbody>
 </table>
 
-<br>
-<a href="dashboard.html">→ Open Dashboard</a>
-
 </div>
 
 <script>
 
+// DATA
 const data = [
-  {mode:"🚐 Matatu", operator:"Super Metro", price:"1500", phone:"254712345678"},
-  {mode:"🚌 Bus", operator:"Mash EA", price:"2500", phone:"254712345678"},
-  {mode:"🚆 Train", operator:"SGR", price:"4500", phone:"254712345678"}
+  {mode:"Matatu", operator:"Super Metro", price:1500, phone:"254712345678"},
+  {mode:"Bus", operator:"Mash EA", price:2500, phone:"254712345678"},
+  {mode:"Train", operator:"SGR", price:4500, phone:"254712345678"}
 ];
 
-// ✅ SAVE BOOKING (THIS LINKS TO DASHBOARD)
+// SAVE BOOKING
 function recordBooking(vendor, price) {
     let commissions = JSON.parse(localStorage.getItem('commissions')) || [];
-
-    let amount = parseFloat(price);
 
     commissions.push({
         date: new Date().toLocaleDateString(),
         vendor: vendor,
-        amount: amount,
-        commission: Math.round(amount * 0.05)
+        amount: price,
+        commission: Math.round(price * 0.05)
     });
 
     localStorage.setItem('commissions', JSON.stringify(commissions));
 }
 
-// ✅ CREATE TABLE
-const tbody = document.getElementById('tableBody');
+// TABLE
+let tbody = document.getElementById('tableBody');
 
 data.forEach(item => {
 
-   
+    let whatsapp = `https://wa.me/${item.phone}?text=Booking ${item.mode} KES ${item.price}`;
+
+    let row = `
+    <tr>
+        <td>${item.mode}</td>
+        <td>${item.operator}</td>
+        <td>KES ${item.price}</td>
+        <td>
+            <a href="${whatsapp}" target="_blank"
+               class="btn"
+               onclick="recordBooking('${item.operator}', ${item
