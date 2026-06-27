@@ -16,17 +16,17 @@
 --text: #1e293b;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
-body { background: var(--bg); color: var(--text); }
+body { background: var(--bg); color: var(--text); padding-bottom: 3rem; }
 
 .hero { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; padding: 3rem 1rem; text-align: center; }
 .container { max-width: 1100px; margin: 1.5rem auto; padding: 0 15px; }
 
-.navbar { background: white; padding: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 1rem; }
-.nav-links { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
+.navbar { background: white; padding: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+.nav-links { display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center; margin-top: 10px; }
 .nav-links a { color: var(--primary); text-decoration: none; font-weight: 600; }
 
 .tier-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin: 2rem 0; }
-.tier-btn { padding: 12px 24px; font-size: 1.05rem; font-weight: bold; border: none; border-radius: 50px; cursor: pointer; transition: 0.3s; }
+.tier-btn { padding: 12px 24px; font-size: 1.05rem; font-weight: bold; border: none; border-radius: 50px; cursor: pointer; transition: 0.3s; min-width: 160px; }
 .tier-btn.local { background: #e2e8f0; color: var(--primary); }
 .tier-btn.local.active { background: var(--primary); color: white; }
 .tier-btn.safari { background: #e2e8f0; color: var(--orange); }
@@ -37,40 +37,46 @@ body { background: var(--bg); color: var(--text); }
 
 .booking-form-box { background: white; padding: 1.8rem; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); margin-bottom: 2rem; }
 .visual-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+
 .image-card { background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.06); cursor: pointer; transition: all 0.3s; }
-.image-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.12); }
+.image-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
 .card-img-holder img { width: 100%; height: 200px; object-fit: cover; }
 
 .map-header { background: white; padding: 1rem; border-radius: 12px 12px 0 0; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
 #leaflet-map { height: 460px; border-radius: 0 0 12px 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
 
+.results-box { background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-top: 1.5rem; display: none; }
+.results-table { width: 100%; border-collapse: collapse; }
+.results-table th, .results-table td { padding: 14px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+.results-table th { background: #f1f5f9; }
+
 @media (max-width: 600px) {
-    .nav-links, .tier-nav { flex-direction: column; }
-    #leaflet-map { height: 360px; }
+    .nav-links, .tier-nav { flex-direction: column; align-items: center; }
+    #leaflet-map { height: 340px; }
 }
 </style>
 </head>
 <body>
 
-<!-- Top Navigation -->
+<!-- Navigation Bar -->
 <nav class="navbar">
-    <div class="container" style="display:flex; justify-content:space-between; align-items:center;">
-        <div style="display:flex; align-items:center; gap:12px;">
-            <img src="https://github.com/YOUR_GITHUB_USERNAME.png" width="40" height="40" style="border-radius:50%;" alt="Profile">
-            <strong>OSARE</strong>
+    <div class="container">
+        <div style="display:flex; align-items:center; gap:12px; justify-content:center; flex-wrap:wrap;">
+            <img src="https://github.com/YOUR_GITHUB_USERNAME.png" width="45" height="45" style="border-radius:50%;" alt="Profile">
+            <strong style="font-size:1.4rem;">OSARE</strong>
         </div>
         <div class="nav-links">
             <a href="index.html">Home</a>
             <a href="safari.html">Safari Tours</a>
             <a href="dashboard.html">Dashboard</a>
-            <a href="about.html">About</a>
+            <a href="about.html">About Us</a>
         </div>
     </div>
 </nav>
 
 <div class="hero">
-    <h1 style="font-size: 2.5rem;">OSARE</h1>
-    <p style="opacity: 0.9; font-size: 1.1rem;">East Africa Transit • On-Ground Tourist Assistance</p>
+    <h1 style="font-size: 2.6rem; font-weight: 800;">OSARE</h1>
+    <p style="opacity: 0.9; font-size: 1.15rem;">East Africa Transit & On-Ground Tourist Assistance</p>
 </div>
 
 <div class="container">
@@ -80,46 +86,52 @@ body { background: var(--bg); color: var(--text); }
     <button class="tier-btn safari" onclick="switchTier('safari')">🌍 Tourist Assistance</button>
 </div>
 
-<!-- ================= RESTORED LOCAL COMMUTE SECTION ================= -->
+<!-- ================= LOCAL COMMUTE SECTION (FULLY RESTORED) ================= -->
 <div id="localSection" class="tier-section active">
     <h2>Compare Local Transits</h2>
     <p class="subtitle">Schedules sorted automatically from budget Matatus up to SGR Trains and flights.</p>
 
     <form class="booking-form-box" onsubmit="executeLocalSearch(event)">
-        <div class="form-row" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem;">
-            <div class="input-group"><label>Your Name</label><input type="text" id="localPassengerName" placeholder="e.g., Jane Smith" required></div>
-            <div class="input-group"><label>Departure</label><input type="text" id="localOrigin" value="Nairobi" required></div>
-            <div class="input-group"><label>Destination</label><input type="text" id="localDestination" value="Mombasa" required></div>
-            <div class="input-group"><label>Budget</label>
-                <select id="budgetTier">
-                    <option value="all">Show All</option>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:1.2rem;">
+            <div><label style="display:block; margin-bottom:6px; font-weight:600;">Your Name</label><input type="text" id="localPassengerName" placeholder="e.g., Jane Smith" required style="width:100%;padding:12px;border:1px solid #e2e8f0;border-radius:8px;"></div>
+            <div><label style="display:block; margin-bottom:6px; font-weight:600;">Departure</label><input type="text" id="localOrigin" value="Nairobi" required style="width:100%;padding:12px;border:1px solid #e2e8f0;border-radius:8px;"></div>
+            <div><label style="display:block; margin-bottom:6px; font-weight:600;">Destination</label><input type="text" id="localDestination" value="Mombasa" required style="width:100%;padding:12px;border:1px solid #e2e8f0;border-radius:8px;"></div>
+            <div><label style="display:block; margin-bottom:6px; font-weight:600;">Budget Tier</label>
+                <select id="budgetTier" style="width:100%;padding:12px;border:1px solid #e2e8f0;border-radius:8px;">
+                    <option value="all">Show All Options</option>
                     <option value="cheap">Cheap (Matatu)</option>
                     <option value="moderate">Moderate (Bus)</option>
-                    <option value="expensive">Premium (SGR/Flight)</option>
+                    <option value="expensive">Premium (SGR / Flight)</option>
                 </select>
             </div>
         </div>
-        <button type="submit" style="background:var(--primary);color:white;width:100%;padding:14px;border:none;border-radius:8px;font-weight:bold;margin-top:1rem;">Search Routes</button>
+        <button type="submit" style="margin-top:1.5rem; background:var(--primary); color:white; width:100%; padding:14px; border:none; border-radius:8px; font-weight:bold; font-size:1.1rem;">Search Routes & Rates</button>
     </form>
 
-    <div id="searchResultsBox" class="results-box" style="display:none;">
-        <!-- Results populated by JS -->
+    <div id="searchResultsBox" class="results-box">
+        <h3 id="resultsHeading">Available Transits</h3>
+        <div style="overflow-x:auto;">
+            <table class="results-table">
+                <thead><tr><th>Mode</th><th>Operator</th><th>Price</th><th>Duration</th><th>Action</th></tr></thead>
+                <tbody id="resultsTableBody"></tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 <!-- ================= TOURIST ASSISTANCE SECTION ================= -->
 <div id="safariSection" class="tier-section">
     <h2>🌍 On-Ground Tourist Assistance - East Africa</h2>
-    <p class="subtitle">Car Hire • Light Aircraft • Hotels • Top Destinations</p>
+    <p class="subtitle">Car Hire • Light Aircraft • Hotels • Top Places</p>
 
     <div class="booking-form-box">
-        <input type="text" id="touristSearch" placeholder="Search: Car hire, Mara resort, Light aircraft..." style="width:100%;padding:16px;border:2px solid #e2e8f0;border-radius:12px;font-size:1.05rem;">
-        <button onclick="filterAssistance()" style="margin-top:12px;width:100%;padding:14px;background:var(--orange);color:white;border:none;border-radius:12px;font-weight:bold;">Search</button>
+        <input type="text" id="touristSearch" placeholder="Search Car hire, Light aircraft, Mara hotels..." style="width:100%; padding:16px; border:2px solid #e2e8f0; border-radius:12px; font-size:1.05rem;">
+        <button onclick="filterAssistance()" style="margin-top:12px; width:100%; padding:14px; background:var(--orange); color:white; border:none; border-radius:12px; font-weight:bold;">Search Assistance</button>
     </div>
 
     <div class="map-header">
         <span>🗺️ Interactive East Africa Map</span>
-        <button onclick="centerMapOnNairobi()" style="background:var(--accent);color:white;border:none;padding:8px 16px;border-radius:8px;">Reset Map</button>
+        <button onclick="centerMapOnNairobi()" style="background:var(--accent);color:white;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;">Reset Map</button>
     </div>
     <div id="leaflet-map"></div>
 
@@ -132,32 +144,53 @@ body { background: var(--bg); color: var(--text); }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-// Navigation & Tier Switch
+// Tier Switching
 function switchTier(tier) {
-    document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tier-section').forEach(s => s.classList.remove('active'));
-    if (tier === 'local') {
-        document.querySelector('.tier-btn.local').classList.add('active');
-        document.getElementById('localSection').classList.add('active');
-    } else {
-        document.querySelector('.tier-btn.safari').classList.add('active');
-        document.getElementById('safariSection').classList.add('active');
-    }
+    document.querySelectorAll('.tier-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tier-section').forEach(sec => sec.classList.remove('active'));
+    document.querySelector(`.tier-btn.${tier}`).classList.add('active');
+    document.getElementById(tier === 'local' ? 'localSection' : 'safariSection').classList.add('active');
 }
 
-// Local Commute Logic (your original)
-function executeLocalSearch(event) {
-    event.preventDefault();
-    alert("Local search executed! (You can expand this later)");
-    // Add your full original local search logic here
+// Local Commute Search (Your Original Logic Restored)
+const travelDatabase = [
+    {type:'cheap', mode:'🚐 Matatu', operator:'Super Metro', price:'KES 1,500', duration:'Hourly', phone:'+254712345678'},
+    {type:'moderate', mode:'🚌 Express Bus', operator:'Mash East', price:'KES 2,500', duration:'8AM & 9PM', phone:'+254712345678'},
+    {type:'expensive', mode:'🚆 SGR Express', operator:'Kenya Railways', price:'KES 1,500-4,500', duration:'Daily', phone:'+254712345678'}
+];
+
+function executeLocalSearch(e) {
+    e.preventDefault();
+    const name = document.getElementById('localPassengerName').value;
+    const origin = document.getElementById('localOrigin').value;
+    const dest = document.getElementById('localDestination').value;
+    const budget = document.getElementById('budgetTier').value;
+
+    const filtered = travelDatabase.filter(item => budget === 'all' || item.type === budget);
+
+    const tbody = document.getElementById('resultsTableBody');
+    tbody.innerHTML = '';
+    document.getElementById('searchResultsBox').style.display = 'block';
+
+    filtered.forEach(item => {
+        const whatsappUrl = `https://wa.me/${item.phone}?text=${encodeURIComponent(`Hello, I want to book from ${origin} to ${dest} - ${item.mode}`)}`;
+        tbody.innerHTML += `
+            <tr>
+                <td>${item.mode}</td>
+                <td>${item.operator}</td>
+                <td style="color:var(--orange);font-weight:bold;">${item.price}</td>
+                <td>${item.duration}</td>
+                <td><a href="${whatsappUrl}" target="_blank" style="background:var(--whatsapp);color:white;padding:8px 12px;border-radius:6px;text-decoration:none;">💬 Book</a></td>
+            </tr>`;
+    });
 }
 
-// Tourist Assistance
-const assistanceOptions = [ /* same as previous message */ ];
+// Tourist Assistance (Leaflet + Cards)
+const assistanceOptions = [ /* your data here - same as before */ ];
 
 let safariMap;
-function initLeafletMap() { /* same as previous */ }
-function renderAssistance() { /* same as previous */ }
+function initLeafletMap() { /* same Leaflet code */ }
+function renderAssistance() { /* same */ }
 function filterAssistance() { /* same */ }
 function contactViaWhatsApp(name, phone) { /* same */ }
 function centerMapOnNairobi() { /* same */ }
