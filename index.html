@@ -1,138 +1,109 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OSARE - East Africa Transit & Booking Hub</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<style>
-:root {
---primary: #1e3a8a;
---accent: #3b82f6;
---success: #10b981;
---orange: #f97316;
---whatsapp: #25d366;
---bg: #f8fafc;
---text: #1e293b;
-}
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
-body { background: var(--bg); color: var(--text); padding-bottom: 4rem; }
-
-.hero { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; padding: 3.5rem 2rem; text-align: center; }
-.container { max-width: 1100px; margin: 2rem auto; padding: 0 20px; }
-
-/* Your existing styles (kept) */
-.tier-nav { display: flex; justify-content: center; gap: 1rem; margin-bottom: 2.5rem; }
-.tier-btn { padding: 12px 24px; font-size: 1.1rem; font-weight: bold; border: none; border-radius: 50px; cursor: pointer; transition: 0.3s; }
-.tier-btn.local { background: #e2e8f0; color: var(--primary); }
-.tier-btn.local.active { background: var(--primary); color: white; }
-.tier-btn.safari { background: #e2e8f0; color: var(--orange); }
-.tier-btn.safari.active { background: var(--orange); color: white; }
-.tier-section { display: none; }
-.tier-section.active { display: block; }
-
-.booking-form-box { background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 2rem; }
-.visual-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-.image-card { background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); cursor: pointer; transition: all 0.3s; }
-.image-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
-
-/* Leaflet Map */
-#leaflet-map { height: 520px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-.map-header { background: white; padding: 1rem; border-radius: 12px 12px 0 0; font-weight: bold; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; }
-</style>
-</head>
-<body>
-
-<div class="hero">
-    <h1 style="font-size: 2.6rem; font-weight: 800;">OSARE</h1>
-    <p style="opacity: 0.9; margin-top: 4px; font-size: 1.1rem;">Instant East African Commuter Enquiries & Premium Safari Leads</p>
-</div>
-
-<div class="container">
-
-<div class="tier-nav">
-    <button class="tier-btn local active" onclick="switchTier('local')">🚆 Local Commute</button>
-    <button class="tier-btn safari" onclick="switchTier('safari')">🌍 Tourist Safaris</button>
-</div>
-
-<!-- Local Section (your original) -->
-<div id="localSection" class="tier-section active">
-    <!-- Paste your original local section here if needed -->
-</div>
-
-<!-- Safari Section with Leaflet Map -->
-<div id="safariSection" class="tier-section">
-    <h2>Explore Premium Savannah Experiences</h2>
-    <p class="subtitle">Click map markers or cards below to book instantly via WhatsApp</p>
-
-    <!-- Leaflet Map -->
-    <div class="map-header">
-        <span>🗺️ Interactive Safari Map (Leaflet.js)</span>
-        <button onclick="centerMapOnNairobi()" style="background:var(--accent); color:white; border:none; padding:8px 16px; border-radius:8px; cursor:pointer;">Reset View</button>
-    </div>
-    <div id="leaflet-map"></div>
-
-    <!-- Your original visual grid and form go here -->
-    <!-- Paste your existing .visual-grid and action-bar here -->
-</div>
-
-<footer style="margin-top: 5rem; opacity: 0.5; text-align: center; font-size: 0.85rem;">
-    © 2026 Osare Hub • Built by nakinson osare
-</footer>
-</div>
-
-<!-- Leaflet CSS & JS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-// Your original functions (switchTier, executeLocalSearch, etc.) go here...
+// Tourist Assistance Database
+const assistanceOptions = [
+    {
+        category: "Car Hire",
+        name: "4x4 Safari Vehicle Hire",
+        desc: "Self-drive or chauffeured Land Cruisers",
+        price: "From $80/day",
+        link: "https://www.avis.co.ke" ,
+        phone: "+254712345678",
+        location: "Nairobi & Major Parks"
+    },
+    {
+        category: "Light Aircraft",
+        name: "Charter Flights",
+        desc: "Light aircraft to Mara, Amboseli, Samburu",
+        price: "From $850 per flight",
+        link: "https://www.safarilink.co.ke",
+        phone: "+254789111222",
+        location: "Wilson Airport, Nairobi"
+    },
+    {
+        category: "Railways",
+        name: "SGR Madaraka Express",
+        desc: "Nairobi to Mombasa / Kisumu",
+        price: "From KES 1,500",
+        link: "https://www.krc.co.ke",
+        phone: "+254712345678",
+        location: "Nairobi SGR Station"
+    },
+    {
+        category: "Hotels & Resorts",
+        name: "Mara Luxury Tented Camp",
+        desc: "Premium eco-lodges with game viewing",
+        price: "From $320/night",
+        link: "https://www.asiliaafrica.com",
+        phone: "+254733444555",
+        location: "Maasai Mara"
+    },
+    {
+        category: "Places to Visit",
+        name: "Maasai Mara National Reserve",
+        desc: "Big Five & Great Migration",
+        price: "Park Fees $70",
+        link: "https://www.magicalkenya.com",
+        phone: "+254712345678",
+        location: "Maasai Mara"
+    }
+];
 
 let safariMap;
 
 function initLeafletMap() {
     safariMap = L.map('leaflet-map').setView([-1.2921, 36.8219], 6);
-
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
+        attribution: '&copy; OpenStreetMap'
     }).addTo(safariMap);
 
-    const locations = [
-        {coords: [-1.406, 35.0], name: "Maasai Mara", desc: "Big Five Safari", price: "$150/person", phone: "+254712345678"},
-        {coords: [-2.65, 37.25], name: "Amboseli", desc: "Elephants & Kilimanjaro", price: "$220/person", phone: "+254712345678"},
-        {coords: [-3.0, 38.5], name: "Tsavo National Park", desc: "Red Elephants", price: "$180/person", phone: "+254712345678"},
-        {coords: [-0.45, 36.1], name: "Lake Nakuru", desc: "Flamingos & Rhinos", price: "$130/person", phone: "+254712345678"},
-        {coords: [-4.0, 39.7], name: "Diani Beach", desc: "Beach + Safari", price: "$280/person", phone: "+254712345678"}
-    ];
-
-    locations.forEach(loc => {
-        const marker = L.marker(loc.coords).addTo(safariMap);
-        marker.bindPopup(`
-            <b>${loc.name}</b><br>
-            ${loc.desc}<br>
-            <strong style="color:#f97316;">${loc.price}</strong><br><br>
-            <button onclick="quickBook('${loc.name}', '${loc.price}', '${loc.phone}')" 
-                    style="background:#25d366;color:white;border:none;padding:10px 16px;border-radius:6px;width:100%;cursor:pointer;">
-                Book via WhatsApp
-            </button>
-        `);
+    // Add markers
+    assistanceOptions.forEach(item => {
+        if (item.location.includes("Mara") || item.location.includes("Nairobi")) {
+            const marker = L.marker([-1.4, 35.0]).addTo(safariMap); // example coords
+            marker.bindPopup(`<b>${item.name}</b><br>${item.desc}`);
+        }
     });
 }
 
-function quickBook(name, price, phone) {
-    const text = `Hello! I want to book ${name} (${price}) through OSARE.`;
-    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
+function renderAssistance(filtered = assistanceOptions) {
+    const grid = document.getElementById('assistanceGrid');
+    grid.innerHTML = filtered.map(item => `
+        <div class="image-card" onclick="contactViaWhatsApp('${item.name}', '${item.phone}')">
+            <div style="padding:1.2rem;">
+                <strong style="color:var(--orange);">${item.category}</strong>
+                <h3>${item.name}</h3>
+                <p>${item.desc}</p>
+                <p><strong>${item.price}</strong></p>
+                <a href="${item.link}" target="_blank" style="color:var(--accent); text-decoration:underline;">Visit Provider →</a>
+            </div>
+        </div>
+    `).join('');
+}
+
+function filterAssistance() {
+    const term = document.getElementById('touristSearch').value.toLowerCase();
+    const filtered = assistanceOptions.filter(item => 
+        item.name.toLowerCase().includes(term) || 
+        item.category.toLowerCase().includes(term) ||
+        item.desc.toLowerCase().includes(term)
+    );
+    renderAssistance(filtered);
+}
+
+function contactViaWhatsApp(service, phone) {
+    const msg = `Hello, I need assistance with ${service} in East Africa.`;
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
 function centerMapOnNairobi() {
     if (safariMap) safariMap.flyTo([-1.2921, 36.8219], 6);
 }
 
-// Initialize everything
+// Initialize
 window.onload = () => {
     initLeafletMap();
-    // Add your other init calls here (e.g. switchTier if needed)
+    renderAssistance();
 };
 </script>
-</body>
-</html>
