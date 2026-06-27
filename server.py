@@ -9,11 +9,20 @@ BASE_DIR = os.path.dirname(__file__)
 
 from fastapi import FastAPI
 
-app = FastAPI()
+import datetime
+import os
+import urllib.parse
+from fastapi import FastAPI, Response
+from fastapi.responses import FileResponse, HTMLResponse
 
-@app.get("/")
-def read_root():
-    return {"message": "Hello from Synology!"}
+app = FastAPI()
+BASE_DIR = os.path.dirname(os.path.abspath(__file__)) # Tells Python exactly where index.html lives
+
+# --------------------------------------
+# ✅ DATA (simple + reliable)
+# --------------------------------------
+LOCAL_DATABASE = [
+...
 
 # --------------------------------------
 # ✅ DATA (simple + reliable)
