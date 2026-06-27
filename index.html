@@ -4,60 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OSARE - East Africa Transit & Booking Hub</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
-:root {
---primary: #1e3a8a;
---accent: #3b82f6;
---success: #10b981;
---orange: #f97316;
---whatsapp: #25d366;
---bg: #f8fafc;
---text: #1e293b;
-}
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
-body { background: var(--bg); color: var(--text); }
-
-.hero { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; padding: 3rem 1rem; text-align: center; }
-.container { max-width: 1100px; margin: 1.5rem auto; padding: 0 15px; }
-
+:root { --primary: #1e3a8a; --orange: #f97316; --whatsapp: #25d366; }
+body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; margin:0; }
+.hero { background: linear-gradient(135deg, var(--primary), #3b82f6); color: white; padding: 3rem 1rem; text-align: center; }
+.container { max-width: 1100px; margin: 2rem auto; padding: 0 15px; }
 .navbar { background: white; padding: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-.nav-links { display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center; margin-top: 10px; }
-.nav-links a { color: var(--primary); text-decoration: none; font-weight: 600; }
-
-.tier-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin: 2rem 0; }
-.tier-btn { padding: 12px 24px; font-size: 1.05rem; font-weight: bold; border: none; border-radius: 50px; cursor: pointer; min-width: 160px; }
-.tier-btn.local { background: #e2e8f0; color: var(--primary); }
-.tier-btn.local.active { background: var(--primary); color: white; }
-.tier-btn.safari { background: #e2e8f0; color: var(--orange); }
-.tier-btn.safari.active { background: var(--orange); color: white; }
-
-.tier-section { display: none; }
-.tier-section.active { display: block; }
-
-.booking-form-box { background: white; padding: 1.8rem; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); margin-bottom: 2rem; }
-.visual-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
-.image-card { background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.06); cursor: pointer; transition: all 0.3s; }
-.image-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
-
-.map-header { background: white; padding: 1rem; border-radius: 12px 12px 0 0; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
-#leaflet-map { height: 480px; border-radius: 0 0 12px 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-
-.results-table { width: 100%; border-collapse: collapse; }
-.results-table th, .results-table td { padding: 12px; border-bottom: 1px solid #e2e8f0; }
-
-@media (max-width: 600px) {
-    .nav-links, .tier-nav { flex-direction: column; }
-    #leaflet-map { height: 360px; }
-}
+.nav-links a { margin: 0 12px; color: var(--primary); text-decoration: none; font-weight: 600; }
+.gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; margin: 25px 0; }
+.card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: 0.3s; }
+.card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+.card img { width: 100%; height: 180px; object-fit: cover; }
+.card p { padding: 12px; text-align: center; font-weight: 600; }
 </style>
 </head>
 <body>
 
 <nav class="navbar">
-    <div class="container" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
-        <div style="display:flex; align-items:center; gap:12px;">
-            <img src="https://github.com/YOUR_GITHUB_USERNAME.png" width="45" height="45" style="border-radius:50%;" alt="Profile">
+    <div style="max-width:1100px;margin:auto;padding:0 15px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:12px;">
+            <img src="https://github.com/YOUR_GITHUB_USERNAME.png" width="50" height="50" style="border-radius:50%;" alt="Profile">
             <strong>OSARE</strong>
         </div>
         <div class="nav-links">
@@ -65,130 +31,43 @@ body { background: var(--bg); color: var(--text); }
             <a href="safari.html">Safari Tours</a>
             <a href="dashboard.html">Dashboard</a>
             <a href="about.html">About</a>
+            <a href="migration.html">Migration Guide</a>
         </div>
     </div>
 </nav>
 
 <div class="hero">
-    <h1 style="font-size: 2.6rem; font-weight: 800;">OSARE</h1>
-    <p style="opacity: 0.9; font-size: 1.15rem;">East Africa Transit & Tourist Assistance Hub</p>
+    <h1>OSARE</h1>
+    <p>Free for Tourists • Vendors pay 5% commission</p>
 </div>
 
 <div class="container">
 
-<div class="tier-nav">
-    <button class="tier-btn local active" onclick="switchTier('local')">🚆 Local Commute</button>
-    <button class="tier-btn safari" onclick="switchTier('safari')">🌍 Tourist Assistance</button>
+<h2>Big Five & Iconic Wildlife</h2>
+<div class="gallery">
+    <a href="https://www.google.com/search?q=lion+maasai+mara+kenya&tbm=isch" target="_blank" class="card">
+        <img src="https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=600" alt="Lion">
+        <p>Lion - Maasai Mara</p>
+    </a>
+    <a href="https://www.google.com/search?q=elephant+amboseli+national+park&tbm=isch" target="_blank" class="card">
+        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600" alt="Elephant">
+        <p>Elephant - Amboseli</p>
+    </a>
+    <a href="https://www.google.com/search?q=leopard+safari+kenya&tbm=isch" target="_blank" class="card">
+        <img src="https://images.unsplash.com/photo-1589979482837-e74f2e145060?w=600" alt="Leopard">
+        <p>Leopard</p>
+    </a>
+    <a href="https://www.google.com/search?q=black+rhino+tsavo+kenya&tbm=isch" target="_blank" class="card">
+        <img src="https://images.unsplash.com/photo-1602491403955-2a2c4f8c8b0a?w=600" alt="Rhino">
+        <p>Rhino - Tsavo</p>
+    </a>
 </div>
 
-<!-- LOCAL COMMUTE SECTION -->
-<div id="localSection" class="tier-section active">
-    <h2>Compare Local Transits</h2>
-    <p class="subtitle">Schedules sorted automatically from budget Matatus up to SGR Trains and flights.</p>
-
-    <form class="booking-form-box" onsubmit="executeLocalSearch(event)">
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem;">
-            <div><label>Your Name</label><input type="text" id="localPassengerName" placeholder="e.g. Jane Smith" required></div>
-            <div><label>Departure</label><input type="text" id="localOrigin" value="Nairobi" required></div>
-            <div><label>Destination</label><input type="text" id="localDestination" value="Mombasa" required></div>
-            <div><label>Budget</label>
-                <select id="budgetTier">
-                    <option value="all">Show All</option>
-                    <option value="cheap">Cheap</option>
-                    <option value="moderate">Moderate</option>
-                    <option value="expensive">Premium</option>
-                </select>
-            </div>
-        </div>
-        <button type="submit" style="margin-top:1rem;width:100%;padding:14px;background:var(--primary);color:white;border:none;border-radius:8px;font-weight:bold;">Search Routes</button>
-    </form>
-
-    <div id="searchResultsBox" class="results-box" style="display:none;">
-        <h3 id="resultsHeading">Available Transits</h3>
-        <table class="results-table"><thead><tr><th>Mode</th><th>Operator</th><th>Price</th><th>Duration</th><th>Action</th></tr></thead><tbody id="resultsTableBody"></tbody></table>
-    </div>
-</div>
-
-<!-- TOURIST ASSISTANCE SECTION -->
-<div id="safariSection" class="tier-section">
-    <h2>🌍 On-Ground Tourist Assistance + Live GTFS Map</h2>
-    <p class="subtitle">Car Hire • Light Aircraft • Hotels • Real-time Transport</p>
-
-    <div class="map-header">
-        <span>🗺️ Live GTFS Transport Map</span>
-        <button onclick="toggleGTFS()">Toggle Live Vehicles</button>
-    </div>
-    <div id="leaflet-map"></div>
-
-    <div class="visual-grid" id="assistanceGrid"></div>
-</div>
+<h2>The Great Migration</h2>
+<p style="margin-bottom:15px;">The largest mammal migration on Earth (1.5 – 2 million wildebeest)</p>
+<a href="migration.html" style="background:var(--primary);color:white;padding:12px 24px;border-radius:8px;text-decoration:none;display:inline-block;">View Full Migration Guide →</a>
 
 </div>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<script>
-// Switch Tier
-function switchTier(tier) {
-    document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tier-section').forEach(s => s.classList.remove('active'));
-    document.querySelector(`.tier-btn.${tier}`).classList.add('active');
-    document.getElementById(tier + 'Section').classList.add('active');
-}
-
-// Local Commute Logic
-function executeLocalSearch(e) {
-    e.preventDefault();
-    // Your original logic here
-    alert("Search executed! Results would appear below.");
-}
-
-// GTFS + Leaflet Map
-let safariMap, vehicleMarkers = [], gtfsInterval;
-
-function initMap() {
-    safariMap = L.map('leaflet-map').setView([-1.2921, 36.8219], 6);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(safariMap);
-}
-
-function toggleGTFS() {
-    if (vehicleMarkers.length > 0) {
-        vehicleMarkers.forEach(m => safariMap.removeLayer(m));
-        vehicleMarkers = [];
-        clearInterval(gtfsInterval);
-    } else {
-        startLiveVehicles();
-    }
-}
-
-function startLiveVehicles() {
-    const vehicles = [
-        {name: "Nairobi-Mombasa Express", lat: -1.29, lng: 36.82},
-        {name: "Mara Shuttle", lat: -1.4, lng: 35.0}
-    ];
-
-    vehicles.forEach(v => {
-        const marker = L.marker([v.lat, v.lng], {
-            icon: L.divIcon({className: 'bus-marker', html: '🚌', iconSize: [32,32]})
-        }).addTo(safariMap).bindPopup(`<b>${v.name}</b><br>Live Position`);
-        vehicleMarkers.push(marker);
-    });
-
-    gtfsInterval = setInterval(() => {
-        vehicleMarkers.forEach(m => {
-            let pos = m.getLatLng();
-            pos.lat += 0.01;
-            pos.lng += 0.015;
-            m.setLatLng(pos);
-        });
-    }, 1800);
-}
-
-window.onload = () => {
-    initMap();
-    // Add assistance cards if needed
-};
-</script>
 </body>
 </html>
