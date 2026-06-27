@@ -1,79 +1,263 @@
-function executeLocalSearch(event) {
-    event.preventDefault();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OSARE - East Africa Transit & Booking Hub</title>
 
-    const passengerName = document.getElementById('localPassengerName').value.trim();
-    const origin = document.getElementById('localOrigin').value;
-    const destination = document.getElementById('localDestination').value;
-    const selectedBudget = document.getElementById('budgetTier').value;
-
-    const resultsBox = document.getElementById('searchResultsBox');
-    const tableBody = document.getElementById('resultsTableBody');
-    const heading = document.getElementById('resultsHeading');
-
-    tableBody.innerHTML = "";
-
-    const filteredData = travelDatabase.filter(item => {
-        if (selectedBudget === 'all') return true;
-        return item.type === selectedBudget;
-    });
-
-    heading.innerText = `Available Options: ${origin} → ${destination}`;
-
-    // ✅ YOUR CONTROLLED DATA (unchanged but improved)
-    filteredData.forEach(item => {
-        const message = `Hello ${item.operator},
-My name is ${passengerName}.
-Route: ${origin} to ${destination}.
-Option: ${item.mode}.
-Price: ${item.price}.`;
-
-        const whatsappUrl = `https://wa.me/${item.phone}?text=${encodeURIComponent(message)}`;
-
-        const row = `
-        <tr>
-            <td>${item.mode}</td>
-            <td>${item.operator}</td>
-            <td style="color: var(--orange); font-weight:600;">${item.price}</td>
-            <td>${item.duration}</td>
-            <td>
-                <a href="${whatsappUrl}" target="_blank" class="btn-inline-book">
-                    Book
-                </a>
-            </td>
-        </tr>`;
-        tableBody.insertAdjacentHTML('beforeend', row);
-    });
-
-    // ✅ ✅ NEW: REAL-WORLD DISCOVERY LINKS (NO GUESSING REQUIRED)
-
-    const searchLinks = [
-        {
-            name: "🔎 More Bus Operators",
-            url: `https://www.google.com/search?q=bus+${origin}+to+${destination}`
-        },
-        {
-            name: "📍 View on Map",
-            url: `https://www.google.com/maps/search/transport+${origin}+${destination}`
-        },
-        {
-            name: "🚗 Car Hire Options",
-            url: `https://www.google.com/search?q=car+hire+${origin}`
-        }
-    ];
-
-    searchLinks.forEach(link => {
-        const row = `
-        <tr>
-            <td colspan="4" style="font-weight:600;">${link.name}</td>
-            <td>
-                <a href="${link.url}" target="_blank" class="btn-inline-book">
-                    Open
-                </a>
-            </td>
-        </tr>`;
-        tableBody.insertAdjacentHTML('beforeend', row);
-    });
-
-    resultsBox.style.display = 'block';
-    resultsBox.scrollIntoView({ behavior: 'smooth' });
+<style>
+:root { 
+    --primary: #1e3a8a; 
+    --accent: #3b82f6; 
+    --success: #10b981;
+    --orange: #f97316;
+    --whatsapp: #25d366;
+    --bg: #f8fafc;
+    --text: #1e293b;
 }
+
+* { margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif; }
+body { background: var(--bg); color: var(--text); padding-bottom:3rem; }
+
+.hero {
+    background: linear-gradient(135deg,var(--primary),var(--accent));
+    color:white;
+    padding:3rem 1rem;
+    text-align:center;
+}
+
+.container {
+    max-width:1100px;
+    margin:auto;
+    padding:15px;
+}
+
+.tier-nav {
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.tier-btn {
+    padding:10px 18px;
+    border:none;
+    cursor:pointer;
+    border-radius:20px;
+    background:#ddd;
+}
+
+.tier-btn.active {
+    background:var(--primary);
+    color:white;
+}
+
+.tier-btn.safari.active {
+    background:var(--orange);
+}
+
+.tier-section { display:none; }
+.tier-section.active { display:block; }
+
+.booking-form-box {
+    background:white;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:20px;
+}
+
+input, select {
+    width:100%;
+    padding:8px;
+    margin-top:5px;
+    margin-bottom:10px;
+}
+
+button {
+    padding:10px;
+    width:100%;
+    background:var(--primary);
+    color:white;
+    border:none;
+    border-radius:6px;
+}
+
+.results-box {
+    background:white;
+    padding:15px;
+    margin-top:10px;
+}
+
+table { width:100%; border-collapse:collapse; }
+td, th { padding:10px; border-bottom:1px solid #ddd; }
+
+.image-card {
+    background:white;
+    margin:10px 0;
+    padding:10px;
+    cursor:pointer;
+    border:2px solid transparent;
+}
+
+.image-card.selected {
+    border:2px solid var(--success);
+}
+
+.btn-inline-book {
+    background:var(--whatsapp);
+    color:white;
+    padding:6px 10px;
+    text-decoration:none;
+    border-radius:4px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+    <h1>OSARE</h1>
+    <p>East Africa Transit & Safari Intelligence</p>
+</div>
+
+<div class="container">
+
+<div class="tier-nav">
+    <button class="tier-btn local active" onclick="switchTier('local')">Local</button>
+    <button class="tier-btn safari" onclick="switchTier('safari')">Safari</button>
+</div>
+
+<!-- LOCAL -->
+<div id="localSection" class="tier-section active">
+
+<form class="booking-form-box" onsubmit="executeLocalSearch(event)">
+<input id="localPassengerName" placeholder="Your Name" required>
+<input id="localOrigin" value="Nairobi">
+<input id="localDestination" value="Mombasa">
+
+<select id="budgetTier">
+<option value="all">All</option>
+<option value="cheap">Cheap</option>
+<option value="moderate">Moderate</option>
+<option value="expensive">Premium</option>
+</select>
+
+<button type="submit">Search Routes</button>
+</form>
+
+<div id="searchResultsBox" class="results-box" style="display:none;">
+<h3 id="resultsHeading"></h3>
+
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Operator</th>
+<th>Price</th>
+<th>Duration</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="resultsTableBody"></tbody>
+</table>
+</div>
+
+</div>
+
+<!-- SAFARI -->
+<div id="safariSection" class="tier-section">
+
+<div class="image-card" onclick="selectSafariAgency(event,'Savannah Tour','Savannah Experts','254712345678','150 USD')">
+Savannah Group Tour
+</div>
+
+<div class="image-card" onclick="selectSafariAgency(event,'Aircraft Charter','Air Transit','254789111222','850 USD')">
+Aircraft Charter
+</div>
+
+<button onclick="dispatchWhatsAppLead()">Book via WhatsApp</button>
+
+</div>
+
+</div>
+
+<script>
+
+const travelDatabase = [
+{ type:'cheap', mode:'Matatu', operator:'Super Metro', price:'1500', duration:'Hourly', phone:'254712345678'},
+{ type:'moderate', mode:'Bus', operator:'Mash East Africa', price:'2500', duration:'Morning/Evening', phone:'254712345678'},
+{ type:'expensive', mode:'Train', operator:'SGR', price:'4500', duration:'Daily', phone:'254712345678'},
+{ type:'expensive', mode:'Flight', operator:'Jambojet', price:'8500', duration:'Multiple', phone:'254712345678'}
+];
+
+function switchTier(tier){
+document.querySelectorAll('.tier-btn').forEach(b=>b.classList.remove('active'));
+document.querySelectorAll('.tier-section').forEach(s=>s.classList.remove('active'));
+
+if(tier==='local'){
+document.querySelector('.tier-btn.local').classList.add('active');
+document.getElementById('localSection').classList.add('active');
+}else{
+document.querySelector('.tier-btn.safari').classList.add('active');
+document.getElementById('safariSection').classList.add('active');
+}
+}
+
+function executeLocalSearch(event){
+event.preventDefault();
+
+const passengerName=document.getElementById('localPassengerName').value;
+const origin=document.getElementById('localOrigin').value;
+const destination=document.getElementById('localDestination').value;
+const budget=document.getElementById('budgetTier').value;
+
+const tableBody=document.getElementById('resultsTableBody');
+tableBody.innerHTML="";
+
+document.getElementById('resultsHeading').innerText =
+"Available Options: "+origin+" → "+destination;
+
+const filtered = travelDatabase.filter(item=>{
+if(budget==='all') return true;
+return item.type===budget;
+});
+
+filtered.forEach(item=>{
+const msg = `Hello ${item.operator}, I want travel from ${origin} to ${destination}`;
+const url = `https://wa.me/${item.phone}?text=${encodeURIComponent(msg)}`;
+
+const row = `
+<tr>
+<td>${item.mode}</td>
+<td>${item.operator}</td>
+<td>${item.price}</td>
+<td>${item.duration}</td>
+<td><{url}Book</a></td>
+</tr>`;
+tableBody.insertAdjacentHTML('beforeend',row);
+});
+
+document.getElementById('searchResultsBox').style.display='block';
+}
+
+let selectedPhone="";
+
+function selectSafariAgency(event,name,vendor,phone,price){
+document.querySelectorAll('.image-card').forEach(card=>card.classList.remove('selected'));
+event.currentTarget.classList.add('selected');
+selectedPhone=phone;
+}
+
+function dispatchWhatsAppLead(){
+if(!selectedPhone){
+alert("Select safari first");
+return;
+}
+window.open(`https://wa.me/${selectedPhone}`,'_blank');
+}
+
+</script>
+
+</body>
+</html>
