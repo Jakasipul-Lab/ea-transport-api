@@ -3,60 +3,75 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OSARE - East Africa Transit & Booking Hub</title>
+<title>OSARE - Booking Hub</title>
 
 <style>
-body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; margin:0; }
-.hero { background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; padding: 3rem 1rem; text-align: center; }
-.navbar { background: white; padding: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-.nav-links a { margin: 0 12px; color: #1e3a8a; text-decoration: none; font-weight: 600; }
-.card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin: 10px 0; }
+body { font-family: Arial; background:#f8fafc; margin:0; }
+.hero { background:#1e3a8a; color:white; padding:2rem; text-align:center; }
+.container { max-width:900px; margin:2rem auto; padding:0 15px; }
+
+table { width:100%; border-collapse:collapse; margin-top:1rem; }
+th,td { padding:12px; border:1px solid #ddd; }
+th { background:#1e3a8a; color:white; }
+
+.btn { background:#25d366; color:white; padding:8px 12px; text-decoration:none; border-radius:5px; font-weight:bold; }
 </style>
 </head>
 
 <body>
 
-<nav class="navbar">
-    <div style="max-width:1100px;margin:auto;padding:0 15px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;">
-        <div style="display:flex;align-items:center;gap:12px;">
-            <img src="https://github.com/YOUR_GITHUB_USERNAME.png" width="50" height="50" style="border-radius:50%;" alt="Profile">
-            <strong>OSARE</strong>
-        </div>
-
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="safari.html">Safari Tours</a>
-            <a href="dashboard.html">Dashboard</a>
-            <a href="about.html">About</a>
-            <a href="migration.html">Migration</a>
-        </div>
-    </div>
-</nav>
-
 <div class="hero">
-    <h1>OSARE</h1>
-    <p>Free for Tourists • Vendors pay 5% commission</p>
+    <h1>OSARE Booking</h1>
+    <p>Click reserve → WhatsApp + Dashboard tracking</p>
 </div>
 
-<div style="max-width:1100px;margin:2rem auto;padding:0 15px;">
-    <h2>Book Services & Earn Commission</h2>
+<div class="container">
 
-    <div class="card">
-        <h3>🚙 Car Hire</h3>
-        <!-- Link removed -->
-    </div>
+<h2>Available Routes</h2>
 
-    <div class="card">
-        <h3>✈️ Light Aircraft</h3>
-        <!-- Link removed -->
-    </div>
+<table>
+<tr>
+    <th>Mode</th>
+    <th>Operator</th>
+    <th>Price</th>
+    <th>Action</th>
+</tr>
 
-    <div class="card">
-        <h3>🚌 Group Tours & Caravan</h3>
-        <!-- Link removed -->
-    </div>
+<tbody id="tableBody"></tbody>
+</table>
+
+<br>
+<a href="dashboard.html">→ Open Dashboard</a>
 
 </div>
 
-</body>
-</html>
+<script>
+
+const data = [
+  {mode:"🚐 Matatu", operator:"Super Metro", price:"1500", phone:"254712345678"},
+  {mode:"🚌 Bus", operator:"Mash EA", price:"2500", phone:"254712345678"},
+  {mode:"🚆 Train", operator:"SGR", price:"4500", phone:"254712345678"}
+];
+
+// ✅ SAVE BOOKING (THIS LINKS TO DASHBOARD)
+function recordBooking(vendor, price) {
+    let commissions = JSON.parse(localStorage.getItem('commissions')) || [];
+
+    let amount = parseFloat(price);
+
+    commissions.push({
+        date: new Date().toLocaleDateString(),
+        vendor: vendor,
+        amount: amount,
+        commission: Math.round(amount * 0.05)
+    });
+
+    localStorage.setItem('commissions', JSON.stringify(commissions));
+}
+
+// ✅ CREATE TABLE
+const tbody = document.getElementById('tableBody');
+
+data.forEach(item => {
+
+   
