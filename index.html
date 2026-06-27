@@ -2,90 +2,61 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>OSARE Dashboard - Commission Tracker</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OSARE - East Africa Transit & Booking Hub</title>
+
 <style>
-body { font-family: Arial, sans-serif; padding: 20px; background: #f8fafc; }
-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
-th { background: #1e3a8a; color: white; }
-input, button { padding: 10px; margin: 5px; }
+body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; margin:0; }
+.hero { background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: white; padding: 3rem 1rem; text-align: center; }
+.navbar { background: white; padding: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+.nav-links a { margin: 0 12px; color: #1e3a8a; text-decoration: none; font-weight: 600; }
+.card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin: 10px 0; }
 </style>
 </head>
+
 <body>
-<h1>5% Commission Tracker</h1>
 
-<input type="text" id="vendor" placeholder="Vendor Name" />
-<input type="number" id="amount" placeholder="Booking Amount (KES)" />
-<button onclick="addCommission()">Record Booking</button>
+<nav class="navbar">
+    <div style="max-width:1100px;margin:auto;padding:0 15px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:12px;">
+            <img src="https://github.com/YOUR_GITHUB_USERNAME.png" width="50" height="50" style="border-radius:50%;" alt="Profile">
+            <strong>OSARE</strong>
+        </div>
 
-<table>
-    <tr><th>Date</th><th>Vendor</th><th>Amount</th><th>5% Commission</th></tr>
-    <tbody id="tableBody"></tbody>
-</table>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="safari.html">Safari Tours</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="about.html">About</a>
+            <a href="migration.html">Migration</a>
+        </div>
+    </div>
+</nav>
 
-<p><strong>Total Commission:</strong> <span id="total">KES 0</span></p>
+<div class="hero">
+    <h1>OSARE</h1>
+    <p>Free for Tourists • Vendors pay 5% commission</p>
+</div>
 
-<button onclick="clearData()">Clear All Data</button>
+<div style="max-width:1100px;margin:2rem auto;padding:0 15px;">
+    <h2>Book Services & Earn Commission</h2>
 
-<script>
-// Load saved data
-let commissions = JSON.parse(localStorage.getItem('commissions')) || [];
+    <div class="card">
+        <h3>🚙 Car Hire</h3>
+        <!-- Link removed -->
+    </div>
 
-function renderTable() {
-    const tbody = document.getElementById('tableBody');
-    tbody.innerHTML = '';
-    let total = 0;
+    <div class="card">
+        <h3>✈️ Light Aircraft</h3>
+        <!-- Link removed -->
+    </div>
 
-    commissions.forEach((entry, index) => {
-        total += entry.commission;
-        tbody.innerHTML += `
-            <tr>
-                <td>${entry.date}</td>
-                <td>${entry.vendor}</td>
-                <td>KES ${entry.amount}</td>
-                <td>KES ${entry.commission}</td>
-            </tr>`;
-    });
+    <div class="card">
+        <h3>🚌 Group Tours & Caravan</h3>
+        <!-- Link removed -->
+    </div>
 
-    document.getElementById('total').textContent = `KES ${total.toLocaleString()}`;
-}
+</div>
 
-function addCommission() {
-    const vendor = document.getElementById('vendor').value;
-    const amount = parseFloat(document.getElementById('amount').value);
-
-    if (!vendor || !amount) {
-        alert("Please fill all fields");
-        return;
-    }
-
-    const commission = Math.round(amount * 0.05);
-
-    commissions.push({
-        date: new Date().toLocaleDateString(),
-        vendor: vendor,
-        amount: amount,
-        commission: commission
-    });
-
-    localStorage.setItem('commissions', JSON.stringify(commissions));
-    renderTable();
-
-    // Clear inputs
-    document.getElementById('vendor').value = '';
-    document.getElementById('amount').value = '';
-}
-
-function clearData() {
-    if (confirm("Clear all commission data?")) {
-        commissions = [];
-        localStorage.removeItem('commissions');
-        renderTable();
-    }
-}
-
-// Initial render
-renderTable();
-</script>
 </body>
 </html>
