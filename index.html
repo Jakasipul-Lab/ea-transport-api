@@ -2,72 +2,90 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OSARE - East Africa Transit & Booking Hub</title>
+<title>OSARE Dashboard - Commission Tracker</title>
 <style>
-:root { --primary: #1e3a8a; --orange: #f97316; --whatsapp: #25d366; }
-body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; margin:0; }
-.hero { background: linear-gradient(135deg, var(--primary), #3b82f6); color: white; padding: 3rem 1rem; text-align: center; }
-.container { max-width: 1100px; margin: 2rem auto; padding: 0 15px; }
-.navbar { background: white; padding: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-.nav-links a { margin: 0 12px; color: var(--primary); text-decoration: none; font-weight: 600; }
-.gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; margin: 25px 0; }
-.card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: 0.3s; }
-.card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
-.card img { width: 100%; height: 180px; object-fit: cover; }
-.card p { padding: 12px; text-align: center; font-weight: 600; }
+body { font-family: Arial, sans-serif; padding: 20px; background: #f8fafc; }
+table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+th { background: #1e3a8a; color: white; }
+input, button { padding: 10px; margin: 5px; }
 </style>
 </head>
 <body>
+<h1>5% Commission Tracker</h1>
 
-<nav class="navbar">
-    <div style="max-width:1100px;margin:auto;padding:0 15px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;">
-        <div style="display:flex;align-items:center;gap:12px;">
-            <img src="https://github.com/YOUR_GITHUB_USERNAME.png" width="50" height="50" style="border-radius:50%;" alt="Profile">
-            <strong>OSARE</strong>
-        </div>
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="safari.html">Safari Tours</a>
-            <a href="dashboard.html">Dashboard</a>
-            <a href="about.html">About</a>
-            <a href="migration.html">Migration Guide</a>
-        </div>
-    </div>
-</nav>
+<input type="text" id="vendor" placeholder="Vendor Name" />
+<input type="number" id="amount" placeholder="Booking Amount (KES)" />
+<button onclick="addCommission()">Record Booking</button>
 
-<div class="hero">
-    <h1>OSARE</h1>
-    <p>Free for Tourists • Vendors pay 5% commission</p>
-</div>
+<table>
+    <tr><th>Date</th><th>Vendor</th><th>Amount</th><th>5% Commission</th></tr>
+    <tbody id="tableBody"></tbody>
+</table>
 
-<div class="container">
+<p><strong>Total Commission:</strong> <span id="total">KES 0</span></p>
 
-<h2>Big Five & Iconic Wildlife</h2>
-<div class="gallery">
-    <a href="https://www.google.com/search?q=lion+maasai+mara+kenya&tbm=isch" target="_blank" class="card">
-        <img src="https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=600" alt="Lion">
-        <p>Lion - Maasai Mara</p>
-    </a>
-    <a href="https://www.google.com/search?q=elephant+amboseli+national+park&tbm=isch" target="_blank" class="card">
-        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600" alt="Elephant">
-        <p>Elephant - Amboseli</p>
-    </a>
-    <a href="https://www.google.com/search?q=leopard+safari+kenya&tbm=isch" target="_blank" class="card">
-        <img src="https://images.unsplash.com/photo-1589979482837-e74f2e145060?w=600" alt="Leopard">
-        <p>Leopard</p>
-    </a>
-    <a href="https://www.google.com/search?q=black+rhino+tsavo+kenya&tbm=isch" target="_blank" class="card">
-        <img src="https://images.unsplash.com/photo-1602491403955-2a2c4f8c8b0a?w=600" alt="Rhino">
-        <p>Rhino - Tsavo</p>
-    </a>
-</div>
+<button onclick="clearData()">Clear All Data</button>
 
-<h2>The Great Migration</h2>
-<p style="margin-bottom:15px;">The largest mammal migration on Earth (1.5 – 2 million wildebeest)</p>
-<a href="migration.html" style="background:var(--primary);color:white;padding:12px 24px;border-radius:8px;text-decoration:none;display:inline-block;">View Full Migration Guide →</a>
+<script>
+// Load saved data
+let commissions = JSON.parse(localStorage.getItem('commissions')) || [];
 
-</div>
+function renderTable() {
+    const tbody = document.getElementById('tableBody');
+    tbody.innerHTML = '';
+    let total = 0;
 
+    commissions.forEach((entry, index) => {
+        total += entry.commission;
+        tbody.innerHTML += `
+            <tr>
+                <td>${entry.date}</td>
+                <td>${entry.vendor}</td>
+                <td>KES ${entry.amount}</td>
+                <td>KES ${entry.commission}</td>
+            </tr>`;
+    });
+
+    document.getElementById('total').textContent = `KES ${total.toLocaleString()}`;
+}
+
+function addCommission() {
+    const vendor = document.getElementById('vendor').value;
+    const amount = parseFloat(document.getElementById('amount').value);
+
+    if (!vendor || !amount) {
+        alert("Please fill all fields");
+        return;
+    }
+
+    const commission = Math.round(amount * 0.05);
+
+    commissions.push({
+        date: new Date().toLocaleDateString(),
+        vendor: vendor,
+        amount: amount,
+        commission: commission
+    });
+
+    localStorage.setItem('commissions', JSON.stringify(commissions));
+    renderTable();
+
+    // Clear inputs
+    document.getElementById('vendor').value = '';
+    document.getElementById('amount').value = '';
+}
+
+function clearData() {
+    if (confirm("Clear all commission data?")) {
+        commissions = [];
+        localStorage.removeItem('commissions');
+        renderTable();
+    }
+}
+
+// Initial render
+renderTable();
+</script>
 </body>
 </html>
