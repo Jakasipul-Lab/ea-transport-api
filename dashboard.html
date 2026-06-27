@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSARE - Admin Panel & Founder Profile</title>
+    <style>
+        :root {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-orange: #f97316;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background: var(--bg-main); color: var(--text-light); min-height: 100vh; display: flex; flex-direction: column; }
+        
+        header { background: var(--bg-card); padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .logo-group h1 { font-size: 1.8rem; font-weight: 800; color: var(--text-light); letter-spacing: -0.5px; }
+        .logo-group span { color: var(--accent-blue); font-size: 0.85rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .nav-btn { background: var(--accent-blue); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; text-decoration: none; cursor: pointer; font-size: 0.95rem; transition: 0.2s; }
+        .nav-btn:hover { background: #2563eb; }
+
+        .dashboard-container { max-width: 1300px; width: 100%; margin: 2rem auto; padding: 0 20px; display: grid; grid-template-columns: 1fr; gap: 2rem; }
+        @media (min-width: 900px) {
+            .dashboard-container { grid-template-columns: 350px 1fr; }
+        }
+
+        /* LEFT SIDEBAR: PIMPED FOUNDER PROFILE */
+        .profile-card { background: var(--bg-card); border-radius: 16px; border: 1px solid var(--border); padding: 2rem; text-align: center; height: max-content; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        
+        /* GITHUB PHOTO INJECTOR */
+        .avatar-frame { width: 130px; height: 130px; margin: 0 auto 1.5rem auto; border-radius: 50%; border: 3px solid var(--accent-blue); padding: 5px; background: var(--bg-main); overflow: hidden; }
+        .avatar-frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        
+        .profile-card h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .title-tag { font-size: 0.85rem; color: var(--accent-blue); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1.5rem; }
+        .bio-text { font-size: 0.95rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.5rem; text-align: left; }
+        
+        .badge-list { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 1.5rem; }
+        .badge { background: #1e293b; border: 1px solid var(--border); padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: var(--text-light); }
+        .badge.sec { border-color: #ef4444; color: #f87171; }
+
+        /* RIGHT PANEL: ADMINISTRATIVE CONTROL & BUSINESS STATISTICS */
+        .main-panel { display: flex; flex-direction: column; gap: 2rem; }
+        
+        /* Stats Counting Grid */
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.2rem; }
+        .stat-card { background: var(--bg-card); border: 1px solid var(--border); padding: 1.5rem; border-radius: 12px; position: relative; overflow: hidden; }
+        .stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--accent-blue); }
+        .stat-card.green::before { background: var(--accent-green); }
+        .stat-card.orange::before { background: var(--accent-orange); }
+        
+        .stat-label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+        .stat-value { font-size: 1.8rem; font-weight: 800; margin-top: 0.5rem; }
+        .stat-subtext { font-size: 0.8rem; color: var(--accent-green); margin-top: 0.25rem; display: block; }
+
+        /* Log / Tables Box */
+        .log-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; }
+        .log-box h3 { font-size: 1.2rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+        .pulse-dot { width: 8px; height: 8px; background: var(--accent-green); border-radius: 50%; display: inline-block; box-shadow: 0 0 8px var(--accent-green); animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+
+        .log-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
+        .log-table th, .log-table td { padding: 12px; border-bottom: 1px solid var(--border); }
+        .log-table th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; }
+        .status-pill { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); padding: 4px 8px; border-radius: 6px; font-weight: bold; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-group">
+            <h1>OSARE</h1>
+            <span>Infrastructure Dashboard v1.4</span>
+        </div>
+        <!-- Button linking back to customer view -->
+        <a href="index.html" class="nav-btn" style="background: transparent; border: 1px solid var(--border);">← Open Live Booking Engine</a>
+    </header>
+
+    <div class="dashboard-container">
+        
+        <!-- ================= ABOUT ME / FOUNDER CYBER PROFILE ================= -->
+        <div class="profile-card">
+            <div class="avatar-frame">
+                <!-- INSTRUCTION: Swap 'your-github-username' with your actual GitHub handle -->
+                <img src="https://github.com/identicons/osare.png" alt="OSARE Founder Profile Photo" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300'">
+            </div>
+            
+            <h2>Nakinson Osare</h2>
+            <div class="title-tag">Founder & Chief Architect</div>
+            
+            <div class="badge-list">
+                <div class="badge">Web Developer</div>
+                <div class="badge">Systems Admin</div>
+                <div class="badge sec">Security Expert</div>
+                <div class="badge">Entrepreneur</div>
+            </div>
+
+            <div class="bio-text">
+                Driving secure, low-friction booking integrations across East African transit networks. Architecting the digital bridges combining high-volume local commuters with premium safari logistics pipelines.
+            </div>
+            
+            <div style="border-top: 1px solid var(--border); padding-top: 1rem; text-align: left; font-size: 0.85rem;">
+                <p style="color: var(--text-muted)">Secure Core Stack:</p>
+                <code style="color: var(--accent-green); display: block; margin-top: 4px; font-family: monospace;">SSL/TLS Active • Lead Hash Tracked</code>
+            </div>
+        </div>
+
+        <!-- ================= ADMINISTRATIVE metrics & LOG PANELS ================= -->
+        <div class="main-panel">
+            
+            <!-- Row 1: High Level Metrics indicators -->
+            <div class="metrics-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Pipeline Volume</div>
+                    <div class="stat-value">4,129</div>
+                    <span class="stat-subtext">↑ 14% this week</span>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-label">Attributed Commissions</div>
+                    <div class="stat-value">$840 USD</div>
+                    <span class="stat-subtext" style="color: var(--accent-green)">5% Net Tracked</span>
+                </div>
+                <div class="stat-card orange">
+                    <div class="stat-label">Active System Nodes</div>
+                    <div class="stat-value">4 Operators</div>
+                    <span class="stat-subtext" style="color: var(--accent-orange)">All systems nominal</span>
+                </div>
+            </div>
+
+            <!-- Row 2: Live Inbound Interaction Stream Logger -->
+            <div class="log-box">
+                <h3><span class="pulse-dot"></span> Active Referral Dispatch Monitor</h3>
+                <div style="overflow-x: auto;">
+                    <table class="log-table">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Package Route</th>
+                                <th>Channel</th>
+                                <th>Referral Tag</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="color: var(--text-muted);">Just Now</td>
+                                <td>Savannah Group Tour (150 USD)</td>
+                                <td style="color: var(--accent-green); font-weight:600;">WhatsApp API</td>
+                                <td><code>OSARE_TRK_01</code></td>
+                                <td><span class="status-pill">Dispatched</span></td>
+                            </tr>
+                            <tr>
+                                <td style="color: var(--text-muted);">14 mins ago</td>
+                                <td>SGR Train Desk (KES 4,500)</td>
+                                <td style="color: var(--accent-green); font-weight:600;">WhatsApp API</td>
+                                <td><code>OSARE_TRK_04</code></td>
+                                <td><span class="status-pill">Dispatched</span></td>
+                            </tr>
+                            <tr>
+                                <td style="color: var(--text-muted);">1 hr ago</td>
+                                <td>Light Aircraft Hire ($850)</td>
+                                <td style="color: var(--accent-green); font-weight:600;">WhatsApp API</td>
+                                <td><code>OSARE_TRK_02</code></td>
+                                <td><span class="status-pill">Dispatched</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer style="margin-top: auto; padding: 2rem; border-top: 1px solid var(--border); text-align: center; font-size: 0.85rem; color: var(--text-muted);">
+        OSARE Security Core Platform v1.4 • Protected Ledger System
+    </footer>
+
+</body>
+</html>
