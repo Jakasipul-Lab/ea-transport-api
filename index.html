@@ -20,13 +20,14 @@
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 350px;
         }
         .button {
             display: inline-block;
             background-color: #007bff;
             color: white;
             padding: 10px 20px;
-            margin: 10px;
+            margin: 10px 5px;
             text-decoration: none;
             border-radius: 5px;
             font-weight: bold;
@@ -34,6 +35,15 @@
         }
         .button:hover {
             background-color: #0056b3;
+        }
+        .status-badge {
+            margin-top: 20px;
+            font-size: 0.85em;
+            color: #666;
+            padding: 8px;
+            border-radius: 5px;
+            background: #eee;
+            font-style: italic;
         }
     </style>
 </head>
@@ -46,7 +56,31 @@
         <a href="about.html" class="button">About</a>
         <a href="safari.html" class="button">Safari</a>
         <a href="contact.html" class="button">Contact</a>
+
+        <div id="backend-status" class="status-badge">Checking API connection...</div>
     </div>
+
+    <script>
+        // Background check to see if your FastAPI backend on port 8000 is awake
+        fetch('http://192.168.178.80:8000/api/')
+            .then(response => {
+                if (!response.ok) throw new Error('Network response error');
+                return response.json();
+            })
+            .then(data => {
+                // If the backend replies, show its custom welcome message
+                document.getElementById('backend-status').style.color = '#28a745';
+                document.getElementById('backend-status').style.background = '#e2f4e6';
+                document.getElementById('backend-status').innerText = "Connected to API: " + data.message;
+            })
+            .catch(error => {
+                // If backend is down, the website stays up but shows offline mode
+                document.getElementById('backend-status').style.color = '#dc3545';
+                document.getElementById('backend-status').style.background = '#f8d7da';
+                document.getElementById('backend-status').innerText = "Database API is offline";
+                console.log("Backend connection status:", error.message);
+            });
+    </script>
 
 </body>
 </html>
