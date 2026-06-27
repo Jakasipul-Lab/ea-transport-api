@@ -1,33 +1,16 @@
 import datetime
 import os
 import urllib.parse
+import uvicorn
 from fastapi import FastAPI, Response
 from fastapi.responses import FileResponse, HTMLResponse
 
 app = FastAPI()
-BASE_DIR = os.path.dirname(__file__)
-
-from fastapi import FastAPI
-
-import datetime
-import os
-import urllib.parse
-from fastapi import FastAPI, Response
-from fastapi.responses import FileResponse, HTMLResponse
-
-app = FastAPI()
-BASE_DIR = os.path.dirname(os.path.abspath(__file__)) # Tells Python exactly where index.html lives
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # --------------------------------------
-# ✅ DATA (simple + reliable)
+# ✅ DATA
 # --------------------------------------
-LOCAL_DATABASE = [
-...
-
-# --------------------------------------
-# ✅ DATA (simple + reliable)
-# --------------------------------------
-
 LOCAL_DATABASE = [
     {
         "keywords": ["bus", "matatu"],
@@ -79,7 +62,6 @@ SAFARI_DATABASE = [
 # --------------------------------------
 # ✅ PAGES
 # --------------------------------------
-
 @app.get("/")
 def home():
     return FileResponse(os.path.join(BASE_DIR, "index.html"))
@@ -99,9 +81,8 @@ def about_page():
     return FileResponse(os.path.join(BASE_DIR, "about.html"))
 
 # --------------------------------------
-# ✅ LOCAL SEARCH (simple + guided)
+# ✅ LOCAL SEARCH
 # --------------------------------------
-
 @app.get("/search/local")
 def search_local(q: str = ""):
     query = q.lower()
@@ -109,7 +90,6 @@ def search_local(q: str = ""):
     results = []
 
     for item in LOCAL_DATABASE:
-        # ✅ match OR show all if no query
         if not query or any(k in query for k in item["keywords"]):
             results.append(f"""
             <div style="border:1px solid #ddd; padding:10px; margin:10px;">
@@ -120,4 +100,9 @@ def search_local(q: str = ""):
             </div>
             """)
 
-    return HTMLResponse(f"""
+    html_content = "".join(results) if results else "<p>No results found</p>"
+    return HTMLResponse(content=html_content)
+
+# This block forces the server to launch on Port 8000 automatically
+if __name__ == "__main__":
+    uvicorn.run("server:app", host="127.0.0.1", port=8000, reload=True)
