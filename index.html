@@ -84,7 +84,10 @@
     
     <div class="container">
         
-       <!-- ✅ TOP NAVIGATION (FIXED) -->2<div style="background:white; padding:10px 20px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 10px rgba(0,0,0,0.1); position:sticky; top:0; z-index:1000;">3 4    <div style="font-weight:bold; color:#1e3a8a; font-size:18px;">5        OSARE6    </div>7 8    <div style="display:flex; gap:15px;">9        <a href="index.html" style="text-decoration:none; color:#1e3a8a; font-weight:600;">Home</a>10        <a href="safari.html" style="text-decoration:none; color:#1e3a8a; font-weight:600;">Safari</a>11        <a href="dashboard.html" style="text-decoration:none; color:#1e3a8a; font-weight:600;">Dashboard</a>
+        <div class="tier-nav">
+            <button class="tier-btn local active" onclick="switchTier('local')">🚆 Local Commute</button>
+            <button class="tier-btn safari" onclick="switchTier('safari')">🌍 Tourist Safaris</button>
+        </div>
         <!-- ================= TIER 1 SECTION: LOCAL TRAVEL ================= -->
         <div id="localSection" class="tier-section active">
             <h2>Compare Local Transits</h2>
