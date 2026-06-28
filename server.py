@@ -103,4 +103,4 @@ def search_local(q: str = ""):
     html_content = "".join(results) if results else "<p>No results found</p>"
     return HTMLResponse(content=html_content)
 if __name__ == "__main__":
-    uvicorn.run("server:app", host="0.0.0.0", port=8000)
+    uvicorn.run("server:app", host="0.0.0.0", port=8005)
