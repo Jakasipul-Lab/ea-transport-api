@@ -105,4 +105,4 @@ def search_local(q: str = ""):
 
 # This block forces the server to launch on Port 8000 automatically
 if __name__ == "__main__":
-    uvicorn.run("server:app", host="127.0.0.1", port=8000, reload=True)
+  
