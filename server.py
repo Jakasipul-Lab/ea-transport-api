@@ -100,7 +100,13 @@ def search_local(q: str = ""):
             </div>
             """)
 
-    html_content = "".join(results) if results else "<p>No results found</p>"
-    return HTMLResponse(content=html_content)
-if __name__ == "__main__":
-    uvicorn.run("server:app", host="0.0.0.0", port=8005)
+   if __name__ == "__main__":
+    import uvicorn
+    import sys
+    
+    print("Attempting to start server on port 8005...")
+    try:
+        uvicorn.run("server:app", host="0.0.0.0", port=8005, reload=False)
+    except Exception as e:
+        print(f"CRITICAL ERROR: The server failed to start. Reason: {e}")
+        input("Press Enter to close this window...") # Keeps window open so you can read the error
