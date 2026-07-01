@@ -1,71 +1,67 @@
-import os
-from fastapi import FastAPI
-from fastapi.responses import FileResponse
-from pathlib import Path
-
-app = FastAPI()
-BASE_DIR = Path(__file__).parent
-
-@app.get("/")
-def home():
-    return FileResponse(BASE_DIR / "index.html")
-
-from fastapi import FastAPI
-app = FastAPI()
-
-@app.get("/")
-def home():
-    return {"ok": "Livebooking Engine is Live"}
-
-@app.get("/dashboard.html")
-def get_dashboard():
-    return FileResponse(BASE_DIR / "dashboard.html")
-
-from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI, Request, Form
+from fastapi.responses import HTMLResponse, RedirectResponse
 
 app = FastAPI()
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 def home():
-    html_content = """
+    return """
     <!DOCTYPE html>
     <html>
     <head><title>Livebooking Engine</title></head>
     <body style="text-align:center;padding:50px;font-family:sans-serif">
       <h1>Livebooking Engine is Live ✅</h1>
       <p>Your booking site is up on Render</p>
+      <a href="/book" style="padding:12px 20px;background:#2563eb;color:white;text-decoration:none;border-radius:8px">
+        Book Now
+      </a>
     </body>
     </html>
     """
-    return HTMLResponse(content=html_content)
 
-@app.get("/migration.html")
-def get_migration():
-    return FileResponse(BASE_DIR / "migration.html")
+@app.get("/book", response_class=HTMLResponse)
+def book_form():
+    return """
+    <!DOCTYPE html>
+    <html>
+    <head><title>Book Your Trip</title></head>
+    <body style="max-width:500px;margin:50px auto;font-family:sans-serif">
+      <h2>Book Your Trip</h2>
+      <form method="post" action="/book">
+        <label>Name:</label><br>
+        <input name="name" required style="width:100%;padding:8px;margin:8px 0;"><br>
+        
+        <label>Email:</label><br>
+        <input type="email" name="email" required style="width:100%;padding:8px;margin:8px 0;"><br>
+        
+        <label>Date:</label><br>
+        <input type="date" name="date" required style="width:100%;padding:8px;margin:8px 0;"><br>
+        
+        <button type="submit" style="padding:12px 20px;background:#16a34a;color:white;border:0;border-radius:8px;cursor:pointer">
+          Confirm Booking
+        </button>
+      </form>
+      <br>
+      <a href="/">← Back Home</a>
+    </body>
+    </html>
+    """
 
-@app.get("/search.html")
-def search():
-    return FileResponse(BASE_DIR / "search.html")
+@app.post("/book")
+def submit_booking(name: str = Form(...), email: str = Form(...), date: str = Form(...)):
+    print(f"New Booking: {name}, {email}, {date}") # You'll see this in Render Logs
+    return RedirectResponse(url="/thank-you", status_code=303)
 
-@app.get("/admin.html")
-def admin():
-    return FileResponse(BASE_DIR / "admin.html")
-
-@app.get("/migration.html")
-def migration():
-    return FileResponse(BASE_DIR / "migration.html")
-
-@app.get("/support.html")
-def support():
-    return FileResponse(BASE_DIR / "support.html")
-
-@app.get("/dashboard.html")
-def dashboard():
-    return FileResponse(BASE_DIR / "dashboard.html")
-
-# This makes it run on Render
-if __name__ == "__main__":
-    import uvicorn
-    port = int(os.environ.get("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+@app.get("/thank-you", response_class=HTMLResponse)
+def thank_you():
+    return """
+    <!DOCTYPE html>
+    <html>
+    <head><title>Booked</title></head>
+    <body style="text-align:center;padding:50px;font-family:sans-serif">
+      <h1>Booking Received ✅</h1>
+      <p>We got your details. Check Render Logs to see them.</p>
+      <a href="/">← Back Home</a>
+    </body>
+    </html>
+    """
