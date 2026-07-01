@@ -10,6 +10,13 @@ BASE_DIR = Path(__file__).parent
 def home():
     return FileResponse(BASE_DIR / "index.html")
 
+from fastapi import FastAPI
+app = FastAPI()
+
+@app.get("/")
+def home():
+    return {"ok": "Livebooking Engine is Live"}
+
 @app.get("/dashboard.html")
 def get_dashboard():
     return FileResponse(BASE_DIR / "dashboard.html")
