@@ -1,17 +1,30 @@
-from fastapi import FastAPI, Request
-from fastapi.templating import Jinja2Templates
-from fastapi.staticfiles import StaticFiles
+    from fastapi import FastAPI
+    from fastapi.responses import FileResponse
+    from pathlib import Path
 
-app = FastAPI()
-app.mount("/static", StaticFiles(directory='static'), name='static')
-templates = Jinja2Templates(directory='templates')
+    app = FastAPI()
+    BASE_DIR = Path(__file__).parent
 
-@app.get('/')
-async def home(request: Request):
-    # Pass the request as a keyword argument 'request'
-    return templates.TemplateResponse(request=request, name='index.html')
+    @app.get("/")
+    def home():
+        return FileResponse(BASE_DIR / "index.html")
 
-@app.get('/{page}')
-async def get_page(request: Request, page: str):
-    # Pass the request as a keyword argument 'request'
-    return templates.TemplateResponse(request=request, name=f'{page}.html')
+    @app.get("/search.html")
+    def search():
+        return FileResponse(BASE_DIR / "search.html")
+
+    @app.get("/admin.html")
+    def admin():
+        return FileResponse(BASE_DIR / "admin.html")
+
+    @app.get("/migration.html")
+    def migration():
+        return FileResponse(BASE_DIR / "migration.html")
+
+    @app.get("/support.html")
+    def support():
+        return FileResponse(BASE_DIR / "support.html")
+
+    @app.get("/dashboard.html")
+    def dashboard():
+        return FileResponse(BASE_DIR / "dashboard.html")
