@@ -10,6 +10,14 @@ BASE_DIR = Path(__file__).parent
 def home():
     return FileResponse(BASE_DIR / "index.html")
 
+@app.get("/dashboard.html")
+def get_dashboard():
+    return FileResponse(BASE_DIR / "dashboard.html")
+
+@app.get("/migration.html")
+def get_migration():
+    return FileResponse(BASE_DIR / "migration.html")
+
 @app.get("/search.html")
 def search():
     return FileResponse(BASE_DIR / "search.html")
