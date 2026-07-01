@@ -21,6 +21,25 @@ def home():
 def get_dashboard():
     return FileResponse(BASE_DIR / "dashboard.html")
 
+from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
+
+app = FastAPI()
+
+@app.get("/")
+def home():
+    html_content = """
+    <!DOCTYPE html>
+    <html>
+    <head><title>Livebooking Engine</title></head>
+    <body style="text-align:center;padding:50px;font-family:sans-serif">
+      <h1>Livebooking Engine is Live ✅</h1>
+      <p>Your booking site is up on Render</p>
+    </body>
+    </html>
+    """
+    return HTMLResponse(content=html_content)
+
 @app.get("/migration.html")
 def get_migration():
     return FileResponse(BASE_DIR / "migration.html")
