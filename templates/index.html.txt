@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Osare Too HERO</title>
+  <style>body{font-family:sans-serif;text-align:center;padding-top:100px}</style>
+</head>
+<body>
+  <h1>Osare Too</h1>
+  <p>Local Matatu + Safari Routes</p>
+  <a href="about.html">About</a> | <a href="dashboard.html">Dashboard</a> | <a href="migration.html">Migration</a>
+</body>
+</html>

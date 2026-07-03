@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EA SafariRoutes</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            background: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 { color: #2e7d32; }
+        .route-card {
+            border: 1px solid #ddd;
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #2e7d32;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+        }
+        .code-display {
+            margin-top: 20px;
+            padding: 20px;
+            background: #e8f5e9;
+            border: 2px dashed #2e7d32;
+            border-radius: 8px;
+            display: none;
+        }
+        .code-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1b5e20;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>EA SafariRoutes</h1>
+    <p>Your trusted gateway to travel across East Africa.</p>
+
+    <div id="routes-list">
+        <p>Loading routes...</p>
+    </div>
+
+    <div id="result-area" class="code-display">
+        <h3>Your Safariroute Code</h3>
+        <p class="code-text" id="safariroute-code">-------</p>
+        <p>Show this code to the transport operator to finalize your booking.</p>
+    </div>
+
+    <br>
+    <a href="/about" class="btn" style="background: #555;">About Us & Offices</a>
+</div>
+
+<script>
+    async function loadRoutes() {
+        const res = await fetch('/api/routes');
+        const routes = await res.json();
+        const list = document.getElementById('routes-list');
+        list.innerHTML = '';
+
+        routes.forEach(route => {
+            const card = document.createElement('div');
+            card.className = 'route-card';
+            card.innerHTML = `
+                <div>
+                    <strong>${route.origin} to ${route.destination}</strong><br>
+                    <small>${route.operator || route.operators[0]} (${route.type})</small>
+                </div>
+                <button class="btn" onclick="bookRoute('${route.route_id}', '${route.operator || route.operators[0]}')">Get Code</button>
+            `;
+            list.appendChild(card);
+        });
+    }
+
+    async function bookRoute(routeId, operator) {
+        const name = prompt("Enter passenger name:") || "Guest";
+        const res = await fetch('/api/book', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ route_id: routeId, operator: operator, passenger_name: name })
+        });
+        const data = await res.json();
+        
+        if (data.status === 'success') {
+            document.getElementById('safariroute-code').innerText = data.code;
+            document.getElementById('result-area').style.display = 'block';
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+    }
+
+    loadRoutes();
+</script>
+
+</body>
+</html>
