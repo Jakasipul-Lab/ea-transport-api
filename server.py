@@ -1,44 +1,61 @@
-from fastapi import FastAPI, Request
-from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI, Request, Form, Depends
 from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from sqlalchemy.orm import Session
 import uvicorn
 import random
 import string
 
-app = FastAPI(title="OSARE Hub")
+from database import engine, get_db, Base
+import models
 
-# Mount static files (css, js, images)
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# Initialize Database
+Base.metadata.create_all(bind=engine)
 
-# Templates
+app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
-# Home Page
-@app.get("/")
-async def home(request: Request):
-    return templates.TemplateResponse("safari.html", {"request": request})
-
-# Other Pages
-@app.get("/dashboard")
-async def dashboard(request: Request):
-    return templates.TemplateResponse("dashboard.html", {"request": request})
-
-@app.get("/admin")
-async def admin(request: Request):
-    return templates.TemplateResponse("admin.html", {"request": request})
-
-# API Endpoints
+# API Endpoint to list routes
 @app.get("/api/routes")
-async def get_routes():
+def get_routes():
+    # In a real app, you would fetch these from the database
     return [
         {"route_id": "1", "origin": "Nairobi", "destination": "Mombasa", "operator": "SafariBus", "type": "Express"},
         {"route_id": "2", "origin": "Kampala", "destination": "Kigali", "operator": "AfricaLink", "type": "Luxury"}
     ]
 
+from fastapi import Request
+from fastapi.templating import Jinja2Templates
+
+templates = Jinja2Templates(directory="templates")
+
+# This makes safari.html your "home" page
+@app.get("/")
+def home(request: Request):
+    return templates.TemplateResponse("safari.html", {"request": request})
+
+# This allows you to visit http://127.0.0.1:8000/dashboard
+@app.get("/dashboard")
+def dashboard(request: Request):
+    return templates.TemplateResponse("dashboard.html", {"request": request})
+
+# This allows you to visit http://127.0.0.1:8000/admin
+@app.get("/admin")
+def admin(request: Request):
+    return templates.TemplateResponse("admin.html", {"request": request})
+
+# API Endpoint to handle booking
 @app.post("/api/book")
-async def book_route(data: dict):
+def book_route(data: dict):
+    # Logic to save to DB (using your model)
+    # Generate a random booking code
     code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
-    return {"status": "success", "booking_code": code, "message": "Booking received"}
+    return {"status": "success", "code": code}
+
+# Web Routes
+@app.get("/")
+async def home(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True)
+    uvicorn.run("server:app", host="0.0.0.0", port=8080, reload=True)
