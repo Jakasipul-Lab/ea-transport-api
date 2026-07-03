@@ -30,3 +30,18 @@ async def inquire(name: str = Form(...), email: str = Form(...), route: str = Fo
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("server:app", host="0.0.0.0", port=8080, reload=True)
+
+from sqlalchemy.orm import Session
+from database import engine, get_db
+import models
+
+# This command ensures your tables exist in the Neon database
+models.Base.metadata.create_all(bind=engine)
+
+@app.get("/test-db")
+def test_db(db: Session = Depends(get_db)):
+    """
+    A simple endpoint to verify that the API can talk to Neon.
+    """
+    return {"status": "success", "message": "Connected to Neon database successfully!"}
+    
