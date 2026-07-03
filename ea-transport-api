@@ -1,0 +1,5 @@
+# 1. Create the virtual environment folder
+python -m venv venv
+
+# 2. Activate it
+.\venv\Scripts\activate
