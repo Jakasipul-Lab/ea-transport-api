@@ -6,3 +6,4 @@ pydantic
 jinja2
 python-multipart
 sqlalchemy
+werkzeug          # ← Add this line
