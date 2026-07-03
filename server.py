@@ -24,6 +24,26 @@ def get_routes():
         {"route_id": "2", "origin": "Kampala", "destination": "Kigali", "operator": "AfricaLink", "type": "Luxury"}
     ]
 
+from fastapi import Request
+from fastapi.templating import Jinja2Templates
+
+templates = Jinja2Templates(directory="templates")
+
+# This makes safari.html your "home" page
+@app.get("/")
+def home(request: Request):
+    return templates.TemplateResponse("safari.html", {"request": request})
+
+# This allows you to visit http://127.0.0.1:8000/dashboard
+@app.get("/dashboard")
+def dashboard(request: Request):
+    return templates.TemplateResponse("dashboard.html", {"request": request})
+
+# This allows you to visit http://127.0.0.1:8000/admin
+@app.get("/admin")
+def admin(request: Request):
+    return templates.TemplateResponse("admin.html", {"request": request})
+
 # API Endpoint to handle booking
 @app.post("/api/book")
 def book_route(data: dict):
