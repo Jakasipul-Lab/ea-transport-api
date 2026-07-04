@@ -6,29 +6,33 @@ from fastapi.responses import HTMLResponse
 
 app = FastAPI(title="OSARE Hub")
 
-# Establish Path
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
+# Force the path to be the current directory + templates
+# This removes ambiguity about where "BASE_DIR" starts
+TEMPLATES_DIR = os.path.join(os.getcwd(), "templates")
+
+# Debugging check: if this prints a list without your files, the files aren't on Render
+print(f"DEBUG: Looking for templates in: {TEMPLATES_DIR}")
+if os.path.exists(TEMPLATES_DIR):
+    print(f"DEBUG: Files found in directory: {os.listdir(TEMPLATES_DIR)}")
+else:
+    print("CRITICAL: The 'templates' directory does not exist in the root!")
+
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
 @app.api_route("/{path:path}", methods=["GET", "HEAD"])
 async def catch_all(request: Request, path: str = ""):
-    # 1. Logic to select the file
     target = "safari.html"
     if "dashboard" in path:
         target = "dashboard.html"
     elif "admin" in path:
         target = "admin.html"
     
-    # 2. Manual Render: Bypasses the dictionary hashing error entirely
     try:
-        template = templates.env.get_template(target)
-        content = template.render({"request": request})
-        return HTMLResponse(content=content)
+        # Use the standard template response
+        return templates.TemplateResponse(target, {"request": request})
     except Exception as e:
-        return HTMLResponse(content=f"Error: {str(e)}", status_code=500)
+        return HTMLResponse(content=f"<h1>Debug Info:</h1><p>Searching in {TEMPLATES_DIR}</p><p>Error: {str(e)}</p>", status_code=500)
 
 if __name__ == "__main__":
-    # Force port to the environment variable, default 8085
     port = int(os.environ.get("PORT", 8085))
     uvicorn.run("server:app", host="0.0.0.0", port=port, reload=False)
