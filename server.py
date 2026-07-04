@@ -1,6 +1,5 @@
 import datetime
 import os
-import urllib.parse
 import uvicorn
 from fastapi import FastAPI, Response
 from fastapi.responses import FileResponse, HTMLResponse
@@ -12,10 +11,9 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 BLUE = "#2563eb"
 GREEN = "#059669"
 DARK = "#0f172a"
-GOLD = "#fbbf24"
 
 # --------------------------------------
-# ✅ DATA
+# ✅ DATA WITH IMAGES
 # --------------------------------------
 LOCAL_DATABASE = [
     {"keywords": ["bus", "matatu"], "title": "🚌 Bus & Matatu Transport", "desc": "Daily routes across towns and cities.", "price": "KES 1,200"},
@@ -24,9 +22,24 @@ LOCAL_DATABASE = [
 ]
 
 SAFARI_DATABASE = [
-    {"keywords": ["mara"], "operator_id": "mara001", "title": "🦁 Masai Mara Safari", "desc": "3 Days Big Five experience.", "price": "$350", "dest": "mara"},
-    {"keywords": ["zanzibar"], "operator_id": "znz001", "title": "🏖️ Zanzibar Beach Holiday", "desc": "4 Days beach package.", "price": "$490", "dest": "zanzibar"},
-    {"keywords": ["serengeti"], "operator_id": "ser001", "title": "🐆 Serengeti Safari", "desc": "Migration wildlife experience.", "price": "$750", "dest": "serengeti"}
+    {
+        "keywords": ["mara"], "operator_id": "mara001", 
+        "title": "🦁 Masai Mara Safari", "desc": "3 Days Big Five experience. Witness the Great Migration.",
+        "price": "$350", "dest": "mara",
+        "img": "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?q=80&w=1200"  # Lion
+    },
+    {
+        "keywords": ["zanzibar"], "operator_id": "znz001",
+        "title": "🏖️ Zanzibar Beach Holiday", "desc": "4 Days beach package. White sand & turquoise waters.",
+        "price": "$490", "dest": "zanzibar",
+        "img": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1200"  # Beach
+    },
+    {
+        "keywords": ["serengeti"], "operator_id": "ser001",
+        "title": "🐆 Serengeti Safari", "desc": "Migration wildlife experience in Tanzania.",
+        "price": "$750", "dest": "serengeti",
+        "img": "https://images.unsplash.com/photo-1516426122078-a0825049d721?q=80&w=1200"  # Safari
+    }
 ]
 
 # --------------------------------------
@@ -44,7 +57,7 @@ def safari_page(): return FileResponse(os.path.join(BASE_DIR, "safari.html"))
 def home_head(): return Response(status_code=200)
 
 # --------------------------------------
-# ✅ LOCAL SEARCH - OSARE BLUE THEME
+# ✅ LOCAL SEARCH - BLUE CARDS
 # --------------------------------------
 @app.get("/search/local")
 def search_local(q: str = ""):
@@ -61,23 +74,15 @@ def search_local(q: str = ""):
                 <br><small>Updated: {now}</small>
             </div>
             """)
-
-    html = f"""
-    <html><head><title>OSARE Local Results</title><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+    html = f"""<html><head><title>OSARE Local</title><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
     <body style="font-family:Arial; background:#f1f5f9; padding:20px;">
-    <div style="background:{BLUE}; color:#fff; padding:20px; border-radius:10px; text-align:center;">
-        <h2>🚆 OSARE Local Travel</h2>
-    </div>
-    <div style="max-width:700px; margin:20px auto;">
-        {''.join(results) if results else '<p style="text-align:center;">No results found. Try: bus, sgr, taxi</p>'}
-    </div>
-    <p style="text-align:center;"><a href="/local" style="color:{BLUE};">← Back to Search</a></p>
-    </body></html>
-    """
+    <div style="background:{BLUE}; color:#fff; padding:20px; border-radius:10px; text-align:center;"><h2>🚆 OSARE Local Travel</h2></div>
+    <div style="max-width:700px; margin:20px auto;">{''.join(results) if results else '<p>No results. Try: bus, sgr, taxi</p>'}</div>
+    <p style="text-align:center;"><a href="/local" style="color:{BLUE};">← Back</a></p></body></html>"""
     return HTMLResponse(html)
 
 # --------------------------------------
-# ✅ SAFARI SEARCH - OSARE GREEN THEME  
+# ✅ SAFARI SEARCH - GREEN CARDS + IMAGES
 # --------------------------------------
 @app.get("/search/safari")
 def search_safari(q: str = ""):
@@ -87,26 +92,21 @@ def search_safari(q: str = ""):
     for item in SAFARI_DATABASE:
         if not query or any(k in query for k in item["keywords"]):
             results.append(f"""
-            <div style="border:2px solid {GREEN}; padding:15px; margin:15px 0; border-radius:12px; background:#ecfdf5;">
-                <h4 style="color:{GREEN}; margin:0;">{item['title']}</h4>
-                <p>{item['desc']}</p>
-                <strong style="color:{GREEN}; font-size:1.1em;">{item['price']}</strong>
-                <br><small>Updated: {now}</small>
+            <div style="border:2px solid {GREEN}; border-radius:12px; background:#ecfdf5; overflow:hidden; margin:20px 0;">
+                <img src="{item['img']}" style="width:100%; height:200px; object-fit:cover;">
+                <div style="padding:15px;">
+                    <h4 style="color:{GREEN}; margin:0;">{item['title']}</h4>
+                    <p>{item['desc']}</p>
+                    <strong style="color:{GREEN}; font-size:1.2em;">{item['price']}</strong>
+                    <br><small>Updated: {now}</small>
+                </div>
             </div>
             """)
-
-    html = f"""
-    <html><head><title>OSARE Safari Results</title><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+    html = f"""<html><head><title>OSARE Safari</title><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
     <body style="font-family:Arial; background:#ecfdf5; padding:20px;">
-    <div style="background:{GREEN}; color:#fff; padding:20px; border-radius:10px; text-align:center;">
-        <h2>🌍 OSARE Safari & Tours</h2>
-    </div>
-    <div style="max-width:700px; margin:20px auto;">
-        {''.join(results) if results else '<p style="text-align:center;">No results found. Try: mara, zanzibar, serengeti</p>'}
-    </div>
-    <p style="text-align:center;"><a href="/safari" style="color:{GREEN};">← Back to Search</a></p>
-    </body></html>
-    """
+    <div style="background:{GREEN}; color:#fff; padding:20px; border-radius:10px; text-align:center;"><h2>🌍 OSARE Safari & Tours</h2></div>
+    <div style="max-width:700px; margin:20px auto;">{''.join(results) if results else '<p>No results. Try: mara, zanzibar, serengeti</p>'}</div>
+    <p style="text-align:center;"><a href="/safari" style="color:{GREEN};">← Back</a></p></body></html>"""
     return HTMLResponse(html)
 
 if __name__ == "__main__":
