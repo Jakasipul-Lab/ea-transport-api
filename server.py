@@ -4,7 +4,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
-app = FastAPI()
+# --- THE FIX: Added your brand name here ---
+app = FastAPI(title="EA SafariRoutes")
 
 # Mount static files and templates
 app.mount("/static", StaticFiles(directory="static"), name="static")
