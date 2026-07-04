@@ -14,7 +14,7 @@ class RouteQuery(BaseModel):
 
 app = FastAPI(title="OSARE Hub")
 
-# 2. Setup Directories (Safety check for deployment)
+# 2. Setup Directories
 if not os.path.exists("static"): os.makedirs("static")
 if not os.path.exists("templates"): os.makedirs("templates")
 
@@ -23,11 +23,11 @@ templates = Jinja2Templates(directory="templates")
 
 # 3. Logic Modules
 def process_commuter_search(query: RouteQuery):
-    # Logic for daily commuters (e.g., traffic/transit APIs)
+    # Logic for daily commuters
     return {"status": "success", "mode": "commuter", "data": "Route calculation logic here"}
 
 def process_tourist_search(query: RouteQuery):
-    # Logic for safari routes (e.g., GIS/Safety data)
+    # Logic for safari routes
     return {"status": "success", "mode": "tourist", "data": "Safari route logic here"}
 
 # 4. API Endpoints
@@ -43,7 +43,7 @@ async def search_route(query: RouteQuery):
         return process_tourist_search(query)
     return {"error": "Invalid mode"}
 
-# 5. Production Execution (No 'reload', uses production port)
+# 5. Production Execution
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8005))
     uvicorn.run("server:app", host="0.0.0.0", port=port)
