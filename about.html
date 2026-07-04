@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About EA SafariRoutes</title>
+    <title>About OSARE - EA SafariRoutes</title>
     <style>
         body {
             margin: 0;
@@ -11,9 +11,31 @@
             background: #f8f9fa;
             color: #333;
         }
+        /* NAVBAR */
+        .navbar {
+            background: #2e7d32;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+        .navbar a.active {
+            border-bottom: 2px solid white;
+        }
+
         .container {
             max-width: 900px;
-            margin: 60px auto;
+            margin: 40px auto;
             background: white;
             padding: 40px;
             border-radius: 12px;
@@ -94,16 +116,25 @@
                 margin: 20px;
                 padding: 20px;
             }
+            .navbar { flex-wrap: wrap; gap: 15px; }
         }
     </style>
 </head>
 <body>
 
+<!-- NAVBAR -->
+<div class="navbar">
+    <a href="/">Home</a>
+    <a href="/safari">Safari</a>
+    <a href="/local">Local</a>
+    <a href="/about" class="active">About</a>
+</div>
+
 <div class="container">
-    <h1>About EA SafariRoutes</h1>
+    <h1>About OSARE - EA SafariRoutes</h1>
 
     <p>
-        EA SafariRoutes is a regional travel access and logistics platform designed
+        OSARE is a regional travel access and logistics platform designed
         to connect users to railway, bus, and private transport systems across East Africa.
     </p>
 
@@ -113,7 +144,7 @@
         analysis, and scalable business integration.
     </p>
 
-    <!-- Leadership Section moved to the body/bottom for a professional look -->
+    <!-- Leadership Section -->
     <div class="leadership-section">
         <img src="https://github.com/Jakasipul-Lab.png" alt="Osare Nakinson" class="profile-img">
         <div class="profile-text">
@@ -158,7 +189,7 @@
     </div>
 
     <div style="text-align:center; margin-top:40px; color:#aaa; font-size:0.9em;">
-        &copy; 2026 EA SafariRoutes. All rights reserved.
+        &copy; 2026 OSARE - EA SafariRoutes. All rights reserved.
     </div>
 </div>
 
