@@ -98,6 +98,25 @@
         });
     }
 
+// Add this to your index.html inside <script> tags
+async function performSearch(mode) {
+    const payload = {
+        mode: mode,
+        origin: { lat: 0, lng: 0 }, // Replace with actual user location
+        destination: { lat: 0, lng: 0 }
+    };
+
+    const response = await fetch('/api/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+    console.log("Search Result:", data);
+    // Add logic here to display the result on your page
+}
+    
     async function bookRoute(routeId, operator) {
         const name = prompt("Enter passenger name:") || "Guest";
         const res = await fetch('/api/book', {
