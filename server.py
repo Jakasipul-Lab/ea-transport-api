@@ -119,19 +119,34 @@ app = Flask(__name__)
 cat > server.py << 'EOF'
 from flask import Flask, send_file
 app = Flask(__name__)
+cat > server.py << 'EOF'
+from flask import Flask, send_file
+
+app = Flask(__name__)
 
 @app.route('/')
-def home(): return send_file('index.html')
+def home():
+    return send_file('index.html')
+
 @app.route('/safari')
-def safari(): return send_file('safari.html')
+def safari():
+    return send_file('safari.html')
+
 @app.route('/local')
-def local(): return send_file('local.html')
+def local():
+    return send_file('local.html')
+
 @app.route('/about')
-def about(): return send_file('about.html')
+def about():
+    return send_file('about.html')
+
 @app.route('/dashboard')
-def dashboard(): return send_file('dashboard.html')
+def dashboard():
+    return send_file('dashboard.html')
+
 @app.route('/migration')
-def migration(): return send_file('migration.html')
+def migration():
+    return send_file('migration.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
