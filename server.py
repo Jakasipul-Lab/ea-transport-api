@@ -2,28 +2,33 @@ import os
 import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(title="OSARE Hub")
 
-# --- EMBEDDED HTML CONTENT ---
-# Replace the text inside these strings with the actual content of your files.
-HTML_SAFARI = "<html><body><h1>Safari Hub</h1><p>Welcome to the main page.</p></body></html>"
-HTML_DASHBOARD = "<html><body><h1>Dashboard</h1><p>Welcome to the user area.</p></body></html>"
-HTML_ADMIN = "<html><body><h1>Admin Panel</h1><p>Restricted access only.</p></body></html>"
+# Mount the static directory to serve CSS/JS/Images
+# Ensure you have a folder named 'static' in the same directory
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
-@app.api_route("/{path:path}", methods=["GET", "HEAD"])
-async def catch_all(request: Request, path: str = ""):
-    # Logic to select the correct content based on the URL path
-    if "dashboard" in path:
-        content = HTML_DASHBOARD
-    elif "admin" in path:
-        content = HTML_ADMIN
-    else:
-        content = HTML_SAFARI
-    
-    return HTMLResponse(content=content)
+# --- HTML CONTENT ---
+# For now, keeping these as strings. In a real project, move these to a /templates folder.
+HTML_SAFARI = "<html><head><link rel='stylesheet' href='/static/style.css'></head><body><h1>Safari Hub</h1></body></html>"
+HTML_DASHBOARD = "<html><body><h1>Dashboard</h1></body></html>"
+HTML_ADMIN = "<html><body><h1>Admin Panel</h1></body></html>"
+
+@app.get("/")
+async def get_safari():
+    return HTMLResponse(content=HTML_SAFARI)
+
+@app.get("/dashboard")
+async def get_dashboard():
+    return HTMLResponse(content=HTML_DASHBOARD)
+
+@app.get("/admin")
+async def get_admin():
+    return HTMLResponse(content=HTML_ADMIN)
 
 if __name__ == "__main__":
-    # Dynamically detects the PORT provided by Render or defaults to 8005 for local testing
     port = int(os.environ.get("PORT", 8005))
-    uvicorn.run("server:app", host="0.0.0.0", port=port, reload=True)
+    # Removed reload=True for standard execution
+    uvicorn.run(app, host="0.0.0.0", port=port)
