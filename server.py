@@ -1,18 +1,20 @@
 import os
 import uvicorn
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(title="OSARE Hub")
 
-# Mount the static directory to serve CSS/JS/Images
-# Ensure you have a folder named 'static' in the same directory
+# Create the directory if it doesn't exist to prevent the RuntimeError
+if not os.path.exists("static"):
+    os.makedirs("static")
+
+# Now it is safe to mount
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # --- HTML CONTENT ---
-# For now, keeping these as strings. In a real project, move these to a /templates folder.
-HTML_SAFARI = "<html><head><link rel='stylesheet' href='/static/style.css'></head><body><h1>Safari Hub</h1></body></html>"
+HTML_SAFARI = "<html><body><h1>Safari Hub</h1></body></html>"
 HTML_DASHBOARD = "<html><body><h1>Dashboard</h1></body></html>"
 HTML_ADMIN = "<html><body><h1>Admin Panel</h1></body></html>"
 
@@ -30,5 +32,4 @@ async def get_admin():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8005))
-    # Removed reload=True for standard execution
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    uvicorn.run("server:app", host="0.0.0.0", port=port)
