@@ -28,5 +28,8 @@ async def dashboard(request: Request):
 async def admin(request: Request):
     return templates.TemplateResponse("admin.html", {"request": request})
 
+import os
+# ...
 if __name__ == "__main__":
-    uvicorn.run("server:app", host="0.0.0.0", port=8080, reload=True)
+    port = int(os.environ.get("PORT", 8080))
+    uvicorn.run("server:app", host="0.0.0.0", port=port, reload=False)
