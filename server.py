@@ -112,14 +112,6 @@ def search_safari(q: str = ""):
     <p style="text-align:center;"><a href="/safari" style="color:{GREEN};">← Back</a></p></body></html>"""
     return HTMLResponse(html)
 
-cat > server.py << 'EOF'
-from flask import Flask, send_file
-app = Flask(__name__)
-
-cat > server.py << 'EOF'
-from flask import Flask, send_file
-app = Flask(__name__)
-cat > server.py << 'EOF'
 from flask import Flask, send_file
 
 app = Flask(__name__)
@@ -147,6 +139,9 @@ def dashboard():
 @app.route('/migration')
 def migration():
     return send_file('migration.html')
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=10000)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
