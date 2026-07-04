@@ -163,5 +163,7 @@ def dashboard():
 def migration():
     return send_file('migration.html')
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=1085)
+import uvicorn
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)  # change 8000 to 3000 or 8080
