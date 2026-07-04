@@ -1,9 +1,5 @@
-fastapi
+fastapi==0.110.0
+starlette==0.36.3
 uvicorn
 jinja2
 python-multipart
-python-dotenv
-psycopg2-binary
-pydantic
-sqlalchemy
-werkzeug
