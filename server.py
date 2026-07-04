@@ -32,6 +32,22 @@ async def get_all_routes():
 async def read_index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
+@app.get("/about")
+async def read_about(request: Request):
+    return templates.TemplateResponse("about.html", {"request": request})
+
+@app.get("/admin")
+async def read_admin(request: Request):
+    return templates.TemplateResponse("admin.html", {"request": request})
+
+@app.get("/dashboard")
+async def read_dashboard(request: Request):
+    return templates.TemplateResponse("dashboard.html", {"request": request})
+
+@app.get("/migration")
+async def read_migration(request: Request):
+    return templates.TemplateResponse("migration.html", {"request": request})
+
 @app.post("/api/search")
 async def search_route(query: RouteQuery):
     # This handles your specific logic when a user hits "Search"
