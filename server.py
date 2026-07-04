@@ -1,9 +1,14 @@
 import os
-import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
+
+app = FastAPI()
+
+# Mount static files and templates
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
 
 class RouteQuery(BaseModel):
     mode: str
@@ -11,48 +16,23 @@ class RouteQuery(BaseModel):
     destination: dict
     preferences: dict = {}
 
-app = FastAPI(title="OSARE Hub")
+# --- ALL PAGE ROUTES ---
+@app.get("/{page}")
+async def get_page(request: Request, page: str = "index"):
+    try:
+        return templates.TemplateResponse(f"{page}.html", {"request": request})
+    except Exception as e:
+        return {"error": f"Template {page}.html not found"}
 
-if not os.path.exists("static"): os.makedirs("static")
-if not os.path.exists("templates"): os.makedirs("templates")
-
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
-
-# --- THE FIX: Added a catalog for your UI to display ---
+# --- API ROUTES ---
 @app.get("/api/routes")
-async def get_all_routes():
-    # This is the actual data your frontend will now find
+async def get_routes():
     return [
-        {"id": "1", "operator": "SafariBus", "origin": "Nairobi", "destination": "Mombasa"},
-        {"id": "2", "operator": "CityLink", "origin": "Nairobi", "destination": "Kisumu"}
+        {"id": 1, "operator": "SafariBus", "origin": "Nairobi", "destination": "Mombasa"},
+        {"id": 2, "operator": "CityLink", "origin": "Nairobi", "destination": "Kisumu"}
     ]
 
-@app.get("/")
-async def read_index(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
-
-@app.get("/about")
-async def read_about(request: Request):
-    return templates.TemplateResponse("about.html", {"request": request})
-
-@app.get("/admin")
-async def read_admin(request: Request):
-    return templates.TemplateResponse("admin.html", {"request": request})
-
-@app.get("/dashboard")
-async def read_dashboard(request: Request):
-    return templates.TemplateResponse("dashboard.html", {"request": request})
-
-@app.get("/migration")
-async def read_migration(request: Request):
-    return templates.TemplateResponse("migration.html", {"request": request})
-
-@app.post("/api/search")
-async def search_route(query: RouteQuery):
-    # This handles your specific logic when a user hits "Search"
-    return {"status": "success", "message": "Search processed"}
-
 if __name__ == "__main__":
+    import uvicorn
     port = int(os.environ.get("PORT", 8005))
-    uvicorn.run("server:app", host="0.0.0.0", port=port)
+    uvicorn.run(app, host="0.0.0.0", port=port)
