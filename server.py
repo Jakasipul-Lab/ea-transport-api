@@ -169,6 +169,16 @@ def dashboard():
 @app.route('/migration')
 def migration():
     return send_file('migration.html')
+from flask import Flask, render_template
+
+app = Flask(__name__)  # don't change static_folder unless needed
+
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+if __name__ == '__main__':
+    app.run()
 
 import uvicorn
 
