@@ -55,6 +55,9 @@ def local_page(): return FileResponse(os.path.join(BASE_DIR, "local.html"))
 def safari_page(): return FileResponse(os.path.join(BASE_DIR, "safari.html"))
 @app.head("/")
 def home_head(): return Response(status_code=200)
+@app.route('/about')
+def about():
+    return send_file('about.html')
 
 # --------------------------------------
 # ✅ LOCAL SEARCH - BLUE CARDS
