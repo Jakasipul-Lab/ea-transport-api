@@ -1,3 +1,17 @@
+# LINE 1: put this on top
+from fastapi import FastAPI, Request
+from fastapi.templating import Jinja2Templates
+
+# LINE 3: then this
+app = FastAPI()
+
+# LINE 4: then this
+templates = Jinja2Templates(directory="templates")
+
+# LINE 6: then your routes
+@app.get("/")
+async def home(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 import datetime
 import os
 import uvicorn
@@ -58,6 +72,15 @@ def home_head(): return Response(status_code=200)
 @app.route('/about')
 def about():
     return send_file('about.html')
+from fastapi import FastAPI, Request
+from fastapi.templating import Jinja2Templates
+
+app = FastAPI()
+templates = Jinja2Templates(directory="templates")
+
+@app.get("/")
+async def home(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 # --------------------------------------
 # ✅ LOCAL SEARCH - BLUE CARDS
