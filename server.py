@@ -1,14 +1,13 @@
 import os
+import uvicorn
 from fastapi import FastAPI, Request
-from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
-# --- THE FIX: Added your brand name here ---
+# Initialize the app with your brand name
 app = FastAPI(title="EA SafariRoutes")
 
-# Mount static files and templates
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# Only templates are used for the UI
 templates = Jinja2Templates(directory="templates")
 
 class RouteQuery(BaseModel):
@@ -17,13 +16,14 @@ class RouteQuery(BaseModel):
     destination: dict
     preferences: dict = {}
 
-# --- ALL PAGE ROUTES ---
+# --- PAGE ROUTES ---
 @app.get("/{page}")
 async def get_page(request: Request, page: str = "index"):
     try:
         return templates.TemplateResponse(f"{page}.html", {"request": request})
-    except Exception as e:
-        return {"error": f"Template {page}.html not found"}
+    except Exception:
+        # Fallback if the file is missing
+        return {"error": "Page not found"}
 
 # --- API ROUTES ---
 @app.get("/api/routes")
@@ -33,7 +33,7 @@ async def get_routes():
         {"id": 2, "operator": "CityLink", "origin": "Nairobi", "destination": "Kisumu"}
     ]
 
+# Production runner
 if __name__ == "__main__":
-    import uvicorn
     port = int(os.environ.get("PORT", 8005))
     uvicorn.run(app, host="0.0.0.0", port=port)
