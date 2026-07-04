@@ -141,5 +141,5 @@ def migration():
     return send_file('migration.html')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=10085)
+    app.run(host='0.0.0.0', port=1085)
 EOF
