@@ -1,70 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EA SafariRoutes</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        nav { background: #f4f4f4; padding: 10px; margin-bottom: 20px; border-radius: 5px; }
+        nav a { margin-right: 15px; text-decoration: none; color: #2c3e50; font-weight: bold; }
+        .hero { margin-bottom: 30px; }
+        .route-card { border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 8px; }
+        #routeSearch { padding: 10px; width: 100%; max-width: 300px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 4px; }
+    </style>
+</head>
+<body>
 
-<script>
-    // 1. Fetch and display the available routes (The Commuter/General List)
-    async function loadRoutes() {
-        try {
-            const res = await fetch('/api/routes');
-            const routes = await res.json();
-            const list = document.getElementById('routes-list');
-            list.innerHTML = '';
+    <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/admin">Admin</a>
+        <a href="/migration">Migration</a>
+    </nav>
 
-            routes.forEach(route => {
-                const card = document.createElement('div');
-                card.className = 'route-card';
-                const operatorName = route.operator || (route.operators ? route.operators[0] : "Standard Operator");
+    <div class="hero">
+        <h1>EA SafariRoutes</h1>
+        <p>Your trusted gateway to travel across East Africa.</p>
+    </div>
+
+    <input type="text" id="routeSearch" placeholder="Search routes..." oninput="filterRoutes()">
+
+    <div id="routes-container">Loading routes...</div>
+
+    <script>
+        async function loadRoutes() {
+            try {
+                const response = await fetch('/api/routes');
+                const routes = await response.json();
+                const container = document.getElementById('routes-container');
                 
-                card.innerHTML = `
-                    <div>
-                        <strong>${route.origin} to ${route.destination}</strong><br>
-                        <small>${operatorName} (${route.type})</small>
+                container.innerHTML = routes.map(r => `
+                    <div class="route-card">
+                        <h3>${r.operator}</h3>
+                        <p><strong>Route:</strong> ${r.origin} → ${r.destination}</p>
+                        <button onclick="alert('Booking confirmed for ${r.operator}')">Book Now</button>
                     </div>
-                    <button class="btn" onclick="bookRoute('${route.route_id}', '${operatorName}')">Get Code</button>
-                `;
-                list.appendChild(card);
-            });
-        } catch (error) {
-            document.getElementById('routes-list').innerHTML = '<p>Unable to load routes. Please try again later.</p>';
+                `).join('');
+            } catch (error) {
+                document.getElementById('routes-container').innerHTML = "Could not load routes.";
+            }
         }
-    }
 
-    // 2. Perform a specific search (The OSARE Gateway Logic)
-    async function performSearch(mode) {
-        const payload = { mode: mode, origin: { lat: 0, lng: 0 }, destination: { lat: 0, lng: 0 } };
-
-        const response = await fetch('/api/search', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-
-        const data = await response.json();
-        if (data.status === 'success') {
-            // Logic to display search-specific results
-            console.log("Search Result:", data);
+        function filterRoutes() {
+            const input = document.getElementById('routeSearch').value.toLowerCase();
+            const cards = document.getElementsByClassName('route-card');
+            for (let card of cards) {
+                card.style.display = card.innerText.toLowerCase().includes(input) ? "block" : "none";
+            }
         }
-    }
-    
-    // 3. The Booking Engine (Connects the vendor to your 5% commission)
-    async function bookRoute(routeId, operator) {
-        const name = prompt("Enter passenger name:") || "Guest";
-        
-        const res = await fetch('/api/book', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ route_id: routeId, operator: operator, passenger_name: name })
-        });
-        
-        const data = await res.json();
-        
-        if (data.status === 'success') {
-            document.getElementById('safariroute-code').innerText = data.code;
-            document.getElementById('result-area').style.display = 'block';
-            document.getElementById('result-area').scrollIntoView({ behavior: 'smooth' });
-        } else {
-            alert("Booking could not be finalized. Please try again.");
-        }
-    }
 
-    // Initialize the page on load
-    loadRoutes();
-</script>
+        loadRoutes();
+    </script>
+</body>
+</html>
