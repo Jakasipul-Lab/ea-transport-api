@@ -151,7 +151,7 @@ def search_safari(q: str):
 # --------------------------------------
 @app.get("/click-lead")
 def click_lead(op: str, dest: str, price: str):
-    YOUR_PHONE = "254700000"
+    YOUR_PHONE = "254758378729"
     message = f"Hello, I want to book {dest} ({price}) [ID:{op}]"
     encoded = urllib.parse.quote(message)
     url = f"https://wa.me/{YOUR_PHONE}?text={encoded}"
