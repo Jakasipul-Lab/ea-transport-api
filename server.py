@@ -19,16 +19,20 @@ app = FastAPI()
 # LINE 4: then this
 templates = Jinja2Templates(directory="templates")
 
-# LINE 6: then your routes
-@app.get("/")
-async def home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
 import datetime
 import os
 import uvicorn
-from fastapi import FastAPI, Response
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
 
+app = FastAPI()
+
+@app.get("/", response_class=HTMLResponse)
+async def home():
+    return f"""
+    <h1>OSARE</h1>
+    <p>Deployed successfully at {datetime.datetime.now()}</p>
+    """
 app = FastAPI()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
