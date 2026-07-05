@@ -12,9 +12,11 @@ app = FastAPI()
 
 @app.get("/", response_class=HTMLResponse)
 async def home():
-    return f"""
-    <h1>OSARE</h1>
-    <p>Site is live! Deployed at {datetime.datetime.now()}</p>
+    return "<h1>OSARE Home</h1>"
+
+@app.get("/about", response_class=HTMLResponse)  # <- you have this right
+async def about():
+    return "<h1>About OSARE</h1><p>This is the about page.</p>"
     """
 @app.get("/health")
 async def health():
