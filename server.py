@@ -35,25 +35,43 @@ SAFARI_DATABASE = [
     {
         "keywords": ["mara", "safari", "kenya", "wildlife", "tour", "trip", "holiday"],
         "operator_id": "mara001",
-        "title": "Masai Mara Safari",
-        "desc": "3 Days Big Five safari experience.",
+        "title": "Masai Mara 3-Day Safari",
+        "vendor": "Mara Safari Lodges Ltd",
+        "type": "Safari Package",
+        "location": "Masai Mara National Reserve, Narok County",
+        "desc": "Experience the Big Five. Includes game drives, park fees, transport from Nairobi, and 2 nights at a tented camp with meals.",
+        "includes": ["Park fees", "Transport", "2 Nights Tented Camp", "All Meals", "Professional Guide"],
         "price": "$350",
+        "image": "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?q=80&w=800", # Mara photo
+        "map_link": "https://maps.google.com/?q=Masai+Mara+National+Reserve",
         "dest": "mara"
     },
     {
-        "keywords": ["zanzibar", "beach", "tanzania", "holiday", "island", "vacation"],
+        "keywords": ["zanzibar", "beach", "tanzania", "holiday", "island", "vacation", "resort"],
         "operator_id": "znz001",
-        "title": "Zanzibar Beach Holiday",
-        "desc": "4 Days beach package with hotel.",
+        "title": "Zanzibar Beach Resort - 4 Days",
+        "vendor": "Blue Ocean Resort",
+        "type": "Hotel + Beach Package",
+        "location": "Nungwi Beach, Zanzibar, Tanzania",
+        "desc": "Relax on white sand beaches. 3 nights in beachfront resort, breakfast, airport transfers, and sunset dhow cruise.",
+        "includes": ["3 Nights Beachfront Room", "Breakfast", "Airport Transfers", "Dhow Cruise"],
         "price": "$490",
+        "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800", # Zanzibar photo
+        "map_link": "https://maps.google.com/?q=Nungwi+Beach+Zanzibar",
         "dest": "zanzibar"
     },
     {
         "keywords": ["serengeti", "migration", "wildlife", "tanzania", "tour"],
         "operator_id": "ser001",
-        "title": "Serengeti Safari Tour",
-        "desc": "Wildlife migration safari package.",
+        "title": "Serengeti Migration Safari",
+        "vendor": "Wild Trails Tanzania",
+        "type": "Safari Package",
+        "location": "Serengeti National Park, Tanzania",
+        "desc": "Witness the Great Migration. 4 days, 3 nights lodge stay, unlimited game drives.",
+        "includes": ["Park fees", "3 Nights Lodge", "All Meals", "Game Drives"],
         "price": "$750",
+        "image": "https://images.unsplash.com/photo-1516426122078-a82eecbf4c90?q=80&w=800", # Serengeti photo
+        "map_link": "https://maps.google.com/?q=Serengeti+National+Park",
         "dest": "serengeti"
     }
 ]
