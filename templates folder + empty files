@@ -1,0 +1,2 @@
+mkdir -p src/templates
+touch src/templates/index.html src/templates/about.html src/templates/safari.html
