@@ -23,6 +23,11 @@ async def home():
         <h2>🚆 OSARE Local Travel</h2>
     </div>
     """
+
+@app.get("/about", response_class=HTMLResponse)
+async def about():
+    return "<h1>About OSARE</h1>"
+    """
 @app.get("/health")
 async def health():
     return {"status": "ok"}
