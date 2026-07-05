@@ -4,12 +4,18 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 
+import datetime
+from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
+
 app = FastAPI()
 
 @app.get("/", response_class=HTMLResponse)
-async def home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
-
+async def home():
+    return f"""
+    <h1>OSARE</h1>
+    <p>Site is live! Deployed at {datetime.datetime.now()}</p>
+    """
 @app.get("/health")
 async def health():
     return {"status": "ok"}
