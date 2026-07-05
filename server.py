@@ -18,11 +18,10 @@ LOCAL_DATABASE = [
 
 @app.get("/", response_class=HTMLResponse)
 async def home():
-    return f"""
-    <h1>OSARE</h1>
-    <p>We have {len(LOCAL_DATABASE)} services</p>
-    <p>Deployed at {datetime.datetime.now()}</p>
-    """
+    return """
+    <div style="background:#2563eb; color:#fff; padding:20px; border-radius:10px; text-align:center;">
+        <h2>🚆 OSARE Local Travel</h2>
+    </div>
     """
 @app.get("/health")
 async def health():
