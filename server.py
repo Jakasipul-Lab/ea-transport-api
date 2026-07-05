@@ -10,13 +10,19 @@ from fastapi.responses import HTMLResponse
 
 app = FastAPI()
 
+LOCAL_DATABASE = [
+    {"keywords": ["bus", "matatu"], "title": "🚌 Bus & Matatu Transport", "desc": "Daily routes across towns and cities.", "price": "KES 1,200"},
+    {"keywords": ["train", "sgr"], "title": "🚆 SGR Train", "desc": "Nairobi ↔ Mombasa transport.", "price": "KES 1,500"},
+    {"keywords": ["taxi", "car"], "title": "🚗 Taxi / Car Hire", "desc": "Comfortable and reliable rides.", "price": "KES 8,000/day"}
+]
+
 @app.get("/", response_class=HTMLResponse)
 async def home():
-    return "<h1>OSARE Home</h1>"
-
-@app.get("/about", response_class=HTMLResponse)  # <- you have this right
-async def about():
-    return "<h1>About OSARE</h1><p>This is the about page.</p>"
+    return f"""
+    <h1>OSARE</h1>
+    <p>We have {len(LOCAL_DATABASE)} services</p>
+    <p>Deployed at {datetime.datetime.now()}</p>
+    """
     """
 @app.get("/health")
 async def health():
