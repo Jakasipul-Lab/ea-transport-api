@@ -134,8 +134,6 @@ def search_local(q: str):
     """)
 
 # --------------------------------------
-# SAFARI SEARCH
-# --------------------------------------
 @app.get("/search/safari")
 def search_safari(q: str):
     query = q.lower()
@@ -143,27 +141,34 @@ def search_safari(q: str):
     for item in SAFARI_DATABASE:
         if smart_match(query, item["keywords"]):
             link = f"/click-lead?op={item['operator_id']}&dest={urllib.parse.quote(item['dest'])}&price={item['price']}"
+            includes_list = "".join([f"<li>{i}</li>" for i in item['includes']])
             results.append(f"""
-            <div style="border:1px solid green; padding:15px; margin:10px;">
-                <h3>{item['title']} - {item['price']}</h3>
+            <div style="border:1px solid #ddd; padding:20px; margin:15px 0; border-radius:12px; background:white; box-shadow:0 4px 12px rgba(0,0,0,0.06);">
+                <img src="{item['image']}" style="width:100%; height:220px; object-fit:cover; border-radius:8px; margin-bottom:12px;">
+                <h3 style="color:#1e3a8a; margin:0;">{item['title']}</h3>
+                <p style="color:#f97316; font-weight:bold; margin:4px 0;">{item['type']} | By: {item['vendor']}</p>
+                <p style="color:#64748b; font-size:14px;">📍 <a href="{item['map_link']}" target="_blank">{item['location']}</a></p>
                 <p>{item['desc']}</p>
-                <a href="{link}" style="background:green;color:white;padding:8px;border-radius:5px;">
+                <h4>What's Included:</h4>
+                <ul style="margin-left:18px;">{includes_list}</ul>
+                <h2 style="color:#10b981;">{item['price']}</h2>
+                <a href="{link}" style="background:#25d366;color:white;padding:12px 20px;border-radius:8px; text-decoration:none; font-weight:bold; display:inline-block;">
                     Book via WhatsApp
                 </a>
             </div>
             """)
     if not results:
         results.append("""
-        <p>No safari matches found. Try:
-        safari, mara, kenya, beach, zanzibar.</p>
+        <p>No matches found. Try: safari, mara, zanzibar, beach, hotel, serengeti</p>
         """)
     return HTMLResponse(f"""
-    <h2>Safari Results for: {q}</h2>
+    <div style="max-width:900px; margin:20px auto; padding:15px; font-family:Segoe UI;">
+    <h2>Results for: "{q}"</h2>
     {''.join(results)}
     <br>
-    <a href="/safari">← Back</a>
+    <a href="/" style="color:#1e3a8a;">← Back to Search</a>
+    </div>
     """)
-
 # --------------------------------------
 # WHATSAPP TRACKING
 # --------------------------------------
