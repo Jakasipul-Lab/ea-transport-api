@@ -330,27 +330,79 @@ function Home({ go }) {
 // About
 // ---------------------------------------------------------------------------
 function About() {
+  const branches = [
+    { region: 'Kisumu Headquarters', name: 'Mrs Jacqueline Susan Nakinson', role: 'Officer-in-Charge', country: 'Kenya' },
+    { region: 'Kenya — Nairobi', name: 'Kenneth Oketch', role: 'Branch Manager', country: 'Kenya' },
+    { region: 'Uganda — Kampala', name: 'Brian Omollo', role: 'Branch Manager', country: 'Uganda' },
+    { region: 'Tanzania — Dar es Salaam', name: 'Johnson Yongo', role: 'Branch Manager', country: 'Tanzania' },
+    { region: 'Germany Branch', name: 'Brunnenstraße 48', role: '34537, Bad Wildungen', country: 'Germany' },
+  ]
   return (
-    <div className="mx-auto max-w-4xl px-5 py-16">
-      <Badge className="gap-1 bg-[#f97316] text-white border-0"><Leaf className="h-3 w-3" /> About OSARE</Badge>
-      <h1 className="mt-4 text-4xl font-extrabold text-slate-900">Organising East Africa tourism with trusted information.</h1>
+    <div className="mx-auto max-w-5xl px-5 py-16">
+      <Badge className="gap-1 bg-[#f97316] text-white border-0"><Leaf className="h-3 w-3" /> About OSARE — EA SafariRoutes</Badge>
+      <h1 className="mt-4 text-4xl font-extrabold text-slate-900">Connecting East Africa through trusted travel & logistics.</h1>
       <p className="mt-4 text-lg text-slate-600">
-        OSARE is a two-tier information & booking hub. Tier 1 serves tourists with safaris, Kilimanjaro climbs, hotels, car & aircraft hire and sightseeing. Tier 2 serves locals with Nairobi CBD transit information. Our goal: put reliable, trustworthy information at everyone's fingertips.
+        OSARE is a regional travel access and logistics platform designed to connect users to railway, bus, and private transport systems across East Africa. It also serves tourists with safaris, Kilimanjaro climbs, hotels, car &amp; aircraft hire and sightseeing.
+      </p>
+      <p className="mt-3 text-lg text-slate-600">
+        The platform acts as a structured routing gateway, allowing users to access existing transport systems through a unified entry point while enabling tracking, analysis, and scalable business integration. Our goal: put reliable, trustworthy information at everyone's fingertips.
       </p>
 
-      <div className="mt-10 grid gap-6 md:grid-cols-3">
-        <Card className="border-slate-200"><CardContent className="p-6"><Users className="h-7 w-7 text-[#1e3a8a]" /><h3 className="mt-3 font-bold">For tourists</h3><p className="mt-1 text-sm text-slate-500">Compare options with photos, prices and off-peak deals. Book direct via WhatsApp.</p></CardContent></Card>
+      {/* Leadership */}
+      <div className="mt-12 grid items-center gap-8 rounded-2xl bg-gradient-to-br from-[#1e3a8a]/5 to-[#f97316]/10 p-8 md:grid-cols-[220px_1fr]">
+        <img
+          src="https://github.com/Jakasipul-Lab.png"
+          alt="Osare Nakinson"
+          className="h-52 w-52 rounded-2xl object-cover shadow-lg"
+          onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=440' }}
+        />
+        <div>
+          <h3 className="text-2xl font-extrabold text-[#1b5e20]">Osare Nakinson</h3>
+          <span className="mt-1 inline-block font-semibold text-[#2e7d32]">Founder &amp; Lead Developer</span>
+          <p className="mt-3 text-slate-600">
+            Driving innovation in East African mobility through technology-first logistics and strategic transport partnerships.
+          </p>
+        </div>
+      </div>
+
+      {/* Value / revenue model */}
+      <div className="mt-12 grid gap-6 md:grid-cols-3">
+        <Card className="border-slate-200"><CardContent className="p-6"><Users className="h-7 w-7 text-[#1e3a8a]" /><h3 className="mt-3 font-bold">For tourists</h3><p className="mt-1 text-sm text-slate-500">Compare options with photos, prices and off-peak deals. Book direct via WhatsApp or online.</p></CardContent></Card>
         <Card className="border-slate-200"><CardContent className="p-6"><Building2 className="h-7 w-7 text-[#1e3a8a]" /><h3 className="mt-3 font-bold">For vendors</h3><p className="mt-1 text-sm text-slate-500">Reach travellers directly. We charge a simple 5% on confirmed bookings.</p></CardContent></Card>
         <Card className="border-slate-200"><CardContent className="p-6"><Percent className="h-7 w-7 text-emerald-600" /><h3 className="mt-3 font-bold">Our revenue</h3><p className="mt-1 text-sm text-slate-500">5% commission paid by vendors — never by the tourist. Fair and transparent.</p></CardContent></Card>
       </div>
 
-      <Card className="mt-10 border-slate-200 bg-slate-50">
+      {/* Branches */}
+      <div className="mt-14">
+        <h2 className="text-2xl font-extrabold text-slate-900">Regional Headquarters &amp; Branches</h2>
+        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {branches.map((b, i) => (
+            <Card key={i} className="border-slate-200">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-2 text-[#2e7d32]">
+                  <MapPin className="h-4 w-4" />
+                  <span className="font-bold">{b.region}</span>
+                </div>
+                <p className="mt-2 font-medium text-slate-800">{b.name}</p>
+                <p className="text-sm text-slate-500">{b.role}</p>
+                <Badge variant="secondary" className="mt-3 bg-slate-100 text-slate-600">{b.country}</Badge>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Contact */}
+      <Card className="mt-12 border-slate-200 bg-slate-50">
         <CardContent className="p-6">
-          <h3 className="font-bold text-slate-900">Contact & booking</h3>
+          <h3 className="font-bold text-slate-900">Contact &amp; booking</h3>
           <p className="mt-2 flex items-center gap-2 text-slate-600"><Phone className="h-4 w-4 text-[#25d366]" /> WhatsApp bookings: +254 758 378 729</p>
-          <p className="mt-1 flex items-center gap-2 text-slate-600"><MapPin className="h-4 w-4 text-[#1e3a8a]" /> Nairobi CBD, Kenya</p>
+          <p className="mt-1 flex items-center gap-2 text-slate-600"><MapPin className="h-4 w-4 text-[#1e3a8a]" /> Kisumu HQ • Nairobi • Kampala • Dar es Salaam • Bad Wildungen</p>
+          <p className="mt-1 flex items-center gap-2 text-slate-600"><Compass className="h-4 w-4 text-[#f97316]" /> www.easafariroutes.com</p>
         </CardContent>
       </Card>
+
+      <p className="mt-10 text-center text-sm text-slate-400">© 2026 OSARE — EA SafariRoutes. All rights reserved.</p>
     </div>
   )
 }
