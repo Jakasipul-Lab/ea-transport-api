@@ -1,0 +1,21 @@
+# ---------------------------------------------------------------------------
+# Render Blueprint for OSARE (Next.js + NEON PostgreSQL)
+# In Render: New + -> Blueprint -> connect JakasipulLab/eatransport-API.
+# Set DATABASE_URL (your NEON connection string) as a secret.
+# ---------------------------------------------------------------------------
+services:
+  - type: web
+    name: osare
+    runtime: node
+    plan: free
+    buildCommand: yarn install && yarn build
+    startCommand: yarn start
+    envVars:
+      - key: DATABASE_URL
+        sync: false            # set this in the Render dashboard (NEON connection string)
+      - key: NEXT_PUBLIC_BASE_URL
+        value: https://easafariroutes.com
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: NODE_VERSION
+        value: "20"
