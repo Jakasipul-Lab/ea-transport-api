@@ -119,6 +119,9 @@ backend:
         -working: true
         -agent: "testing"
         -comment: "✅ PASS: POST /api/seed successfully returns {inserted: 15}. All listings seeded correctly."
+        -working: true
+        -agent: "testing"
+        -comment: "✅ PASS (PostgreSQL): POST /api/seed returns {inserted: 15}. All 15 listings seeded successfully to PostgreSQL with UUID ids. Migration verified."
 
   - task: "List & search listings (GET /api/listings?type=&q=&category=)"
     implemented: true
@@ -134,6 +137,9 @@ backend:
         -working: true
         -agent: "testing"
         -comment: "✅ PASS: All filter tests passed. GET /api/listings returns 15 items with UUID ids (no _id leakage). type=safari returns 10, type=local returns 5, q=kilimanjaro returns 2 results, category filter works correctly. All required fields present (type, category, title, vendor, priceLabel, image, keywords)."
+        -working: true
+        -agent: "testing"
+        -comment: "✅ PASS (PostgreSQL): All 5 filter tests passed. GET /api/listings returns 15 items with UUID ids (no _id leakage). type=safari returns 10, type=local returns 5, q=kilimanjaro returns 2 results, category=Hotel & Resort returns 2 results. All required fields present (type, category, title, vendor, priceLabel, image, includes, keywords). includes/keywords stored as JSONB arrays. PostgreSQL migration verified."
 
   - task: "Create/Update/Delete listing (POST/PUT/DELETE /api/listings[/:id])"
     implemented: true
@@ -149,6 +155,9 @@ backend:
         -working: true
         -agent: "testing"
         -comment: "✅ PASS: All CRUD operations working. POST /api/listings creates listing with UUID id, includes/keywords parsed to arrays. PUT /api/listings/:id updates correctly. DELETE /api/listings/:id removes listing and verified removal. No MongoDB _id leakage."
+        -working: true
+        -agent: "testing"
+        -comment: "✅ PASS (PostgreSQL): All 4 CRUD tests passed. POST /api/listings creates listing with UUID id, includes/keywords parsed to arrays (JSONB). PUT /api/listings/:id updates correctly with priceValue=120 (numeric, not string), priceLabel=$120. DELETE /api/listings/:id removes listing and verified removal. No _id leakage. PostgreSQL migration verified."
 
   - task: "Create booking lead + WhatsApp url (POST /api/leads)"
     implemented: true
@@ -164,6 +173,9 @@ backend:
         -working: true
         -agent: "testing"
         -comment: "✅ PASS: POST /api/leads works correctly. Returns UUID id, whatsappUrl contains wa.me/254758378729 with URL-encoded message, commission calculated correctly (5% of priceValue). Fallback with inline data also works when listingId not found."
+        -working: true
+        -agent: "testing"
+        -comment: "✅ PASS (PostgreSQL): Both lead creation tests passed. POST /api/leads with valid listingId returns UUID id, whatsappUrl contains wa.me/254758378729, commission=17.5 (numeric, 5% of 350). Fallback with fake listingId + inline data also works. PostgreSQL migration verified."
 
   - task: "List leads (GET /api/leads) and Dashboard stats (GET /api/stats)"
     implemented: true
@@ -179,6 +191,9 @@ backend:
         -working: true
         -agent: "testing"
         -comment: "✅ PASS: GET /api/leads returns array with UUID ids (no _id leakage). GET /api/stats returns all required fields: totalListings, safariCount, localCount, totalLeads, estRevenueUSD (all numeric), leadsByType (object with safari/local), leadsByCategory (array). All working correctly."
+        -working: true
+        -agent: "testing"
+        -comment: "✅ PASS (PostgreSQL): Both endpoints passed. GET /api/leads returns array with 2 leads, UUID ids, no _id leakage. GET /api/stats returns all required fields: totalListings=15, safariCount=10, localCount=5, totalLeads=2, estRevenueUSD=27.5 (all numeric), leadsByType (object), leadsByCategory (array). PostgreSQL migration verified."
 
 frontend:
   - task: "OSARE full UI (home, safari, local, about, dashboard, admin, vendor portal)"
@@ -207,6 +222,9 @@ frontend:
         -working: true
         -agent: "testing"
         -comment: "✅ PASS: All 13 vendor auth tests passed (13/13). (1) POST /api/auth/register returns 200 with token and vendor (no passwordHash or _id leaked). (2) Duplicate email registration correctly returns 409. (3) POST /api/auth/login returns 200 with token and vendor. (4) Login with wrong password correctly returns 401. (5) GET /api/auth/me with valid token returns vendor info (no passwordHash leaked). (6) GET /api/auth/me without token returns 401. (7) GET /api/auth/me with invalid token returns 401. (8) POST /api/listings with Bearer token correctly attaches ownerId matching vendor.id. (9) GET /api/my-listings returns only vendor's listings (verified ownerId matches). (10) GET /api/my-listings without token returns 401. (11) POST /api/leads works for vendor's listing. (12) GET /api/my-stats returns correct stats (1 listing, 1 lead, $10 commission = 5% of $200). (13) GET /api/my-stats without token returns 401. CRITICAL SECURITY CHECKS VERIFIED: No passwordHash leaked, no MongoDB _id leaked, ownerId correctly attached, all auth-protected endpoints properly reject unauthorized requests."
+        -working: true
+        -agent: "testing"
+        -comment: "✅ PASS (PostgreSQL): All 11 vendor auth tests passed (11/11). (1) POST /api/auth/register returns 200 with token and vendor (UUID id, no password_hash, no _id). (2) Duplicate email correctly returns 409. (3) POST /api/auth/login returns 200 with token and vendor (no password_hash). (4) Wrong password correctly returns 401. (5) GET /api/auth/me with token returns vendor info (no password_hash). (6) GET /api/auth/me without token returns 401. (7) POST /api/listings with Bearer token correctly attaches ownerId matching vendor.id. (8) GET /api/my-listings returns 1 vendor's listing with matching ownerId. (9) GET /api/my-listings without token returns 401. (10) GET /api/my-stats returns correct stats: listings=1, leads=1, commissionOwedUSD=10 (5% of $200). (11) GET /api/my-stats without token returns 401. CRITICAL SECURITY CHECKS VERIFIED: No password_hash leaked in any response, no _id leaked, all IDs are UUIDs, numeric fields are numbers, ownerId correctly attached, all auth-protected endpoints properly reject unauthorized requests. PostgreSQL migration verified."
 
 metadata:
   created_by: "main_agent"
@@ -230,3 +248,7 @@ agent_communication:
     -message: "Test the NEW OSARE vendor-auth backend endpoints (Next.js API routes under /api). Prior endpoints already passed; focus on the vendor auth flow now."
     -agent: "testing"
     -message: "✅ ALL VENDOR AUTH TESTS PASSED (13/13). Comprehensive vendor auth testing completed: (1) POST /api/auth/register works - returns 200 with token and vendor (no passwordHash or _id leaked). (2) Duplicate email registration correctly rejected with 409. (3) POST /api/auth/login works - returns 200 with token and vendor. (4) Login with wrong password correctly rejected with 401. (5) GET /api/auth/me with valid token works - returns vendor info (no passwordHash leaked). (6) GET /api/auth/me without token correctly rejected with 401. (7) GET /api/auth/me with invalid token correctly rejected with 401. (8) POST /api/listings with Bearer token correctly attaches ownerId matching vendor.id. (9) GET /api/my-listings returns only vendor's listings (verified ownerId matches). (10) GET /api/my-listings without token correctly rejected with 401. (11) POST /api/leads works for vendor's listing. (12) GET /api/my-stats returns correct stats (1 listing, 1 lead, $10 commission = 5% of $200). (13) GET /api/my-stats without token correctly rejected with 401. CRITICAL SECURITY CHECKS VERIFIED: No passwordHash leaked in any response, no MongoDB _id leaked in any response, ownerId correctly attached to listings, all auth-protected endpoints properly reject unauthorized requests. All vendor auth backend endpoints are fully functional and secure."
+    -agent: "main"
+    -message: "MAJOR CHANGE: Backend migrated from MongoDB to PostgreSQL (NEON). route.js now uses the 'pg' driver with DATABASE_URL. Tables listings/leads/vendors/sessions auto-create on first request. Arrays (includes, keywords) stored as JSONB. Please RE-TEST ALL backend endpoints end-to-end against Postgres, INCLUDING vendor auth (register/login/me, my-listings, my-stats, ownerId on create). Confirm: seed=15, filters (safari 10, local 5, q=kilimanjaro>=1, category filter), CRUD, leads whatsappUrl wa.me/254758378729 + numeric commission, stats structure, duplicate-email 401/409, 401 on protected routes without token, and NO password_hash ever returned. All ids must be UUIDs."
+    -agent: "testing"
+    -message: "🎉 ALL POSTGRESQL MIGRATION TESTS PASSED (26/26). Comprehensive end-to-end testing completed against PostgreSQL (NEON): CORE ENDPOINTS: (1) POST /api/seed returns {inserted:15}. (2) GET /api/listings with all filters working - type=safari (10), type=local (5), q=kilimanjaro (2), category=Hotel & Resort (2). All items have UUID ids, no _id leakage, includes/keywords as JSONB arrays. (3) CRUD operations - POST creates with UUID, includes/keywords parsed to arrays; PUT updates with priceValue=120 (numeric); DELETE removes and verified. (4) POST /api/leads returns UUID id, whatsappUrl contains wa.me/254758378729, commission=17.5 (numeric, 5% of 350). Fallback works. (5) GET /api/leads returns array with UUID ids. GET /api/stats returns all required numeric fields. VENDOR AUTH: (6) POST /api/auth/register returns 200 with token and vendor (UUID id, no password_hash, no _id). (7) Duplicate email returns 409. (8) POST /api/auth/login returns 200 with token and vendor (no password_hash). (9) Wrong password returns 401. (10) GET /api/auth/me with token returns vendor info (no password_hash). (11) GET /api/auth/me without token returns 401. (12) POST /api/listings with Bearer token correctly attaches ownerId matching vendor.id. (13) GET /api/my-listings returns vendor's listings with matching ownerId. (14) GET /api/my-listings without token returns 401. (15) GET /api/my-stats returns correct stats (listings=1, leads=1, commissionOwedUSD=10). (16) GET /api/my-stats without token returns 401. CRITICAL VERIFICATIONS: ✅ All IDs are UUIDs (no MongoDB ObjectID). ✅ No password_hash in any response. ✅ No _id or internal DB columns leaked. ✅ Numeric fields (priceValue, commission, estRevenueUSD) are numbers, not strings. ✅ includes/keywords stored as JSONB arrays. ✅ All auth-protected endpoints properly reject unauthorized requests (401). ✅ Duplicate email registration properly rejected (409). PostgreSQL migration is FULLY FUNCTIONAL and SECURE."

@@ -12,6 +12,7 @@ Domain: **www.easafariroutes.com** · Repo: **JakasipulLab/eatransport-API**
 
 - The platform is **100% free for tourists / commuters**.
 - **Vendors pay a 5% commission** on confirmed bookings — never the traveller.
+  (The rate is a single constant `COMMISSION_RATE` in the API and can be changed anytime.)
 - Bookings are captured as **WhatsApp leads** to `+254 758 378 729`, so every enquiry
   is tracked and shown in the **Revenue Dashboard**.
 
@@ -23,12 +24,11 @@ Domain: **www.easafariroutes.com** · Repo: **JakasipulLab/eatransport-API**
 |------------|---------------------------------------------------------|
 | Framework  | **Next.js 15** (App Router) — frontend + API in one app |
 | UI         | React 18, Tailwind CSS, shadcn/ui, lucide-react, Recharts |
-| Database   | **MongoDB** (via the official `mongodb` driver)         |
+| Database   | **PostgreSQL** via **NEON** (using the `pg` driver)     |
 | Deployment | **Render.com** (Node web service, `output: standalone`) |
 
-> The whole app (pages **and** backend API) runs as a single Next.js service —
-> there is no separate Python server. The original `server.py` (FastAPI) logic has
-> been re-implemented as Next.js API routes.
+> The whole app (pages **and** backend API) runs as a single Next.js service.
+> The original `server.py` (FastAPI) logic has been re-implemented as Next.js API routes.
 
 ---
 
@@ -37,33 +37,41 @@ Domain: **www.easafariroutes.com** · Repo: **JakasipulLab/eatransport-API**
 ```
 /
 ├── app/
-│   ├── page.js                 # Full OSARE UI: Home, Safari, Local, About, Dashboard, Admin
+│   ├── page.js                 # OSARE UI: Home, Safari, Local, About, Dashboard, Vendor Portal, Admin
 │   ├── layout.js               # Root layout + metadata
 │   ├── globals.css             # Global styles / design tokens
-│   └── api/[[...path]]/route.js # Backend API (listings, leads, stats, seed)
+│   └── api/[[...path]]/route.js # Backend API (listings, leads, stats, vendor auth, seed) on PostgreSQL
 ├── components/ui/              # shadcn/ui components
 ├── next.config.js              # standalone output for Render
-├── render.yaml                 # Render Blueprint
+├── render.yaml                 # Render Blueprint (NEON DATABASE_URL)
 ├── .env.example                # Environment variable template
 └── package.json
 ```
 
+Tables are auto-created on first request: `listings`, `leads`, `vendors`, `sessions`.
+
 ---
 
-## API reference (all routes are prefixed with `/api`)
+## API reference (all routes prefixed with `/api`)
 
-| Method | Route                              | Description                                        |
-|--------|------------------------------------|----------------------------------------------------|
-| GET    | `/api/listings`                    | List/search. Query: `type`, `q`, `category`        |
-| POST   | `/api/listings`                    | Create a listing (admin)                           |
-| PUT    | `/api/listings/:id`                | Update a listing                                   |
-| DELETE | `/api/listings/:id`                | Delete a listing                                   |
-| POST   | `/api/leads`                       | Create a booking lead → returns a `whatsappUrl`    |
-| GET    | `/api/leads`                       | List all booking leads                             |
-| GET    | `/api/stats`                       | Dashboard stats + estimated 5% commission revenue  |
-| POST   | `/api/seed`                        | Reset & load 15 sample listings                    |
+| Method | Route                    | Description                                        |
+|--------|--------------------------|----------------------------------------------------|
+| GET    | `/api/listings`          | List/search. Query: `type`, `q`, `category`        |
+| POST   | `/api/listings`          | Create a listing (attaches `ownerId` if logged in) |
+| PUT    | `/api/listings/:id`      | Update a listing                                   |
+| DELETE | `/api/listings/:id`      | Delete a listing                                   |
+| POST   | `/api/leads`             | Create a booking lead → returns a `whatsappUrl`    |
+| GET    | `/api/leads`             | List all booking leads                             |
+| GET    | `/api/stats`             | Dashboard stats + estimated 5% commission revenue  |
+| POST   | `/api/seed`              | Reset & load 15 sample listings                    |
+| POST   | `/api/auth/register`     | Vendor sign-up → `{ token, vendor }`               |
+| POST   | `/api/auth/login`        | Vendor login → `{ token, vendor }`                 |
+| GET    | `/api/auth/me`           | Current vendor (Bearer token)                      |
+| GET    | `/api/my-listings`       | Vendor's own listings (Bearer token)               |
+| GET    | `/api/my-stats`          | Vendor's leads + commission owed (Bearer token)    |
 
-Every document uses a **UUID `id`** (no MongoDB ObjectID is ever exposed).
+Every record uses a **UUID `id`**. Vendor auth uses built-in `crypto` (scrypt) password
+hashing + bearer session tokens — no external auth service required.
 
 ---
 
@@ -73,10 +81,13 @@ See [`.env.example`](./.env.example). Required:
 
 | Variable              | Purpose                                             |
 |-----------------------|-----------------------------------------------------|
-| `MONGO_URL`           | MongoDB connection string                           |
-| `DB_NAME`             | Database name (e.g. `osare`)                        |
+| `DATABASE_URL`        | NEON PostgreSQL connection string                   |
 | `NEXT_PUBLIC_BASE_URL`| Public URL of the deployed app                      |
 | `CORS_ORIGINS`        | Allowed origins (`*` for open access)               |
+
+> The app automatically strips `&channel_binding=require` from `DATABASE_URL`
+> because the Node `pg` driver does not support SCRAM channel binding. SSL is
+> enabled automatically.
 
 ---
 
@@ -84,7 +95,7 @@ See [`.env.example`](./.env.example). Required:
 
 ```bash
 yarn install
-cp .env.example .env      # then edit MONGO_URL / DB_NAME
+cp .env.example .env      # then paste your NEON DATABASE_URL
 yarn dev                  # http://localhost:3000
 ```
 
@@ -93,51 +104,39 @@ or click **"Reset & load sample data"** on the Admin page.
 
 ---
 
-## Deploy to Render.com
+## Deploy to Render.com with NEON
 
-This app is built for **MongoDB**. Render does **not** host MongoDB directly, so use
-**MongoDB Atlas** (free tier) for the database — this requires **zero code changes**.
+### Step 1 — NEON database
+1. Create a project at <https://neon.tech> (free).
+2. Copy the **connection string** from **Connection Details**
+   (`postgresql://...neon.tech/...?sslmode=require`).
 
-### Step 1 — Create a free MongoDB Atlas cluster
-1. Sign up at <https://www.mongodb.com/atlas> and create a free **M0** cluster.
-2. Add a database user + password.
-3. Under **Network Access**, allow `0.0.0.0/0` (or Render's IPs).
-4. Copy the connection string, e.g.
-   `mongodb+srv://USER:PASS@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority`
-
-### Step 2 — Deploy the web service on Render
+### Step 2 — Deploy the web service
 1. Push this repo to `JakasipulLab/eatransport-API`.
-2. In Render: **New + → Web Service → connect the repo** (or use **Blueprint** with the
-   included `render.yaml`).
-3. Settings:
-   - **Build command:** `yarn install && yarn build`
-   - **Start command:** `yarn start`
+2. In Render: **New + → Blueprint** (uses `render.yaml`) or a **Web Service**:
+   - **Build:** `yarn install && yarn build`
+   - **Start:** `yarn start`
    - **Environment:** Node 20
-4. Add environment variables:
-   - `MONGO_URL` = your Atlas connection string
-   - `DB_NAME` = `osare`
-   - `NEXT_PUBLIC_BASE_URL` = your Render/`easafariroutes.com` URL
+3. Environment variables:
+   - `DATABASE_URL` = your NEON connection string
+   - `NEXT_PUBLIC_BASE_URL` = your Render / `easafariroutes.com` URL
    - `CORS_ORIGINS` = `*`
-5. Deploy. Once live, open the app and (if needed) POST `/api/seed` once.
+4. Deploy. Tables auto-create on first request; POST `/api/seed` once to load samples.
 
-### Step 3 — Point your domain
-In Render → **Custom Domains**, add `easafariroutes.com` and follow the DNS
-instructions from your registrar.
+### Step 3 — Custom domain
+In Render → **Custom Domains**, add `easafariroutes.com` and follow the DNS steps.
 
 ---
 
-## About NEON / PostgreSQL
+## Changing the commission rate
 
-**NEON is PostgreSQL-only**, and this MVP currently uses **MongoDB**. Two options:
-
-- **Recommended (no code changes):** use **MongoDB Atlas** on Render as above.
-- **If you must use NEON/Postgres:** the data layer in `app/api/[[...path]]/route.js`
-  needs to be rewritten from the MongoDB driver to a Postgres client (e.g. `pg` or
-  Prisma) with SQL tables for `listings` and `leads`. This is a straightforward but
-  separate task — ask and it can be provided as a Postgres-ready branch.
+Open `app/api/[[...path]]/route.js` and edit:
+```js
+const COMMISSION_RATE = 0.05 // 5% — change to 0.10 for 10%, 0 for free, etc.
+```
 
 ---
 
 ## License
 
-© 2025 OSARE — easafariroutes.com. All rights reserved.
+© 2026 OSARE — easafariroutes.com. All rights reserved.
