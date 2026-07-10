@@ -63,22 +63,31 @@ def search(q: str = Query(None), category: str = Query("local")):
     return [{"op": r.operator, "time": r.time, "price": r.price} for r in results]
 
 
-# 2. FIXED ROUTES: Explicitly serving your pages
-
-# This brings back your Homepage (Make sure your file is named index.html)
+# 2. HOMEPAGE FIXED (GET + HEAD)
 @app.get("/")
-async def serve_homepage():
+@app.head("/")
+async def serve_root():
     return FileResponse("index.html")
 
-# This safely serves your advertisement page at easafariroutes.com/advertisement
-@app.get("/advertisement")
-async def serve_advertisement():
-    return FileResponse("advertisement.html")
+
+# 3. DYNAMIC HTML ROUTER FOR ALL YOUR REAL PAGES
+# This handles: /about, /admin, /advertise, /dashboard, /local, /migration, /safari
+@app.get("/{page_name}")
+@app.head("/{page_name}")
+async def serve_any_page(page_name: str):
+    # Strip any trailing extension if users add it manually
+    clean_name = page_name.replace(".html", "")
+    file_path = f"{clean_name}.html"
+
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    
+    # Fallback to index if route doesn't match an actual file
+    return FileResponse("index.html")
 
 
-# 3. Mount static files LAST for CSS/JS assets (images, styles, etc.)
-# This ensures it won't steal your homepage route anymore
-app.mount("/static", StaticFiles(directory="."), name="static")
+# 4. Mount static directory LAST for assets (style.css, logo.png, main.js)
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 if __name__ == "__main__":
