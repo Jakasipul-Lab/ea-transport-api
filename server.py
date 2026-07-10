@@ -2,7 +2,7 @@ import os
 from fastapi import FastAPI, Query
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles  # Added for safe static routing
+from fastapi.staticfiles import StaticFiles  
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -45,7 +45,7 @@ db.close()
 app = FastAPI()
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
-# 1. Your API search endpoint stays exactly here
+# 1. Your API search endpoint
 @app.get("/api/search")
 def search(q: str = Query(None), category: str = Query("local")):
     db = SessionLocal()
@@ -62,13 +62,26 @@ def search(q: str = Query(None), category: str = Query("local")):
     db.close()
     return [{"op": r.operator, "time": r.time, "price": r.price} for r in results]
 
-# 2. REMOVED the old home() and catch_all() routes.
-# Instead, we mount the current directory. FastAPI handles index.html as root automatically,
-# resolves HEAD requests properly, and routes all your files like advertisment.html smoothly.
-app.mount("/", StaticFiles(directory=".", html=True), name="static")
+
+# 2. FIXED ROUTES: Explicitly serving your pages
+
+# This brings back your Homepage (Make sure your file is named index.html)
+@app.get("/")
+async def serve_homepage():
+    return FileResponse("index.html")
+
+# This safely serves your advertisement page at easafariroutes.com/advertisement
+@app.get("/advertisement")
+async def serve_advertisement():
+    return FileResponse("advertisement.html")
+
+
+# 3. Mount static files LAST for CSS/JS assets (images, styles, etc.)
+# This ensures it won't steal your homepage route anymore
+app.mount("/static", StaticFiles(directory="."), name="static")
+
 
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 10000))
-    # Using string "server:app" allows Uvicorn to safely track reload states
     uvicorn.run("server:app", host="0.0.0.0", port=port, reload=True)
