@@ -2,6 +2,7 @@ import os
 from fastapi import FastAPI, Query
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles  # Added for safe static routing
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -44,10 +45,7 @@ db.close()
 app = FastAPI()
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
-@app.get("/", response_class=HTMLResponse)
-def home():
-    return FileResponse("index.html")
-
+# 1. Your API search endpoint stays exactly here
 @app.get("/api/search")
 def search(q: str = Query(None), category: str = Query("local")):
     db = SessionLocal()
@@ -64,13 +62,13 @@ def search(q: str = Query(None), category: str = Query("local")):
     db.close()
     return [{"op": r.operator, "time": r.time, "price": r.price} for r in results]
 
-@app.get("/{path:path}")
-def catch_all(path: str):
-    if os.path.exists(path):
-        return FileResponse(path)
-    return FileResponse("index.html")
+# 2. REMOVED the old home() and catch_all() routes.
+# Instead, we mount the current directory. FastAPI handles index.html as root automatically,
+# resolves HEAD requests properly, and routes all your files like advertisment.html smoothly.
+app.mount("/", StaticFiles(directory=".", html=True), name="static")
 
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 10000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    # Using string "server:app" allows Uvicorn to safely track reload states
+    uvicorn.run("server:app", host="0.0.0.0", port=port, reload=True)
