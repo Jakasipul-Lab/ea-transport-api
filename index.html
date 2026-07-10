@@ -1,1 +1,217 @@
-$(cat /root/workspace/index.b64)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EA SafariRoutes - East Africa's Transit & Booking Hub</title>
+    <style>
+        :root {--primary: #1e3a8a; --accent: #3b82f6; --orange: #f97316; --bg: #f8fafc; --gold: #f59e0b; --success: #10b981;}
+        body { background: var(--bg); font-family: 'Segoe UI', system-ui, sans-serif; margin:0; padding:0; color: #1e293b; }
+        .hero { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; padding: 3rem 1rem; text-align: center; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 15px; }
+        
+        .tier-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin: 2rem 0; }
+        .tier-btn { padding: 12px 24px; font-size: 1.05rem; font-weight: bold; border: none; border-radius: 50px; cursor: pointer; transition: 0.3s; background: #e2e8f0; color: #475569; }
+        .tier-btn.active { background: var(--primary); color: white; }
+        .tier-btn.safari-btn.active { background: var(--orange); }
+        
+        .tier-section { display: none; }
+        .tier-section.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .booking-form-box { background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); margin-bottom: 2rem; border: 1px solid #e2e8f0; }
+        .input-group { margin-bottom: 1.2rem; }
+        .input-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #475569; }
+        .input-group input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
+        
+        .btn-main { background: var(--primary); color: white; width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.2s; }
+        .btn-safari { background: var(--orange); }
+        .btn-main:hover { opacity: 0.9; }
+
+        /* RESULTS TABLE */
+        .results-box { display: none; margin-top: 2rem; background: #fff; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .results-header { background: #f8fafc; padding: 1rem; font-weight: bold; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; border-bottom: 1px solid #e2e8f0; font-size: 0.85rem; text-transform: uppercase; color: #64748b; }
+        .result-row { padding: 1.2rem 1rem; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; border-bottom: 1px solid #f1f5f9; align-items: center; }
+        .result-row:last-child { border-bottom: none; }
+        .btn-book { background: var(--success); color: white; border: none; padding: 8px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85rem; }
+
+        /* MODAL */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 2000; backdrop-filter: blur(4px); }
+        .modal-content { background: white; padding: 2.5rem; border-radius: 20px; width: 90%; max-width: 450px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
+        .code-box { font-size: 2rem; font-weight: 900; color: var(--primary); margin: 1.5rem 0; padding: 1rem; background: #f0f4f8; border-radius: 12px; border: 2px dashed var(--accent); }
+
+        .featured-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin: 3rem 0; }
+        .featured-card { background: white; border-radius: 16px; padding: 1.5rem; border: 1px solid #e2e8f0; text-align: left; }
+        
+        footer { margin-top: 4rem; padding: 3rem 1rem; text-align: center; color: #64748b; font-size: 0.9rem; border-top: 1px solid #e2e8f0; }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <h1 style="font-size: 2.8rem; margin-bottom: 0.5rem; font-weight: 900;">EA SafariRoutes</h1>
+    <p style="opacity: 0.9; font-size: 1.2rem;">Official East Africa Transit Marketplace • OSARE Search Engine</p>
+</div>
+
+<div class="container">
+    <div class="tier-nav">
+        <button id="localBtn" class="tier-btn active" onclick="switchTier('local')">Local Commute</button>
+        <button id="safariBtn" class="tier-btn safari-btn" onclick="switchTier('safari')">Tourist & Safari Assistance</button>
+    </div>
+
+    <!-- LOCAL COMMUTE SECTION -->
+    <div id="localSection" class="tier-section active">
+        <div class="booking-form-box">
+            <h2 style="color: var(--primary); margin-top: 0;">Compare Local Transits</h2>
+            <p style="color: #64748b; margin-bottom: 1.5rem;">Schedules sorted from local Matatus up to SGR Trains.</p>
+            <form onsubmit="handleSearch(event, 'local')">
+                <div class="input-group">
+                    <label>Search Route</label>
+                    <input type="text" id="localQuery" placeholder="e.g. Nairobi to Mombasa" required>
+                </div>
+                <button type="submit" class="btn-main">Find Available Transits</button>
+            </form>
+        </div>
+        
+        <div class="results-box" id="localResults">
+            <div class="results-header">
+                <div>Operator</div>
+                <div>Departure</div>
+                <div>Price</div>
+                <div>Action</div>
+            </div>
+            <div id="localList"></div>
+        </div>
+    </div>
+
+    <!-- TOURIST ASSISTANCE SECTION -->
+    <div id="safariSection" class="tier-section">
+        <div class="booking-form-box">
+            <h2 style="color: var(--orange); margin-top: 0;">Safari & Travel Assistance</h2>
+            <p style="color: #64748b; margin-bottom: 1.5rem;">Car Hire • Safari Flights • Luxury Tours</p>
+            <form onsubmit="handleSearch(event, 'safari')">
+                <div class="input-group">
+                    <label>What service do you need?</label>
+                    <input type="text" id="safariQuery" placeholder="e.g. Mara Safari, 4x4 Car Hire" required>
+                </div>
+                <button type="submit" class="btn-main btn-safari">Search Premium Services</button>
+            </form>
+        </div>
+
+        <div class="results-box" id="safariResults">
+            <div class="results-header">
+                <div>Service Partner</div>
+                <div>Availability</div>
+                <div>Est. Rate</div>
+                <div>Action</div>
+            </div>
+            <div id="safariList"></div>
+        </div>
+    </div>
+
+    <div class="featured-grid">
+        <div class="featured-card" style="border-left: 5px solid var(--primary);">
+            <h4 style="margin:0; color: var(--primary);">MASH EAST AFRICA</h4>
+            <p style="font-size:0.85rem; color:#64748b;">Daily VIP Luxury Coaches. Nairobi - Mombasa - Kampala.</p>
+            <button onclick="openBooking('Mash East Africa')" style="margin-top:10px; background:none; border:1px solid var(--primary); color:var(--primary); padding:5px 15px; border-radius:4px; font-weight:bold; cursor:pointer;">Book Mash</button>
+        </div>
+        <div class="featured-card" style="border-left: 5px solid var(--orange);">
+            <h4 style="margin:0; color: var(--orange);">AFRICAN SPICE</h4>
+            <p style="font-size:0.85rem; color:#64748b;">Premium 4x4 Safari Rentals & Airport Transfers.</p>
+            <button onclick="openBooking('African Spice Car Hire')" style="margin-top:10px; background:none; border:1px solid var(--orange); color:var(--orange); padding:5px 15px; border-radius:4px; font-weight:bold; cursor:pointer;">Rent 4x4</button>
+        </div>
+    </div>
+
+    <div style="background: #1e293b; color: white; padding: 2.5rem; border-radius: 16px; text-align: center;">
+        <h3 style="margin-top:0;">Advertise with EA SafariRoutes</h3>
+        <p style="opacity:0.8;">Target high-value travelers. Get your company featured here.</p>
+        <a href="mailto:info@easafariroutes.com?subject=Advertising" style="color:var(--accent); text-decoration:none; font-weight:bold; border:1px solid var(--accent); padding:10px 30px; border-radius:50px; display:inline-block;">Contact Sales</a>
+    </div>
+
+    <footer>
+        © 2026 EA SafariRoutes • Built by nakinson osare
+    </footer>
+</div>
+
+<!-- BOOKING MODAL -->
+<div class="modal" id="bookingModal">
+    <div class="modal-content">
+        <h2 id="modalTitle">Secure Booking</h2>
+        <div id="inputPhase">
+            <p style="color: #64748b;">Enter your name for ID verification to generate a <strong>SafariRoutes Code</strong>.</p>
+            <div class="input-group" style="text-align: left; margin-top: 1.5rem;">
+                <label>Passenger Name</label>
+                <input type="text" id="passengerName" placeholder="Full Name">
+            </div>
+            <button class="btn-main" onclick="generateCode()" style="background: var(--success);">Get Booking Code</button>
+            <button class="btn-main" onclick="closeModal()" style="background:none; color:#64748b; margin-top:10px; font-size:0.9rem;">Cancel</button>
+        </div>
+        <div id="codePhase" style="display: none;">
+            <p>Your verified tracking code is ready:</p>
+            <div class="code-box" id="finalCode"></div>
+            <p style="font-size: 0.85rem; color: #64748b; line-height: 1.4;">Present this code to the operator to finalize payment.<br><strong>No payment, no code.</strong></p>
+            <button class="btn-main" onclick="closeModal()" style="margin-top: 1.5rem;">Done</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let activePartner = '';
+
+    function switchTier(tier) {
+        document.getElementById('localBtn').classList.toggle('active', tier === 'local');
+        document.getElementById('safariBtn').classList.toggle('active', tier === 'safari');
+        document.getElementById('localSection').classList.toggle('active', tier === 'local');
+        document.getElementById('safariSection').classList.toggle('active', tier === 'safari');
+    }
+
+    function openBooking(partner) {
+        activePartner = partner;
+        document.getElementById('modalTitle').innerText = partner;
+        document.getElementById('passengerName').value = '';
+        document.getElementById('inputPhase').style.display = 'block';
+        document.getElementById('codePhase').style.display = 'none';
+        document.getElementById('bookingModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('bookingModal').style.display = 'none';
+    }
+
+    function generateCode() {
+        const name = document.getElementById('passengerName').value;
+        if(!name) return alert('Please enter passenger name');
+        const code = 'SR-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+        document.getElementById('finalCode').innerText = code;
+        document.getElementById('inputPhase').style.display = 'none';
+        document.getElementById('codePhase').style.display = 'block';
+    }
+
+    function handleSearch(e, type) {
+        e.preventDefault();
+        const results = type === 'local' ? [
+            { op: 'Madaraka Express (SGR)', time: '08:00 AM', price: '1,500 KES' },
+            { op: 'Mash East Africa', time: '09:00 PM', price: '1,800 KES' },
+            { op: 'North Rift Sacco', time: 'Leaves hourly', price: '1,200 KES' }
+        ] : [
+            { op: 'Safarilink Aviation', time: 'Daily', price: '8,500 KES' },
+            { op: 'African Spice Car Hire', time: 'Immediate', price: '5,000 KES/day' }
+        ];
+
+        const listId = type === 'local' ? 'localList' : 'safariList';
+        const boxId = type === 'local' ? 'localResults' : 'safariResults';
+        
+        document.getElementById(listId).innerHTML = results.map(r => `
+            <div class="result-row">
+                <div style="font-weight:bold; color:var(--primary);">${r.op}</div>
+                <div>${r.time}</div>
+                <div style="font-weight:bold;">${r.price}</div>
+                <div><button class="btn-book" onclick="openBooking('${r.op}')">Get Code</button></div>
+            </div>
+        `).join('');
+        
+        document.getElementById(boxId).style.display = 'block';
+    }
+</script>
+</body>
+</html>
