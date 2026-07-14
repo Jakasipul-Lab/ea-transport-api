@@ -2,7 +2,6 @@ import os
 from fastapi import FastAPI, Query
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles  
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -25,18 +24,25 @@ class Route(Base):
 
 Base.metadata.create_all(bind=engine)
 
-# Seed data
+# Seed data with requested terms
 db = SessionLocal()
 if db.query(Route).count() == 0:
     sample_routes = [
+        # LOCAL
         Route(operator="Madaraka Express (SGR)", origin="Nairobi", destination="Mombasa", time="08:00 AM", price="1,500 KES", category="local"),
         Route(operator="Madaraka Express (SGR)", origin="Mombasa", destination="Nairobi", time="03:00 PM", price="1,500 KES", category="local"),
         Route(operator="Mash East Africa", origin="Nairobi", destination="Mombasa", time="09:00 PM", price="1,800 KES", category="local"),
         Route(operator="Easy Coach", origin="Nairobi", destination="Kisumu", time="08:00 AM", price="1,600 KES", category="local"),
         Route(operator="North Rift Sacco", origin="Nairobi", destination="Eldoret", time="Leaves hourly", price="1,200 KES", category="local"),
-        Route(operator="Safarilink Aviation", origin="Nairobi", destination="Maasai Mara", time="Daily", price="8,500 KES", category="safari"),
-        Route(operator="African Spice Car Hire", origin="Nairobi", destination="Anywhere", time="Immediate", price="5,000 KES/day", category="safari"),
-        Route(operator="Discover Kenya Tours", origin="Mombasa", destination="Tsavo East", time="Full Day", price="12,000 KES", category="safari")
+        
+        # SAFARI / TOURIST / HOTELS
+        Route(operator="Safarilink Aviation", origin="Nairobi", destination="Masai Mara", time="Daily Flights", price="8,500 KES", category="safari"),
+        Route(operator="Mara Gates Safaris", origin="Nairobi", destination="Masai Mara", time="3 Days Safari", price="45,000 KES", category="safari"),
+        Route(operator="Mount Kilimanjaro Treks", origin="Nairobi", destination="Kilimanjaro", time="7 Days Trek", price="120,000 KES", category="safari"),
+        Route(operator="Serena Hotel & Resort", origin="Mombasa", destination="Beach Stay", time="Per Night", price="15,000 KES", category="safari"),
+        Route(operator="Safari Park Hotel", origin="Nairobi", destination="City Resort", time="Per Night", price="12,000 KES", category="safari"),
+        Route(operator="African Spice Car Hire", origin="Nairobi", destination="Kilimanjaro Transfer", time="Immediate", price="25,000 KES", category="safari"),
+        Route(operator="Mara Hotel & resort", origin="Masai Mara", destination="Luxury Stay", time="Per Night", price="20,000 KES", category="safari")
     ]
     db.add_all(sample_routes)
     db.commit()
@@ -45,13 +51,17 @@ db.close()
 app = FastAPI()
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
-# 1. Your API search endpoint
+@app.get("/", response_class=HTMLResponse)
+def home():
+    return FileResponse("index.html")
+
 @app.get("/api/search")
 def search(q: str = Query(None), category: str = Query("local")):
     db = SessionLocal()
     query = db.query(Route).filter(Route.category == category)
     if q:
-        words = q.lower().replace(" to ", " ").split()
+        # Split search query for flexibility (e.g. "Nairobi Mombasa" matches both)
+        words = q.lower().replace("/", " ").replace(" to ", " ").split()
         for word in words:
             query = query.filter(
                 (Route.origin.ilike(f"%{word}%")) | 
@@ -62,35 +72,13 @@ def search(q: str = Query(None), category: str = Query("local")):
     db.close()
     return [{"op": r.operator, "time": r.time, "price": r.price} for r in results]
 
-
-# 2. HOMEPAGE FIXED (GET + HEAD)
-@app.get("/")
-@app.head("/")
-async def serve_root():
+@app.get("/{path:path}")
+def catch_all(path: str):
+    if os.path.exists(path):
+        return FileResponse(path)
     return FileResponse("index.html")
-
-
-# 3. DYNAMIC HTML ROUTER FOR ALL YOUR REAL PAGES
-# This handles: /about, /admin, /advertise, /dashboard, /local, /migration, /safari
-@app.get("/{page_name}")
-@app.head("/{page_name}")
-async def serve_any_page(page_name: str):
-    # Strip any trailing extension if users add it manually
-    clean_name = page_name.replace(".html", "")
-    file_path = f"{clean_name}.html"
-
-    if os.path.exists(file_path):
-        return FileResponse(file_path)
-    
-    # Fallback to index if route doesn't match an actual file
-    return FileResponse("index.html")
-
-
-# 4. Mount static directory LAST for assets (style.css, logo.png, main.js)
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
 
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 10000))
-    uvicorn.run("server:app", host="0.0.0.0", port=port, reload=True)
+    uvicorn.run(app, host="0.0.0.0", port=port)
