@@ -15,13 +15,14 @@ Base = declarative_base()
 
 class Route(Base):
     __tablename__ = "routes"
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True)
     operator = Column(String)
     origin = Column(String)
     destination = Column(String)
-    time = Column(String)
-    price = Column(String)
-    category = Column(String) # 'local' or 'safari'
+    price_kes = Column(Integer) # for sorting cheapest
+    price_text = Column(String) # "1,200 KES"
+    type = Column(String) # Matatu, Bus, Train
+    info = Column(String) # "Bay 12"
 
 Base.metadata.create_all(bind=engine)
 
