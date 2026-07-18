@@ -1,7 +1,8 @@
 import os
 from fastapi import FastAPI, Query
-from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -51,10 +52,6 @@ db.close()
 app = FastAPI()
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
-@app.get("/", response_class=HTMLResponse)
-def home():
-    return FileResponse("index.html")
-
 @app.get("/api/search")
 def search(q: str = Query(None), category: str = Query("local")):
     db = SessionLocal()
@@ -72,11 +69,34 @@ def search(q: str = Query(None), category: str = Query("local")):
     db.close()
     return [{"op": r.operator, "time": r.time, "price": r.price} for r in results]
 
-@app.get("/{path:path}")
-def catch_all(path: str):
-    if os.path.exists(path):
-        return FileResponse(path)
+
+# 2. HOMEPAGE FIXED (GET + HEAD)
+@app.get("/")
+@app.head("/")
+async def serve_root():
     return FileResponse("index.html")
+
+
+# 3. DYNAMIC HTML ROUTER FOR ALL YOUR REAL PAGES
+# This handles: /about, /admin, /advertise, /dashboard, /local, /migration, /safari
+@app.get("/{page_name}")
+@app.head("/{page_name}")
+async def serve_any_page(page_name: str):
+    # Strip any trailing extension if users add it manually
+    clean_name = page_name.replace(".html", "")
+    file_path = f"{clean_name}.html"
+
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    
+    # Fallback to index if route doesn't match an actual file
+    return FileResponse("index.html")
+
+
+# 4. Mount static directory LAST for assets (style.css, logo.png, main.js)
+if os.path.exists("static"):
+    app.mount("/static", StaticFiles(directory="static"), name="static")
+
 
 if __name__ == "__main__":
     import uvicorn
