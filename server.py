@@ -91,9 +91,12 @@ async def serve_any_page(page_name: str):
     
     return FileResponse("index.html")
 
-# 4. Mount static directory LAST for assets
-if os.path.exists("static"):
-    app.mount("/static", StaticFiles(directory="static"), name="static")
+# 4. Mount static directory LAST for assets - SAFE VERSION
+static_dir = "static"
+if os.path.exists(static_dir) and os.path.isdir(static_dir):
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
+else:
+    print(f"Warning: '{static_dir}' directory not found. Skipping static files.")
 
 if __name__ == "__main__":
     import uvicorn
