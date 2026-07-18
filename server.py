@@ -3,7 +3,7 @@ from fastapi import FastAPI, Query
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy import create_engine, Column, Integer, String, or_ # FIX 1: add or_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
@@ -35,6 +35,8 @@ if db.query(Route).count() == 0:
         Route(operator="Mash East Africa", origin="Nairobi", destination="Mombasa", time="09:00 PM", price="1,800 KES", category="local"),
         Route(operator="Easy Coach", origin="Nairobi", destination="Kisumu", time="08:00 AM", price="1,600 KES", category="local"),
         Route(operator="North Rift Sacco", origin="Nairobi", destination="Eldoret", time="Leaves hourly", price="1,200 KES", category="local"),
+        Route(operator="2NK Sacco", origin="Nairobi", destination="Ngong", time="Every 10min", price="80-120 KES", category="local"),
+        Route(operator="Metro Trans", origin="Nairobi", destination="Rongai", time="24/7", price="60-100 KES", category="local"),
         
         # SAFARI / TOURIST / HOTELS
         Route(operator="Safarilink Aviation", origin="Nairobi", destination="Masai Mara", time="Daily Flights", price="8,500 KES", category="safari"),
@@ -57,18 +59,19 @@ def search(q: str = Query(None), category: str = Query("local")):
     db = SessionLocal()
     query = db.query(Route).filter(Route.category == category)
     if q:
-        # Split search query for flexibility (e.g. "Nairobi Mombasa" matches both)
+        # FIX 2: use or_() instead of | chain. Also search all words
         words = q.lower().replace("/", " ").replace(" to ", " ").split()
         for word in words:
             query = query.filter(
-                (Route.origin.ilike(f"%{word}%")) | 
-                (Route.destination.ilike(f"%{word}%")) | 
-                (Route.operator.ilike(f"%{word}%"))
+                or_(
+                    Route.origin.ilike(f"%{word}%"), 
+                    Route.destination.ilike(f"%{word}%"), 
+                    Route.operator.ilike(f"%{word}%")
+                )
             )
     results = query.all()
     db.close()
-    return [{"op": r.operator, "time": r.time, "price": r.price} for r in results]
-
+    return [{"op": r.operator, "origin": r.origin, "dest": r.destination, "time": r.time, "price": r.price} for r in results]
 
 # 2. HOMEPAGE FIXED (GET + HEAD)
 @app.get("/")
@@ -76,27 +79,21 @@ def search(q: str = Query(None), category: str = Query("local")):
 async def serve_root():
     return FileResponse("index.html")
 
-
 # 3. DYNAMIC HTML ROUTER FOR ALL YOUR REAL PAGES
-# This handles: /about, /admin, /advertise, /dashboard, /local, /migration, /safari
 @app.get("/{page_name}")
 @app.head("/{page_name}")
 async def serve_any_page(page_name: str):
-    # Strip any trailing extension if users add it manually
     clean_name = page_name.replace(".html", "")
     file_path = f"{clean_name}.html"
 
     if os.path.exists(file_path):
         return FileResponse(file_path)
     
-    # Fallback to index if route doesn't match an actual file
     return FileResponse("index.html")
 
-
-# 4. Mount static directory LAST for assets (style.css, logo.png, main.js)
+# 4. Mount static directory LAST for assets
 if os.path.exists("static"):
     app.mount("/static", StaticFiles(directory="static"), name="static")
-
 
 if __name__ == "__main__":
     import uvicorn
