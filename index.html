@@ -73,6 +73,11 @@
         <p>Show this code to the transport operator to finalize your booking.</p>
     </div>
 
+<div>
+  {{item.op}} - {{item.price}}
+  <a href="https://wa.me/{{item.phone}}?text=Ref:{{item.code}}">WhatsApp</a>
+</div>
+    
     <br>
     <a href="/about" class="btn" style="background: #555;">About Us & Offices</a>
 </div>
