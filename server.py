@@ -4,25 +4,13 @@ from fastapi.staticfiles import StaticFiles
 import sqlite3, os
 
 app = FastAPI()
-
-if os.path.exists("static"):
-    app.mount("/static", StaticFiles(directory="static"), name="static")
+if os.path.exists("static"): app.mount("/static", StaticFiles(directory="static"), name="static")
 
 DB_NAME = "transport.db"
 conn = sqlite3.connect(DB_NAME, check_same_thread=False)
 c = conn.cursor()
 c.execute("CREATE TABLE IF NOT EXISTS routes (id INTEGER PRIMARY KEY, operator TEXT, origin TEXT, destination TEXT, time TEXT, price TEXT, category TEXT, phone TEXT, osare_code TEXT)")
 conn.commit()
-
-# add test data only if table is empty
-c.execute("SELECT COUNT(*) FROM routes")
-if c.fetchone()[0] == 0:
-    c.executemany("INSERT INTO routes VALUES (?,?,?,?,?,?,?,?,?)", [
-        (1,'Metro Shuttle','Nairobi','Thika','6:00 AM','KES 200','local','254700000001','OSARE001'),
-        (2,'Safari Adventures','Nairobi','Maasai Mara','7:00 AM','KES 4500','safari','254700000002','OSARE002'),
-        (3,'Coast Express','Nairobi','Mombasa','8:00 AM','KES 1200','safari','254700000003','OSARE003')
-    ])
-    conn.commit()
 
 @app.get("/api/search")
 def search(q: str = "", category: str = "local"):
@@ -35,5 +23,4 @@ def search(q: str = "", category: str = "local"):
 @app.get("/")
 def home(): return FileResponse("index.html")
 @app.get("/{page}")
-def serve_page(page: str):
-    return FileResponse(f"{page}.html") if os.path.exists(f"{page}.html") else FileResponse("index.html")
+def serve_page(page: str): return FileResponse(f"{page}.html") if os.path.exists(f"{page}.html") else FileResponse("index.html")
