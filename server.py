@@ -4,7 +4,10 @@ from fastapi.staticfiles import StaticFiles
 import sqlite3, os
 
 app = FastAPI()
-if os.path.exists("static"): app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# serve css/js/images if you have a static folder
+if os.path.exists("static"):
+    app.mount("/static", StaticFiles(directory="static"), name="static")
 
 DB_NAME = "transport.db"
 conn = sqlite3.connect(DB_NAME, check_same_thread=False)
@@ -20,7 +23,14 @@ def search(q: str = "", category: str = "local"):
     rows = cur.fetchall()
     return [{"op":r[0],"origin":r[1],"dest":r[2],"time":r[3],"price":r[4],"phone":r[5],"code":r[6]} for r in rows]
 
+# THIS IS THE PART FOR YOUR main FOLDER
 @app.get("/")
-def home(): return FileResponse("index.html")
+def home():
+    return FileResponse("main/index.html")
+
 @app.get("/{page}")
-def serve_page(page: str): return FileResponse(f"{page}.html") if os.path.exists(f"{page}.html") else FileResponse("index.html")
+def serve_page(page: str):
+    path = f"main/{page}.html"
+    if os.path.exists(path):
+        return FileResponse(path)
+    return FileResponse("main/index.html")
