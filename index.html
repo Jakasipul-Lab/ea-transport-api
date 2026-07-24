@@ -3,140 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EA SafariRoutes - East Africa's Transit & Booking Hub</title>
+    <title>EA SafariRoutes</title>
     <style>
-        :root {--primary: #1e3a8a; --accent: #3b82f6; --orange: #f97316; --bg: #f8fafc; --success: #25d366;}
-        body { background: var(--bg); font-family: 'Segoe UI', system-ui, sans-serif; margin:0; padding:0; color: #1e293b; }
-        .hero { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; padding: 3rem 1rem; text-align: center; }
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 15px; }
-        .tier-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin: 2rem 0; }
-        .tier-btn { padding: 12px 24px; font-size: 1.05rem; font-weight: bold; border: none; border-radius: 50px; cursor: pointer; transition: 0.3s; background: #e2e8f0; color: #475569; }
-        .tier-btn.active { background: var(--primary); color: white; }
-        .tier-btn.safari-btn.active { background: var(--orange); }
-        .tier-section { display: none; }
-        .tier-section.active { display: block; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .booking-form-box { background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); margin-bottom: 2rem; border: 1px solid #e2e8f0; }
-        .input-group { margin-bottom: 1.2rem; }
-        .input-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #475569; }
-        .input-group input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
-        .btn-main { background: var(--primary); color: white; width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.2s; }
-        .btn-safari { background: var(--orange); }
-        .results-box { display: none; margin-top: 2rem; background: #fff; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-        .results-header { background: #f8fafc; padding: 1rem; font-weight: bold; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; border-bottom: 1px solid #e2e8f0; font-size: 0.85rem; text-transform: uppercase; color: #64748b; }
-        .result-row { padding: 1.2rem 1rem; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; border-bottom: 1px solid #f1f5f9; align-items: center; }
-        .btn-wa { background: var(--success); color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.9rem; width: 100%; text-decoration: none; text-align: center; }
-        .featured-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin: 3rem 0; }
-        .featured-card { background: white; border-radius: 16px; padding: 1.5rem; border: 1px solid #e2e8f0; text-align: left; }
-        footer { margin-top: 4rem; padding: 3rem 1rem; text-align: center; color: #64748b; font-size: 0.9rem; border-top: 1px solid #e2e8f0; }
-        .loading { text-align: center; padding: 2rem; color: #64748b; display: none; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            background: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 { color: #2e7d32; }
+        .route-card {
+            border: 1px solid #ddd;
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #2e7d32;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+        }
+        .code-display {
+            margin-top: 20px;
+            padding: 20px;
+            background: #e8f5e9;
+            border: 2px dashed #2e7d32;
+            border-radius: 8px;
+            display: none;
+        }
+        .code-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1b5e20;
+            letter-spacing: 2px;
+        }
     </style>
 </head>
 <body>
-<div class="hero">
-    <h1>EA SafariRoutes</h1>
-    <p>Official East Africa Transit Marketplace • OSARE Search Engine</p>
-</div>
+
 <div class="container">
-    <div class="tier-nav">
-        <button id="localBtn" class="tier-btn active" onclick="switchTier('local')">Local Commute</button>
-        <button id="safariBtn" class="tier-btn safari-btn" onclick="switchTier('safari')">Tourist & Safari Assistance</button>
+    <h1>EA SafariRoutes</h1>
+    <p>Your trusted gateway to travel across East Africa.</p>
+
+    <div id="routes-list">
+        <p>Loading routes...</p>
     </div>
-    <div id="localSection" class="tier-section active">
-        <div class="booking-form-box">
-            <h2>Compare Local Transits</h2>
-            <p>Free service for locals.</p>
-            <form onsubmit="handleSearch(event, 'local')">
-                <div class="input-group">
-                    <label>Search Route</label>
-                    <input type="text" id="localQuery" placeholder="e.g. Nairobi to Mombasa" required>
-                </div>
-                <button type="submit" class="btn-main">Find Available Transits</button>
-            </form>
-        </div>
-        <div id="localLoading" class="loading">Searching...</div>
-        <div class="results-box" id="localResults">
-            <div class="results-header">
-                <div>Operator</div><div>Departure</div><div>Price</div><div>Action</div>
-            </div>
-            <div id="localList"></div>
-        </div>
+
+    <div id="result-area" class="code-display">
+        <h3>Your Safariroute Code</h3>
+        <p class="code-text" id="safariroute-code">-------</p>
+        <p>Show this code to the transport operator to finalize your booking.</p>
     </div>
-    <div id="safariSection" class="tier-section">
-        <div class="booking-form-box">
-            <h2 style="color:var(--orange)">Safari & Travel Assistance</h2>
-            <p>5% platform fee applies.</p>
-            <form onsubmit="handleSearch(event, 'safari')">
-                <div class="input-group">
-                    <label>What service do you need?</label>
-                    <input type="text" id="safariQuery" placeholder="e.g. Masai Mara, Kilimanjaro, Hotel" required>
-                </div>
-                <button type="submit" class="btn-main btn-safari">Search Services</button>
-            </form>
-        </div>
-        <div id="safariLoading" class="loading">Searching...</div>
-        <div class="results-box" id="safariResults">
-            <div class="results-header">
-                <div>Partner</div><div>Availability</div><div>Rate</div><div>Action</div>
-    <div class="featured-grid">
-    <div class="featured-card" style="border-left: 5px solid var(--primary);">
-        <h4 style="color:var(--primary)">MASH EAST AFRICA</h4>
-        <p>Daily VIP Luxury Coaches.</p>
-        <p><small>Book at Mash offices or online</small></p>
-    </div>
-    <div class="featured-card" style="border-left: 5px solid var(--orange);">
-        <h4 style="color:var(--orange)">AFRICAN SPICE</h4>
-        <p>Premium 4x4 Safari Rentals.</p>
-        <p><small>Contact for safari quotes</small></p>
-    </div>
+
+    <br>
+    <a href="/about" class="btn" style="background: #555;">About Us & Offices</a>
 </div>
-    <div style="background:#1e293b; color:white; padding:2rem; border-radius:16px; text-align:center;">
-        <h3>Advertise with EA SafariRoutes</h3>
-        <p>Get your company featured here.</p>
-        <a href="mailto:info@easafariroutes.com?subject=Advertising" style="color:var(--accent); text-decoration:none; font-weight:bold; border:1px solid var(--accent); padding:10px 30px; border-radius:50px; display:inline-block;">Contact Sales</a>
-    </div>
-    <footer>© 2026 EA SafariRoutes • Built by nakinson osare</footer>
-</div>
+
 <script>
-    const WHATSAPP_NUMBER = '254758378729';
-    function switchTier(t) {
-        document.getElementById('localBtn').classList.toggle('active', t==='local');
-        document.getElementById('safariBtn').classList.toggle('active', t==='safari');
-        document.getElementById('localSection').classList.toggle('active', t==='local');
-        document.getElementById('safariSection').classList.toggle('active', t==='safari');
+    async function loadRoutes() {
+        const res = await fetch('/api/routes');
+        const routes = await res.json();
+        const list = document.getElementById('routes-list');
+        list.innerHTML = '';
+
+        routes.forEach(route => {
+            const card = document.createElement('div');
+            card.className = 'route-card';
+            card.innerHTML = `
+                <div>
+                    <strong>${route.origin} to ${route.destination}</strong><br>
+                    <small>${route.operator || route.operators[0]} (${route.type})</small>
+                </div>
+                <button class="btn" onclick="bookRoute('${route.route_id}', '${route.operator || route.operators[0]}')">Get Code</button>
+            `;
+            list.appendChild(card);
+        });
     }
-    function bookWhatsApp(p, d, t) {
-        let m = `Hello, I want to book ${p} (${d}).`;
-        if(t==='safari') m += ` I understand there is a 5% fee.`;
-        window.location.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(m)}`;
+
+    async function bookRoute(routeId, operator) {
+        const name = prompt("Enter passenger name:") || "Guest";
+        const res = await fetch('/api/book', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ route_id: routeId, operator: operator, passenger_name: name })
+        });
+        const data = await res.json();
+        
+        if (data.status === 'success') {
+            document.getElementById('safariroute-code').innerText = data.code;
+            document.getElementById('result-area').style.display = 'block';
+            window.scrollTo(0, document.body.scrollHeight);
+        }
     }
-    async function handleSearch(e, t) {
-        e.preventDefault();
-        const q = t==='local' ? document.getElementById('localQuery').value : document.getElementById('safariQuery').value;
-        const box = t==='local' ? 'localResults' : 'safariResults';
-        const list = t==='local' ? 'localList' : 'safariList';
-        const load = t==='local' ? 'localLoading' : 'safariLoading';
-        document.getElementById(box).style.display = 'none';
-        document.getElementById(load).style.display = 'block';
-        try {
-            const res = await fetch(`/api/search?q=${encodeURIComponent(q)}&category=${t}`);
-            const data = await res.json();
-            if(data.length === 0) {
-                document.getElementById(list).innerHTML = '<div style="padding:2rem; text-align:center">No results found. Try "Mombasa", "Mara", or "Hotel".</div>';
-            } else {
-                document.getElementById(list).innerHTML = data.map(r => `
-                    <div class="result-row">
-                        <div style="font-weight:bold">${r.op}</div>
-                        <div>${r.time}</div>
-                        <div>${r.price}</div>
-                        <div><button class="btn-wa" onclick="bookWhatsApp(\'${r.op}\', \'${q}\', \'${t}\')">Book Now</button></div>
-                    </div>
-                `).join('');
-            }
-            document.getElementById(box).style.display = 'block';
-        } catch(err) { alert('Error loading results.'); }
-        finally { document.getElementById(load).style.display = 'none'; }
-    }
+
+    loadRoutes();
 </script>
+
 </body>
 </html>
