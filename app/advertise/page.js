@@ -37,7 +37,7 @@ export default function AdvertisePage() {
           </Card>
           <Card>
             <CardHeader><CardTitle className="flex items-center gap-2"><Handshake className="w-5 h-5"/> Pay Only on Results</CardTitle></CardHeader>
-            <CardContent>${COMMISSION_RATE * 100}% commission on confirmed bookings only. $0 upfront. No ads spend risk.</CardContent>
+            <CardContent>{COMMISSION_RATE * 100}% commission on confirmed bookings only. $0 upfront. No ads spend risk.</CardContent>
           </Card>
         </div>
       </section>
