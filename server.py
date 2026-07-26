@@ -1,4 +1,3 @@
-
 import datetime
 import os
 import urllib.parse
@@ -25,9 +24,9 @@ LOCAL_DATABASE = [
 ]
 
 SAFARI_DATABASE = [
-    {"keywords": ["mara"], "operator_id": "mara001", "title": "🦁 Masai Mara Safari", "desc": "3 Days Big Five experience.", "price": "$350", "dest": "mara"},
-    {"keywords": ["zanzibar"], "operator_id": "znz001", "title": "🏖️ Zanzibar Beach Holiday", "desc": "4 Days beach package.", "price": "$490", "dest": "zanzibar"},
-    {"keywords": ["serengeti"], "operator_id": "ser001", "title": "🐆 Serengeti Safari", "desc": "Migration wildlife experience.", "price": "$750", "dest": "serengeti"}
+    {"keywords": ["mara"], "vendor_id": "mara001", "title": "🦁 Masai Mara Safari", "desc": "3 Days Big Five experience.", "price": "$350", "dest": "mara"},
+    {"keywords": ["zanzibar"], "vendor_id": "znz001", "title": "🏖️ Zanzibar Beach Holiday", "desc": "4 Days beach package.", "price": "$490", "dest": "zanzibar"},
+    {"keywords": ["serengeti"], "vendor_id": "ser001", "title": "🐆 Serengeti Safari", "desc": "Migration wildlife experience.", "price": "$750", "dest": "serengeti"}
 ]
 
 # --------------------------------------
