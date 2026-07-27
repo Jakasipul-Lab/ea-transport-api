@@ -33,13 +33,13 @@ SAFARI_DATABASE = [
 # ✅ PAGES
 # --------------------------------------
 @app.get("/")
-def home(): return FileResponse(os.path.join(BASE_DIR, "index.html"))
+def home(): return FileResponse(os.path.join(BASE_DIR, "static", "index.html"))
 @app.get("/local")
 @app.get("/local.html")
-def local_page(): return FileResponse(os.path.join(BASE_DIR, "local.html"))
+def local_page(): return FileResponse(os.path.join(BASE_DIR, "static", "local.html"))
 @app.get("/safari")
 @app.get("/safari.html")
-def safari_page(): return FileResponse(os.path.join(BASE_DIR, "safari.html"))
+def safari_page(): return FileResponse(os.path.join(BASE_DIR, "static", "safari.html"))
 @app.head("/")
 def home_head(): return Response(status_code=200)
 
