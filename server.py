@@ -66,6 +66,31 @@ def safari_page():
 def home_head():
     return Response(status_code=200)
 
+@app.get("/api/search")
+@app.get("/api/routes")
+def get_routes(
+    category: str = Query(None), 
+    q: str = Query(None),
+    db: Session = Depends(get_db)
+):
+    query = db.query(Route)
+    
+    # Strictly filter by category if provided ('local' or 'safari')
+    if category:
+        query = query.filter(Route.category == category)
+        
+    if q:
+        search_term = f"%{q}%"
+        query = query.filter(
+            or_(
+                Route.origin.ilike(search_term),
+                Route.destination.ilike(search_term),
+                Route.operator.ilike(search_term),
+                Route.info.ilike(search_term)
+            )
+        )
+    return query.all()
+
 # 4. Search API Endpoints
 @app.get("/api/search")
 @app.get("/api/routes")
