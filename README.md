@@ -1,5 +1,10 @@
 # OSARE — East Africa Safari Routes & Transit Hub
 
+> Information hub for **tourists** and **locals** across East Africa.
+> Two sections: **EAsafari Routes** and **Jakasipul Hub**
+
+Live: **www.easafariroutes.com**
+
 > Free information assistant & booking hub for **tourists** and **locals** across East Africa.
 > A two-tier platform: **Safari / Tourism** and **Local Commute** — with photos, prices,
 > off-peak deals, trusted vendor info, and one-tap **WhatsApp booking**.
