@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy import create_engine, Column, Integer, String, or_
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
 
-# 1. Database setup
+# 1. Database setup (Modern SQLAlchemy 2.0 syntax)
 DATABASE_URL = "sqlite:///./transport.db"
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -18,12 +18,13 @@ class Route(Base):
     operator = Column(String)
     origin = Column(String)
     destination = Column(String)
-    time = Column(String)          
-    price = Column(String)         
-    price_kes = Column(Integer)    
-    category = Column(String)      
-    info = Column(String)          
+    time = Column(String)          # Departure / schedule time
+    price = Column(String)         # Formatted text e.g. "1,500 KES"
+    price_kes = Column(Integer)    # Numeric price for sorting
+    category = Column(String)      # "local" (Jakasipul) or "safari" (EAsafari)
+    info = Column(String)          # Additional notes/amenities
 
+# Ensure tables exist in transport.db
 Base.metadata.create_all(bind=engine)
 
 # 2. FastAPI Application
