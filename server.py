@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy import create_engine, Column, Integer, String, or_
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
 
-# Database setup
+# 1. Database setup
 DATABASE_URL = "sqlite:///./transport.db"
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -18,14 +18,16 @@ class Route(Base):
     operator = Column(String)
     origin = Column(String)
     destination = Column(String)
-    time = Column(String)
-    price = Column(String)
-    price_kes = Column(Integer)
-    category = Column(String)
-    info = Column(String)
+    time = Column(String)          # Departure / schedule time
+    price = Column(String)         # Formatted text e.g. "1,500 KES"
+    price_kes = Column(Integer)    # Numeric price for sorting
+    category = Column(String)      # "local" (Jakasipul) or "safari" (EAsafari)
+    info = Column(String)          # Additional notes/amenities
 
+# Auto-create tables in transport.db if they don't exist yet
 Base.metadata.create_all(bind=engine)
 
+# 2. FastAPI Application
 app = FastAPI(title="OSARE Double Tier Transport API")
 
 app.add_middleware(
@@ -38,7 +40,7 @@ app.add_middleware(
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Dependency
+# Database session dependency
 def get_db():
     db = SessionLocal()
     try:
@@ -46,27 +48,39 @@ def get_db():
     finally:
         db.close()
 
-# Serves your restored Double Tier index.html
+# 3. Double Tier Routes (Serving restored HTML directly from root)
+
 @app.get("/")
 def home():
+    """Serves the main Double Tier OSARE hub."""
     return FileResponse(os.path.join(BASE_DIR, "index.html"))
 
 @app.get("/local")
 @app.get("/local.html")
 def local_page():
+    """Serves Tier 2: Jakasipul Local Commuter Hub."""
     return FileResponse(os.path.join(BASE_DIR, "local.html"))
 
 @app.get("/safari")
 @app.get("/safari.html")
 def safari_page():
+    """Serves Tier 1: EAsafari Long Distance Routes."""
     return FileResponse(os.path.join(BASE_DIR, "safari.html"))
 
 @app.head("/")
 def home_head():
+    """Health check endpoint for hosting platforms like Render/Railway."""
     return Response(status_code=200)
 
+# 4. Search API Endpoint for Frontend Queries
+
 @app.get("/api/routes")
-def get_routes(category: str = None, search: str = None, db: Session = Depends(get_db)):
+def get_routes(
+    category: str = None, 
+    search: str = None, 
+    db: Session = Depends(get_db)
+):
+    """Fetches routes filtered by category (local/safari) or search terms."""
     query = db.query(Route)
     if category:
         query = query.filter(Route.category == category)
@@ -79,3 +93,7 @@ def get_routes(category: str = None, search: str = None, db: Session = Depends(g
             )
         )
     return query.all()
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("server:app", host="0.0.0.0", port=10000, reload=True)
