@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowLeft, Search, Compass, MapPin, Clock } from "lucide-react"
 
-export default function EAsafariPage() {
+export default function SafarioutesPage() {
   const [query, setQuery] = useState("")
   const [routes, setRoutes] = useState([])
   const [loading, setLoading] = useState(false)
@@ -27,7 +27,7 @@ export default function EAsafariPage() {
       const data = await res.json()
       setRoutes(data)
     } catch (error) {
-      console.error("Failed to fetch safari routes:", error)
+      console.error("Failed to fetch safarioutes:", error)
     } finally {
       setLoading(false)
     }
@@ -39,7 +39,7 @@ export default function EAsafariPage() {
         <ArrowLeft className="w-4 h-4"/> Back to Home
       </Link>
       
-      <h1 className="text-4xl font-bold mb-2 text-emerald-800">🦁 EAsafari: Regional & Tourism Hub</h1>
+      <h1 className="text-4xl font-bold mb-2 text-emerald-800">🦁 safarioutes: Regional & Tourism Hub</h1>
       <p className="text-muted-foreground mb-6">Long-distance travel, wildlife safaris, SGR express rail, and cross-border coaches.</p>
 
       {/* Tourism & Regional Search Form */}
@@ -48,7 +48,7 @@ export default function EAsafariPage() {
           <Search className="absolute left-3 top-3 w-5 h-5 text-emerald-600" />
           <input
             type="text"
-            placeholder="Search Safari & Regional Routes (e.g. Masai Mara, Amboseli, SGR Mombasa, Kampala)..."
+            placeholder="Search Safarioutes (e.g. Masai Mara, Amboseli, SGR Mombasa, Kampala)..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-background"
@@ -59,16 +59,16 @@ export default function EAsafariPage() {
           disabled={loading}
           className="bg-emerald-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-emerald-700 disabled:opacity-50 cursor-pointer"
         >
-          {loading ? "Searching..." : "Search Safari Routes"}
+          {loading ? "Searching..." : "Search Safarioutes"}
         </button>
       </form>
 
       {/* Results Section */}
       {hasSearched && (
         <div className="mb-8 space-y-4">
-          <h2 className="text-xl font-semibold text-emerald-900">Regional Safari & Tourism Results</h2>
+          <h2 className="text-xl font-semibold text-emerald-900">Regional Safarioutes Results</h2>
           {routes.length === 0 ? (
-            <p className="text-muted-foreground">No safari or regional routes found for "{query}".</p>
+            <p className="text-muted-foreground">No safarioutes found for "{query}".</p>
           ) : (
             routes.map((route) => (
               <Card key={route.id} className="border-l-4 border-l-emerald-600">
