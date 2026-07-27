@@ -13,12 +13,10 @@ export default function EAsafariPage() {
 
   const handleSearch = async (e) => {
     e.preventDefault()
-    
-    // Fetch all safari routes if query is empty, or filter if typed
+
     const searchUrl = query.trim() 
-     const searchUrl = query.trim() 
       ? `http://127.0.0.1:10000/api/search?q=${encodeURIComponent(query.trim())}&category=safari`
-      : `http://127.0.0.1:10000/api/search?category=safari``
+      : `http://127.0.0.1:10000/api/search?category=safari`
 
     setLoading(true)
     setHasSearched(true)
@@ -41,16 +39,16 @@ export default function EAsafariPage() {
         <ArrowLeft className="w-4 h-4"/> Back to Home
       </Link>
       
-      <h1 className="text-4xl font-bold mb-2">🦁 EAsafari Routes</h1>
-      <p className="text-muted-foreground mb-6">Regional tourism, wildlife safaris, SGR rail, and long-distance travel.</p>
+      <h1 className="text-4xl font-bold mb-2 text-emerald-800">🦁 EAsafari: Regional & Tourism Hub</h1>
+      <p className="text-muted-foreground mb-6">Long-distance travel, wildlife safaris, SGR express rail, and cross-border coaches.</p>
 
-      {/* Interactive Search Form */}
+      {/* Tourism & Regional Search Form */}
       <form onSubmit={handleSearch} className="flex gap-2 mb-8">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
+          <Search className="absolute left-3 top-3 w-5 h-5 text-emerald-600" />
           <input
             type="text"
-            placeholder="Search tourism routes (e.g. Masai Mara, Amboseli, Diani, SGR, Kampala)..."
+            placeholder="Search Safari & Regional Routes (e.g. Masai Mara, Amboseli, SGR Mombasa, Kampala)..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-background"
@@ -61,16 +59,16 @@ export default function EAsafariPage() {
           disabled={loading}
           className="bg-emerald-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-emerald-700 disabled:opacity-50 cursor-pointer"
         >
-          {loading ? "Searching..." : "Search"}
+          {loading ? "Searching..." : "Search Safari Routes"}
         </button>
       </form>
 
       {/* Results Section */}
       {hasSearched && (
         <div className="mb-8 space-y-4">
-          <h2 className="text-xl font-semibold">Tourism & Safari Results</h2>
+          <h2 className="text-xl font-semibold text-emerald-900">Regional Safari & Tourism Results</h2>
           {routes.length === 0 ? (
-            <p className="text-muted-foreground">No safari routes found for "{query}".</p>
+            <p className="text-muted-foreground">No safari or regional routes found for "{query}".</p>
           ) : (
             routes.map((route) => (
               <Card key={route.id} className="border-l-4 border-l-emerald-600">
@@ -84,7 +82,7 @@ export default function EAsafariPage() {
                       {route.origin} → {route.destination}
                     </h3>
                     <p className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
-                      <Clock className="w-3.5 h-3.5" /> Schedule: {route.time}
+                      <Clock className="w-3.5 h-3.5" /> Departure: {route.time}
                     </p>
                   </div>
                   <div className="text-right">
@@ -98,11 +96,11 @@ export default function EAsafariPage() {
         </div>
       )}
 
-      {/* Major Regional Tourism Corridors Overview */}
+      {/* Tourism Corridors */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Compass className="w-5 h-5 text-emerald-600" /> Major Regional Tourism Corridors
+          <CardTitle className="flex items-center gap-2 text-emerald-800">
+            <Compass className="w-5 h-5 text-emerald-600" /> Major Tourism Corridors
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 text-sm">
