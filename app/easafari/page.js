@@ -13,12 +13,18 @@ export default function EAsafariPage() {
 
   const handleSearch = async (e) => {
     e.preventDefault()
-    if (!query.trim()) return
+    
+    // Fetch all safari routes if query is empty, or filter if typed
+    const searchUrl = query.trim() 
+      ? `http://localhost:10000/api/search?q=${encodeURIComponent(query.trim())}&category=safari`
+      : `http://localhost:10000/api/search?category=safari`
 
     setLoading(true)
     setHasSearched(true)
+
     try {
-      const res = await fetch(`http://localhost:10000/api/search?q=${encodeURIComponent(query)}&category=safari`)
+      const res = await fetch(searchUrl)
+      if (!res.ok) throw new Error("Server error")
       const data = await res.json()
       setRoutes(data)
     } catch (error) {
@@ -37,7 +43,7 @@ export default function EAsafariPage() {
       <h1 className="text-4xl font-bold mb-2">🦁 EAsafari Routes</h1>
       <p className="text-muted-foreground mb-6">Regional tourism, wildlife safaris, SGR rail, and long-distance travel.</p>
 
-      {/* Tourism Search Bar */}
+      {/* Interactive Search Form */}
       <form onSubmit={handleSearch} className="flex gap-2 mb-8">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
@@ -52,13 +58,13 @@ export default function EAsafariPage() {
         <button
           type="submit"
           disabled={loading}
-          className="bg-emerald-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-emerald-700 disabled:opacity-50"
+          className="bg-emerald-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-emerald-700 disabled:opacity-50 cursor-pointer"
         >
           {loading ? "Searching..." : "Search"}
         </button>
       </form>
 
-      {/* Search Results */}
+      {/* Results Section */}
       {hasSearched && (
         <div className="mb-8 space-y-4">
           <h2 className="text-xl font-semibold">Tourism & Safari Results</h2>
@@ -91,7 +97,7 @@ export default function EAsafariPage() {
         </div>
       )}
 
-      {/* Lucrative Tourism Hubs Overview */}
+      {/* Major Regional Tourism Corridors Overview */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
