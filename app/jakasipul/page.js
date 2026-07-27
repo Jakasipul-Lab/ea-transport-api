@@ -15,9 +15,8 @@ export default function JakasipulPage() {
     e.preventDefault()
 
     const searchUrl = query.trim() 
-      ? `http://localhost:10000/api/search?q=${encodeURIComponent(query.trim())}&category=local`
-      : `http://localhost:10000/api/search?category=local`
-
+      ? `http://127.0.0.1:10000/api/search?q=${encodeURIComponent(query.trim())}&category=safari`
+      : `http://127.0.0.1:10000/api/search?category=safari`
     setLoading(true)
     setHasSearched(true)
 
