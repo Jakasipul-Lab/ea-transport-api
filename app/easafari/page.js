@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowLeft, Search, Train, MapPin, Clock } from "lucide-react"
+import { ArrowLeft, Search, Compass, MapPin, Clock } from "lucide-react"
 
 export default function EAsafariPage() {
   const [query, setQuery] = useState("")
@@ -18,7 +18,6 @@ export default function EAsafariPage() {
     setLoading(true)
     setHasSearched(true)
     try {
-      // Connects directly to your Python FastAPI backend on port 10000
       const res = await fetch(`http://localhost:10000/api/search?q=${encodeURIComponent(query)}&category=safari`)
       const data = await res.json()
       setRoutes(data)
@@ -35,30 +34,25 @@ export default function EAsafariPage() {
         <ArrowLeft className="w-4 h-4"/> Back to Home
       </Link>
       
-      <h1 className="text-4xl font-bold mb-2">🚄 EAsafari Routes</h1>
-      <p className="text-muted-foreground mb-6">Your gateway to comfortable long-distance travel across East Africa.</p>
+      <h1 className="text-4xl font-bold mb-2">🦁 EAsafari Routes</h1>
+      <p className="text-muted-foreground mb-6">Regional tourism, wildlife safaris, SGR rail, and long-distance travel.</p>
 
-      <p className="mb-8 text-sm">
-        We’re here to serve you better. Find schedules, operators, and route information all in one place.{" "}
-        Need assistance? <Link href="/help" className="underline font-medium text-primary">Visit our Help Page</Link>
-      </p>
-
-      {/* Interactive Search Bar connected to transport.db */}
+      {/* Tourism Search Bar */}
       <form onSubmit={handleSearch} className="flex gap-2 mb-8">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
           <input
             type="text"
-            placeholder="Search regional route (e.g. Mombasa, Kisumu, Kampala)..."
+            placeholder="Search tourism routes (e.g. Masai Mara, Amboseli, Diani, SGR, Kampala)..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-background"
+            className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-background"
           />
         </div>
         <button
           type="submit"
           disabled={loading}
-          className="bg-primary text-primary-foreground px-6 py-2 rounded-lg font-medium hover:opacity-90 disabled:opacity-50"
+          className="bg-emerald-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-emerald-700 disabled:opacity-50"
         >
           {loading ? "Searching..." : "Search"}
         </button>
@@ -67,9 +61,9 @@ export default function EAsafariPage() {
       {/* Search Results */}
       {hasSearched && (
         <div className="mb-8 space-y-4">
-          <h2 className="text-xl font-semibold">Safari & Long-Distance Results</h2>
+          <h2 className="text-xl font-semibold">Tourism & Safari Results</h2>
           {routes.length === 0 ? (
-            <p className="text-muted-foreground">No regional routes found for "{query}".</p>
+            <p className="text-muted-foreground">No safari routes found for "{query}".</p>
           ) : (
             routes.map((route) => (
               <Card key={route.id} className="border-l-4 border-l-emerald-600">
@@ -79,15 +73,15 @@ export default function EAsafariPage() {
                       {route.operator}
                     </span>
                     <h3 className="text-lg font-bold mt-1 flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-muted-foreground" />
+                      <MapPin className="w-4 h-4 text-emerald-600" />
                       {route.origin} → {route.destination}
                     </h3>
                     <p className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
-                      <Clock className="w-3.5 h-3.5" /> Departure: {route.time}
+                      <Clock className="w-3.5 h-3.5" /> Schedule: {route.time}
                     </p>
                   </div>
                   <div className="text-right">
-                    <span className="text-lg font-bold text-green-600">{route.price}</span>
+                    <span className="text-lg font-bold text-emerald-700">{route.price}</span>
                     {route.info && <p className="text-xs text-muted-foreground mt-1">{route.info}</p>}
                   </div>
                 </CardContent>
@@ -97,18 +91,18 @@ export default function EAsafariPage() {
         </div>
       )}
 
-      {/* Popular Routes Overview */}
+      {/* Lucrative Tourism Hubs Overview */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Train className="w-5 h-5" /> Popular Long-Distance Routes
+            <Compass className="w-5 h-5 text-emerald-600" /> Major Regional Tourism Corridors
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 text-sm">
-          <p>• <strong>Nairobi ↔ Mombasa:</strong> SGR Express/Inter-County & Highway Buses</p>
-          <p>• <strong>Nairobi ↔ Kisumu:</strong> VIP Executive Buses & Express Shuttles</p>
-          <p>• <strong>Nairobi ↔ Eldoret:</strong> Multi-daily Shuttles & Intercity Coaches</p>
-          <p>• <strong>Nairobi ↔ Kampala:</strong> Cross-border Overnight Coaches</p>
+          <p>• <strong>Masai Mara Circuit:</strong> 4x4 Tour Land Cruisers & Air Charters from Nairobi/JKIA</p>
+          <p>• <strong>Amboseli & Tsavo:</strong> Overland Wildlife Shuttles & Game Park Transfers</p>
+          <p>• <strong>Coastal Tourist Hubs:</strong> SGR Madaraka Express to Mombasa, Diani & Watamu Transfers</p>
+          <p>• <strong>Cross-Border Transit:</strong> Luxury Executive Coaches to Arusha, Namanga & Kampala</p>
         </CardContent>
       </Card>
     </main>
