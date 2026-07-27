@@ -2,41 +2,121 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>OSARE - East Africa Travel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Osare - East Africa Transit Super Search</title>
+    <meta name="description" content="Find the best way to travel across Kenya with SGR, Buses & Matatus in one place.">
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; background: #f7f7f7; }
-        .header { background: #2a7a2a; color: white; padding: 20px; text-align: center; }
-        .container { max-width: 900px; margin: 30px auto; padding: 20px; background: white; border-radius: 10px; }
-        .btn { display: inline-block; padding: 12px 25px; margin: 10px; background: #2a7a2a; color: white; text-decoration: none; border-radius: 6px; }
-        .btn:hover { background: #1e551e; }
-        h1 { margin: 0; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 2rem 0;
+        }
+        .header {
+            margin-bottom: 3rem;
+        }
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .header p {
+            font-size: 1.4rem;
+            opacity: 0.95;
+        }
+        .cards {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            width: 380px;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+        .btn {
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 14px 32px;
+            background: white;
+            color: #1e40af;
+            font-weight: 600;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            background: #f8fafc;
+            transform: scale(1.05);
+        }
+        footer {
+            margin-top: 4rem;
+            opacity: 0.8;
+            font-size: 0.95rem;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>OSARE</h1>
-        <p>East Africa Safari & Commuter Routes</p>
-    </div>
-
     <div class="container">
-        <h2>Who We Are</h2>
-        <p>
-        OSARE connects travelers and daily commuters across East Africa. 
-        Find verified matatus, buses, and shuttles for local travel. 
-        Find trusted safari vendors for tourists. 
-        It’s free to search. You book directly with vendors on WhatsApp.
-        </p>
+        <div class="header">
+            <h1>OSARE</h1>
+            <p>East Africa Safari & Commuter Routes</p>
+        </div>
+        
+        <div class="cards">
+            <!-- Card 1 -->
+            <div class="card">
+                <h2>🚄 Easafari Routes</h2>
+                <p>Long-distance travel: SGR, Buses & Intercity options</p>
+                <a href="#" class="btn">Go to Easafari Routes</a>
+            </div>
 
-        <h2>Get Started</h2>
-        <a href="/safari" class="btn">View Safari Vendors</a>
-        <a href="/local" class="btn">Find Commuter Routes</a>
-        <a href="/vendor/register" class="btn">Vendor: Join Us</a>
-        <a href="/about" class="btn">About OSARE</a>
+            <!-- Card 2 -->
+            <div class="card">
+                <h2>🚌 Jakasipul Hub</h2>
+                <p>Matatu, Local Routes & Commuter Transport</p>
+                <a href="#" class="btn">Go to Jakasipul Hub</a>
+            </div>
+        </div>
 
-        <h2>Why Choose OSARE</h2>
-        <p>✓ No booking fees for travelers<br>
-           ✓ Real prices from real operators<br>
-           ✓ Support local businesses</p>
+        <footer>
+            <p>© 2026 Osare • Aggregating Kenya's Transport Network</p>
+            <p style="margin-top: 10px; font-size: 0.85rem;">
+                Information only. No booking. No ticketing.
+            </p>
+            <p style="margin-top: 10px;">
+                <a href="https://github.com/YOUR_USERNAME/YOUR_REPO" style="color: white; text-decoration: underline;">
+                    View on GitHub
+                </a>
+            </p>
+        </footer>
     </div>
 </body>
 </html>
