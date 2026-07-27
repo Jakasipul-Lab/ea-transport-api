@@ -13,7 +13,7 @@ export default function HelpPage() {
         For route inquiries, vendor support, or feedback, please reach out.
       </p>
       <div className="space-y-2">
-        <p><b>Email:</b> support@osare.co.ke</p>
+        <p><b>Email:</b> support@easafariroutes.com</p>
         <p><b>Hours:</b> Mon - Sat, 8AM - 6PM EAT</p>
       </div>
     </main>
