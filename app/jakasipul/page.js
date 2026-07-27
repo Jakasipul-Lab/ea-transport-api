@@ -15,8 +15,9 @@ export default function JakasipulPage() {
     e.preventDefault()
 
     const searchUrl = query.trim() 
-      ? `http://127.0.0.1:10000/api/search?q=${encodeURIComponent(query.trim())}&category=safari`
-      : `http://127.0.0.1:10000/api/search?category=safari`
+      ? `http://127.0.0.1:10000/api/search?q=${encodeURIComponent(query.trim())}&category=local`
+      : `http://127.0.0.1:10000/api/search?category=local`
+
     setLoading(true)
     setHasSearched(true)
 
@@ -38,16 +39,16 @@ export default function JakasipulPage() {
         <ArrowLeft className="w-4 h-4"/> Back to Home
       </Link>
       
-      <h1 className="text-4xl font-bold mb-2">🚌 Jakasipul Hub</h1>
-      <p className="text-muted-foreground mb-6">Reliable local matatu routes and daily metropolitan commuter transit.</p>
+      <h1 className="text-4xl font-bold mb-2 text-blue-800">🚌 Jakasipul: Local Commuter Hub</h1>
+      <p className="text-muted-foreground mb-6">City matatu routes, local town shuttles, and daily metropolitan stages.</p>
 
-      {/* Interactive Search Form */}
+      {/* Local Commuter Search Form */}
       <form onSubmit={handleSearch} className="flex gap-2 mb-8">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
+          <Search className="absolute left-3 top-3 w-5 h-5 text-blue-600" />
           <input
             type="text"
-            placeholder="Search local matatu stage (e.g. Rongai, Ngong, Kasarani, Likoni, Kondele)..."
+            placeholder="Search Local Commuter Stage (e.g. Rongai, Ngong, Kasarani, Likoni, Kondele)..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 bg-background"
@@ -58,16 +59,16 @@ export default function JakasipulPage() {
           disabled={loading}
           className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 cursor-pointer"
         >
-          {loading ? "Searching..." : "Search"}
+          {loading ? "Searching..." : "Search Local Routes"}
         </button>
       </form>
 
       {/* Results Section */}
       {hasSearched && (
         <div className="mb-8 space-y-4">
-          <h2 className="text-xl font-semibold">Commuter Results</h2>
+          <h2 className="text-xl font-semibold text-blue-900">Local Commuter Results</h2>
           {routes.length === 0 ? (
-            <p className="text-muted-foreground">No local routes found for "{query}".</p>
+            <p className="text-muted-foreground">No local commuter routes found for "{query}".</p>
           ) : (
             routes.map((route) => (
               <Card key={route.id} className="border-l-4 border-l-blue-600">
@@ -95,11 +96,11 @@ export default function JakasipulPage() {
         </div>
       )}
 
-      {/* Major Local Terminals Overview */}
+      {/* Local Terminals */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Bus className="w-5 h-5 text-blue-600" /> Major City Stages & Terminals
+          <CardTitle className="flex items-center gap-2 text-blue-800">
+            <Bus className="w-5 h-5 text-blue-600" /> Major Local City Terminals
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 text-sm">
