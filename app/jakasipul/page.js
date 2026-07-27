@@ -13,12 +13,17 @@ export default function JakasipulPage() {
 
   const handleSearch = async (e) => {
     e.preventDefault()
-    if (!query.trim()) return
+
+    const searchUrl = query.trim() 
+      ? `http://localhost:10000/api/search?q=${encodeURIComponent(query.trim())}&category=local`
+      : `http://localhost:10000/api/search?category=local`
 
     setLoading(true)
     setHasSearched(true)
+
     try {
-      const res = await fetch(`http://localhost:10000/api/search?q=${encodeURIComponent(query)}&category=local`)
+      const res = await fetch(searchUrl)
+      if (!res.ok) throw new Error("Server error")
       const data = await res.json()
       setRoutes(data)
     } catch (error) {
@@ -37,7 +42,7 @@ export default function JakasipulPage() {
       <h1 className="text-4xl font-bold mb-2">🚌 Jakasipul Hub</h1>
       <p className="text-muted-foreground mb-6">Reliable local matatu routes and daily metropolitan commuter transit.</p>
 
-      {/* Local Commuter Search Bar */}
+      {/* Interactive Search Form */}
       <form onSubmit={handleSearch} className="flex gap-2 mb-8">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
@@ -52,13 +57,13 @@ export default function JakasipulPage() {
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
+          className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 cursor-pointer"
         >
           {loading ? "Searching..." : "Search"}
         </button>
       </form>
 
-      {/* Search Results */}
+      {/* Results Section */}
       {hasSearched && (
         <div className="mb-8 space-y-4">
           <h2 className="text-xl font-semibold">Commuter Results</h2>
