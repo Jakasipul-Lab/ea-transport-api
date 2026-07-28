@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Kenyatta National Hospital",
+    "tier": "local",
+    "category": "hospital",
+    "lat": -1.3028,
+    "lon": 36.8081,
+    "price": 0,
+    "commission": "0%"
+  },
+  {
+    "name": "Nairobi Hospital",
+    "tier": "midrange", 
+    "category": "hospital",
+    "lat": -1.2921,
+    "lon": 36.8219,
+    "price": 5000,
+    "commission": "10%"
+  },
+  {
+    "name": "Serena Safari Lodge",
+    "tier": "safari",
+    "category": "lodge",
+    "lat": -1.3691,
+    "lon": 36.7085,
+    "price": 45000,
+    "commission": "5%"
+  },
+  {
+    "name": "Goodlife Pharmacy Westlands",
+    "tier": "local",
+    "category": "pharmacy",
+    "lat": -1.2631,
+    "lon": 36.8086,
+    "price": 0,
+    "commission": "0%"
+  }
+]
