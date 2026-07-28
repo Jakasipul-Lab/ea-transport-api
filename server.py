@@ -20,12 +20,12 @@ class Route(Base):
     time = Column(String)
     price = Column(String)
     price_kes = Column(Integer)
-    category = Column(String)  # "local" = Jakasipul, "safari" = EAsafari
+    category = Column(String)  # "local" or "safari"
     info = Column(String)
 
 Base.metadata.create_all(bind=engine)
 
-# 2. FastAPI Application - app MUST be defined before routes
+# 2. FastAPI Application
 app = FastAPI(title="OSARE Double Tier Transport API")
 
 app.add_middleware(
@@ -64,20 +64,14 @@ def safari_page():
 def home_head():
     return Response(status_code=200)
 
-# 4. Search API Endpoints - 2 TIER VERSION - NO DUPLICATES
-@app.get("/api/search")
-@app.get("/api/routes")
-def get_routes(
-    category: str = Query(None),  # "safari" or "local"
-    from_: str = Query(None, alias="from"),
-    to: str = Query(None),
-    q: str = Query(None),
-    db: Session = Depends(get_db)
-):
+# Helper function to query routes safely
+def query_routes(db: Session, category: str = None, from_: str = None, to: str = None, q: str = None):
     query = db.query(Route)
     
     if category:
-        query = query.filter(Route.category == category)
+        # Normalize category lookup just in case
+        clean_cat = "safari" if category.lower() in ["safari", "easafari"] else "local"
+        query = query.filter(Route.category == clean_cat)
         
     if from_:
         query = query.filter(Route.origin.ilike(f"%{from_}%"))
@@ -95,13 +89,40 @@ def get_routes(
             )
         )
         
-    results = query.all()
+    return query.all()
+
+# 4. Core Search API Endpoints
+@app.get("/api/search")
+@app.get("/api/routes")
+def get_routes(
+    category: str = Query(None),
+    from_: str = Query(None, alias="from"),
+    to: str = Query(None),
+    q: str = Query(None),
+    db: Session = Depends(get_db)
+):
+    results = query_routes(db, category=category, from_=from_, to=to, q=q)
+    
+    # Convert SQLAlchemy models to clean dictionaries for the frontend
+    serialized_results = [
+        {
+            "id": r.id,
+            "operator": r.operator,
+            "origin": r.origin,
+            "destination": r.destination,
+            "time": r.time,
+            "price": r.price,
+            "price_kes": r.price_kes,
+            "category": r.category,
+            "info": r.info
+        } for r in results
+    ]
     
     return {
-        "tier": category,
+        "tier": category or "all",
         "commission": "5%",
-        "count": len(results),
-        "results": results
+        "count": len(serialized_results),
+        "results": serialized_results
     }
 
 # 5. Public Search Route for Frontend
@@ -109,14 +130,19 @@ def get_routes(
 def public_search(
     from_: str = Query(None, alias="from"), 
     to: str = Query(None), 
-    tier: str = Query("easafari")  # easafari or jakasipul
+    tier: str = Query("easafari"),
+    db: Session = Depends(get_db)
 ):
-    db = SessionLocal()
-    try:
-        category = "safari" if tier == "easafari" else "local"
-        return get_routes(category=category, from_=from_, to=to, db=db)
-    finally:
-        db.close()
+    # Map incoming frontend tier names to database categories reliably
+    category_mapping = {
+        "easafari": "safari",
+        "safari": "safari",
+        "jakasipul": "local",
+        "local": "local"
+    }
+    category = category_mapping.get(tier.lower(), "safari")
+    
+    return get_routes(category=category, from_=from_, to=to, db=db)
 
 if __name__ == "__main__":
     import uvicorn
