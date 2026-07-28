@@ -25,6 +25,19 @@ class Route(Base):
 
 Base.metadata.create_all(bind=engine)
 
+# Auto-seed database on startup if empty
+db_check = SessionLocal()
+if db_check.query(Route).count() == 0:
+    sample_routes = [
+        Route(operator="Mara Land Cruiser Safaris", origin="Nairobi CBD / JKIA", destination="Masai Mara (Talek / Sekenani Gate)", time="06:00 AM Daily", price="KES 15,000", price_kes=15000, category="safari", info="4x4 Tour Van / Land Cruiser - Game Drives Included"),
+        Route(operator="Amboseli Express Shuttles", origin="Nairobi", destination="Amboseli National Park (Kimana Gate)", time="07:30 AM Daily", price="KES 4,500", price_kes=4500, category="safari", info="Tourist Overland Shuttle"),
+        Route(operator="Madaraka Express SGR", origin="Nairobi Terminus (Syokimau)", destination="Mombasa Terminus (Miritini)", time="08:00 AM & 03:00 PM", price="KES 1,500 (First Class KES 4,500)", price_kes=1500, category="safari", info="High-speed rail to the Coast"),
+        Route(operator="Super Metro", origin="Nairobi CBD (Archives)", destination="Rongai / Kiserian", time="Every 5 mins", price="KES 100", price_kes=100, category="local", info="Express commuter via Langata Rd"),
+    ]
+    db_check.add_all(sample_routes)
+    db_check.commit()
+db_check.close()
+
 # 2. FastAPI Application
 app = FastAPI(title="OSARE Double Tier Transport API")
 
