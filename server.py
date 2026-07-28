@@ -75,7 +75,7 @@ def safari_page():
 
 @app.head("/")
 def home_head():
-    return Response(status_code=200)
+    return Response(status_code=200, media_type="text/html")
 
 # Helper function to query routes safely
 def query_routes(db: Session, category: str = None, from_: str = None, to: str = None, q: str = None):
