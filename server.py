@@ -1,12 +1,15 @@
 import os
 from fastapi import FastAPI, Query, Depends
-from fastapi.responses import FileResponse, Response
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine, Column, Integer, String, or_
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
 
-# 1. Database setup
-DATABASE_URL = "sqlite:///./transport.db"
+# 1. Paths - important for NAS
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATABASE_URL = f"sqlite:///{os.path.join(BASE_DIR, 'transport.db')}"
+
+# 2. Database setup
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
@@ -25,21 +28,21 @@ class Route(Base):
 
 Base.metadata.create_all(bind=engine)
 
-# Auto-seed database on startup if empty
-db_check = SessionLocal()
-if db_check.query(Route).count() == 0:
+# Auto-seed if DB is empty
+db = SessionLocal()
+if db.query(Route).count() == 0:
     sample_routes = [
         Route(operator="Mara Land Cruiser Safaris", origin="Nairobi CBD / JKIA", destination="Masai Mara (Talek / Sekenani Gate)", time="06:00 AM Daily", price="KES 15,000", price_kes=15000, category="safari", info="4x4 Tour Van / Land Cruiser - Game Drives Included"),
         Route(operator="Amboseli Express Shuttles", origin="Nairobi", destination="Amboseli National Park (Kimana Gate)", time="07:30 AM Daily", price="KES 4,500", price_kes=4500, category="safari", info="Tourist Overland Shuttle"),
         Route(operator="Madaraka Express SGR", origin="Nairobi Terminus (Syokimau)", destination="Mombasa Terminus (Miritini)", time="08:00 AM & 03:00 PM", price="KES 1,500 (First Class KES 4,500)", price_kes=1500, category="safari", info="High-speed rail to the Coast"),
         Route(operator="Super Metro", origin="Nairobi CBD (Archives)", destination="Rongai / Kiserian", time="Every 5 mins", price="KES 100", price_kes=100, category="local", info="Express commuter via Langata Rd"),
     ]
-    db_check.add_all(sample_routes)
-    db_check.commit()
-db_check.close()
+    db.add_all(sample_routes)
+    db.commit()
+db.close()
 
-# 2. FastAPI Application
-app = FastAPI(title="OSARE Double Tier Transport API", docs_url="/docs", redoc_url="/redoc")
+# 3. FastAPI App
+app = FastAPI(title="OSARE Double Tier Transport API")
 
 app.add_middleware(
     CORSMiddleware,
@@ -49,8 +52,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
 def get_db():
     db = SessionLocal()
     try:
@@ -58,54 +59,33 @@ def get_db():
     finally:
         db.close()
 
-# 3. HTML Route Handlers
+# 4. Pages - with fallback if HTML missing
 @app.get("/")
 def home():
-    return FileResponse(os.path.join(BASE_DIR, "index.html"))
+    file_path = os.path.join(BASE_DIR, "index.html")
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    return {"status": "Server Running", "message": "Put index.html in this folder to see homepage", "api": "/api/routes"}
 
 @app.get("/local")
-@app.get("/local.html")
+@app.get("/local.html") 
 def local_page():
-    return FileResponse(os.path.join(BASE_DIR, "local.html"))
+    file_path = os.path.join(BASE_DIR, "local.html")
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    return {"message": "local.html not found"}
 
 @app.get("/safari")
 @app.get("/safari.html")
 def safari_page():
-    return FileResponse(os.path.join(BASE_DIR, "safari.html"))
+    file_path = os.path.join(BASE_DIR, "safari.html")
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    return {"message": "safari.html not found"}
 
-@app.head("/")
-def home_head():
-    return Response(status_code=200, media_type="text/html")
-
-# Helper function to query routes safely
-def query_routes(db: Session, category: str = None, from_: str = None, to: str = None, q: str = None):
-    query = db.query(Route)
-    
-    if category:
-        clean_cat = "safari" if category.lower() in ["safari", "easafari"] else "local"
-        query = query.filter(Route.category == clean_cat)
-        
-    if from_:
-        query = query.filter(Route.origin.ilike(f"%{from_}%"))
-    if to:
-        query = query.filter(Route.destination.ilike(f"%{to}%"))
-        
-    if q:
-        search_term = f"%{q}%"
-        query = query.filter(
-            or_(
-                Route.origin.ilike(search_term),
-                Route.destination.ilike(search_term),
-                Route.operator.ilike(search_term),
-                Route.info.ilike(search_term)
-            )
-        )
-        
-    return query.all()
-
-# 4. Core Search API Endpoints
-@app.get("/api/search")
+# 5. API Endpoints
 @app.get("/api/routes")
+@app.get("/api/search")
 def get_routes(
     category: str = Query(None),
     from_: str = Query(None, alias="from"),
@@ -113,61 +93,38 @@ def get_routes(
     q: str = Query(None),
     db: Session = Depends(get_db)
 ):
-    results = query_routes(db, category=category, from_=from_, to=to, q=q)
+    query = db.query(Route)
     
-    # HARDCODED FALLBACK: If anything is empty, return these default live items instantly
-    if not results or len(results) == 0:
-        results = [
-            Route(id=1, operator="Mara Land Cruiser Safaris", origin="Nairobi CBD / JKIA", destination="Masai Mara (Talek / Sekenani Gate)", time="06:00 AM Daily", price="KES 15,000", price_kes=15000, category="safari", info="4x4 Tour Van / Land Cruiser - Game Drives Included"),
-            Route(id=2, operator="Amboseli Express Shuttles", origin="Nairobi", destination="Amboseli National Park (Kimana Gate)", time="07:30 AM Daily", price="KES 4,500", price_kes=4500, category="safari", info="Tourist Overland Shuttle"),
-            Route(id=3, operator="Madaraka Express SGR", origin="Nairobi Terminus (Syokimau)", destination="Mombasa Terminus (Miritini)", time="08:00 AM & 03:00 PM", price="KES 1,500 (First Class KES 4,500)", price_kes=1500, category="safari", info="High-speed rail to the Coast"),
-            Route(id=4, operator="Super Metro", origin="Nairobi CBD (Archives)", destination="Rongai / Kiserian", time="Every 5 mins", price="KES 100", price_kes=100, category="local", info="Express commuter via Langata Rd")
-        ]
+    if category:
+        clean_cat = "safari" if category.lower() in ["safari", "easafari"] else "local"
+        query = query.filter(Route.category == clean_cat)
+    if from_:
+        query = query.filter(Route.origin.ilike(f"%{from_}%"))
+    if to:
+        query = query.filter(Route.destination.ilike(f"%{to}%"))
+    if q:
+        search_term = f"%{q}%"
+        query = query.filter(or_(Route.origin.ilike(search_term), Route.destination.ilike(search_term), Route.operator.ilike(search_term)))
         
-        # Filter fallback items manually if category was requested
-        if category:
-            clean_cat = "safari" if category.lower() in ["safari", "easafari"] else "local"
-            results = [r for r in results if r.category == clean_cat]
-
-    serialized_results = [
-        {
-            "id": r.id,
-            "operator": r.operator,
-            "origin": r.origin,
-            "destination": r.destination,
-            "time": r.time,
-            "price": r.price,
-            "price_kes": r.price_kes,
-            "category": r.category,
-            "info": r.info
-        } for r in results
-    ]
+    results = query.all()
     
+    # Fallback if DB empty
+    if not results:
+        results = db.query(Route).all()
+
     return {
         "tier": category or "all",
         "commission": "5%",
-        "count": len(serialized_results),
-        "results": serialized_results
+        "count": len(results),
+        "results": [
+            {
+                "id": r.id, "operator": r.operator, "origin": r.origin, 
+                "destination": r.destination, "time": r.time, "price": r.price,
+                "price_kes": r.price_kes, "category": r.category, "info": r.info
+            } for r in results
+        ]
     }
-
-# 5. Public Search Route for Frontend
-@app.get("/public/search")
-def public_search(
-    from_: str = Query(None, alias="from"), 
-    to: str = Query(None), 
-    tier: str = Query("easafari"),
-    db: Session = Depends(get_db)
-):
-    category_mapping = {
-        "easafari": "safari",
-        "safari": "safari",
-        "jakasipul": "local",
-        "local": "local"
-    }
-    category = category_mapping.get(tier.lower(), "safari")
-    
-    return get_routes(category=category, from_=from_, to=to, db=db)
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("server:app", host="0.0.0.0", port=10000, reload=True)
+    uvicorn.run(app, host="0.0.0.0", port=10000)
