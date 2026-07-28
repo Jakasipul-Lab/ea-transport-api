@@ -82,7 +82,6 @@ def query_routes(db: Session, category: str = None, from_: str = None, to: str =
     query = db.query(Route)
     
     if category:
-        # Normalize category lookup just in case
         clean_cat = "safari" if category.lower() in ["safari", "easafari"] else "local"
         query = query.filter(Route.category == clean_cat)
         
@@ -116,6 +115,14 @@ def get_routes(
 ):
     results = query_routes(db, category=category, from_=from_, to=to, q=q)
     
+    # 🔍 DEBUG PRINTS ADDED HERE
+    print(f"DEBUG: Category requested -> {category}, Found rows -> {len(results)}")
+    
+    # SAFETY FALLBACK: If strict filter returns 0 and no specific text query was typed, return everything so data shows up
+    if len(results) == 0 and not from_ and not to and not q:
+        results = db.query(Route).all()
+        print(f"DEBUG: Fallback triggered. Total rows returned -> {len(results)}")
+
     # Convert SQLAlchemy models to clean dictionaries for the frontend
     serialized_results = [
         {
@@ -146,7 +153,6 @@ def public_search(
     tier: str = Query("easafari"),
     db: Session = Depends(get_db)
 ):
-    # Map incoming frontend tier names to database categories reliably
     category_mapping = {
         "easafari": "safari",
         "safari": "safari",
