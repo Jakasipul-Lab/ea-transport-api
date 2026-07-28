@@ -4,22 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Osare - East Africa Transit Super Search</title>
-<meta name="description" content="Find the best way to travel across Kenya with SGR, Buses & Matatus in one place.">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135deg,#1e3a8a 0%,#3b82f6 100%);color:white;min-height:100vh;padding:20px}
-.container{max-width:900px;margin:0 auto;text-align:center;padding:2rem 0}
-.header{margin-bottom:2rem}
+.container{max-width:1100px;margin:0 auto;text-align:center;padding:2rem 0}
+.header{margin-bottom:2.5rem}
 .header h1{font-size:3.5rem;font-weight:800;margin-bottom:0.5rem;text-shadow:0 4px 12px rgba(0,0,0,0.3)}
-.header p{font-size:1.4rem;opacity:0.95}
-.search-box{background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:1.5rem;margin-bottom:2.5rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
-.search-box input{padding:14px 18px;width:240px;border-radius:50px;border:none;font-size:1rem;color:#1e40af}
+.header p{font-size:1.3rem;opacity:0.95}
 .cards{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap}
-.card{background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:2.5rem 2rem;width:380px;transition:all 0.3s ease}
+.card{background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:2.5rem 2rem;width:480px;transition:all 0.3s ease;text-align:left}
 .card:hover{transform:translateY(-10px);box-shadow:0 20px 40px rgba(0,0,0,0.3)}
-.card h2{font-size:1.8rem;margin-bottom:1rem}
-.btn{display:inline-block;margin-top:1.5rem;padding:14px 32px;background:white;color:#1e40af;font-weight:600;border-radius:50px;text-decoration:none;border:none;cursor:pointer;transition:all 0.3s;font-size:1rem}
-.btn:hover{background:#f8fafc;transform:scale(1.05)}
+.card h2{font-size:1.8rem;margin-bottom:1rem;text-align:center}
+.card p{opacity:0.9;margin-bottom:1.5rem;text-align:center}
+.search-inputs{display:flex;gap:10px;margin-bottom:1.5rem}
+.search-inputs input{padding:14px 18px;width:100%;border-radius:50px;border:none;font-size:1rem;color:#1e40af}
+.btn{display:inline-block;width:100%;padding:14px 32px;background:white;color:#1e40af;font-weight:600;border-radius:50px;text-decoration:none;border:none;cursor:pointer;transition:all 0.3s;font-size:1rem;text-align:center}
+.btn:hover{background:#f8fafc;transform:scale(1.02)}
+.hub-info{background:rgba(0,0,0,0.2);padding:15px;border-radius:12px;font-size:0.95rem;line-height:1.6}
 footer{margin-top:4rem;opacity:0.8;font-size:0.95rem;text-align:center}
 </style>
 </head>
@@ -27,34 +28,45 @@ footer{margin-top:4rem;opacity:0.8;font-size:0.95rem;text-align:center}
 <div class="container">
     <div class="header">
         <h1>OSARE</h1>
-        <p>East Africa Safari & Commuter Routes</p>
-    </div>
-    
-    <div class="search-box">
-        <input id="from" placeholder="From: Nairobi">
-        <input id="to" placeholder="To: Mombasa">
-        <button class="btn" onclick="location.href='/public/search?from='+document.getElementById('from').value+'&to='+document.getElementById('to').value">Search Routes</button>
+        <p>2-Tier Transit: Long Distance + Local Commuting</p>
     </div>
     
     <div class="cards">
+        <!-- TIER 1: EASAFARI -->
         <div class="card">
             <h2>🚄 EAsafari Routes</h2>
-            <p>Long-distance travel: SGR, Buses & Intercity options</p>
-            <a href="/public/search" class="btn">Browse All Routes</a>
+            <p>High-end travel & tourism. SGR, Buses, Intercity</p>
+            
+            <div class="search-inputs">
+                <input id="from" placeholder="From: Nairobi">
+                <input id="to" placeholder="To: Mombasa">
+            </div>
+            <button class="btn" onclick="location.href='/public/search?from='+document.getElementById('from').value+'&to='+document.getElementById('to').value+'&tier=easafari'">Search EAsafari Routes</button>
         </div>
 
+        <!-- TIER 2: JAKASIPUL -->
         <div class="card">
             <h2>🚌 Jakasipul Hub</h2>
-            <p>Matatu, Local Routes & Commuter Transport</p>
-            <a href="/public/search" class="btn">Browse Local Routes</a>
+            <p>Everyday local commuting. Matatus & Fair-price validation</p>
+            
+            <div class="hub-info">
+                <strong>Find your stage:</strong><br>
+                Nairobi CBD → Githurai, Rongai, Kitengela<br>
+                Compare fares. Validate routes. No booking needed.
+            </div>
+            <a href="/public/search?tier=jakasipul" class="btn" style="margin-top:1.5rem;">Browse Jakasipul Routes</a>
         </div>
     </div>
 
     <footer>
-        <p>© 2026 Osare • Aggregating Kenya's Transport Network</p>
-        <p style="margin-top:10px;font-size:0.85rem;">Information only. No booking. No ticketing.</p>
-        <p style="margin-top:10px;">
-            <a href="/ads" style="color:white;text-decoration:underline;">Advertise With Us</a>
+        <p>© 2026 Osare • EAsafari & Jakasipul</p>
+        <p style="margin-top: 10px; font-size: 0.85rem;">
+            EAsafari: Intercity routes. Jakasipul: Local matatu routes. 5% platform commission.
+        </p>
+        <p style="margin-top: 10px;">
+            <a href="/ads" style="color: white; text-decoration: underline;">
+                Advertise With Us
+            </a>
         </p>
     </footer>
 </div>
