@@ -1,3 +1,17 @@
+app = FastAPI(title="OSARE Double Tier Transport API")
+
+# ADD THIS HERE - HEALTH CHECK
+@app.get("/ping")
+def ping():
+    return {"pong": True, "version": "v3-fixed", "time": "2026-07-29"}
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 import os
 from fastapi import FastAPI, Query, Depends
 from fastapi.responses import FileResponse
