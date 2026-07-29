@@ -1,3 +1,7 @@
+@app.get("/health/safari") 
+def health_safari():
+    return {"status": "safari ok"}
+
 "use client"
 
 import { useState } from "react"
