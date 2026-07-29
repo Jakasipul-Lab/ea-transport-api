@@ -1,3 +1,7 @@
+@app.get("/health/local")
+def health_local():
+    return {"status": "local ok"}
+
 "use client"
 
 import { useState, useEffect } from "react"
