@@ -22,6 +22,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135d
 .btn:hover{background:#f8fafc;transform:scale(1.02)}
 .hub-info{background:rgba(0,0,0,0.2);padding:15px;border-radius:12px;font-size:0.95rem;line-height:1.6}
 footer{margin-top:4rem;opacity:0.8;font-size:0.95rem;text-align:center}
+.route-card{background:rgba(255,255,255,0.15);padding:20px;border-radius:12px;margin-bottom:15px;text-align:left}
 </style>
 </head>
 <body>
@@ -41,7 +42,7 @@ footer{margin-top:4rem;opacity:0.8;font-size:0.95rem;text-align:center}
                 <input id="from" placeholder="From: Nairobi">
                 <input id="to" placeholder="To: Mombasa">
             </div>
-            <button class="btn" onclick="location.href='/public/search?from='+document.getElementById('from').value+'&to='+document.getElementById('to').value+'&tier=easafari'">Search EAsafari Routes</button>
+            <button class="btn" onclick="searchRoutes('safari')">Search EAsafari Routes</button>
         </div>
 
         <!-- TIER 2: JAKASIPUL -->
@@ -54,21 +55,55 @@ footer{margin-top:4rem;opacity:0.8;font-size:0.95rem;text-align:center}
                 Nairobi CBD → Githurai, Rongai, Kitengela<br>
                 Compare fares. Validate routes. No booking needed.
             </div>
-            <a href="/public/search?tier=jakasipul" class="btn" style="margin-top:1.5rem;">Browse Jakasipul Routes</a>
+            <button class="btn" onclick="searchRoutes('local')" style="margin-top:1.5rem;">Browse Jakasipul Routes</button>
         </div>
     </div>
+
+    <!-- RESULTS SHOW HERE -->
+    <div id="results" style="margin-top:3rem; max-width:900px; margin-left:auto; margin-right:auto;"></div>
 
     <footer>
         <p>© 2026 Osare • EAsafari & Jakasipul</p>
         <p style="margin-top: 10px; font-size: 0.85rem;">
             EAsafari: Intercity routes. Jakasipul: Local matatu routes. 5% platform commission.
         </p>
-        <p style="margin-top: 10px;">
-            <a href="/ads" style="color: white; text-decoration: underline;">
-                Advertise With Us
-            </a>
-        </p>
     </footer>
 </div>
+
+<script>
+const API_URL = "";
+
+async function searchRoutes(category) {
+  const from = document.getElementById('from').value || "";
+  const to = document.getElementById('to').value || "";
+  const q = from + " " + to;
+  
+  const resultsDiv = document.getElementById('results');
+  resultsDiv.innerHTML = "<p>Searching...</p>";
+  
+  try {
+    const res = await fetch(`${API_URL}/api/search?category=${category}&q=${q}`);
+    const data = await res.json();
+    
+    if(data.length === 0){
+      resultsDiv.innerHTML = "<p style='text-align:center'>No routes found. Try searching 'Nairobi'</p>";
+      return;
+    }
+    
+    resultsDiv.innerHTML = "<h2 style='text-align:center;margin-bottom:1rem'>Results</h2>" + 
+      data.map(route => `
+        <div class="route-card">
+          <h3>${route.operator}</h3>
+          <p><b>${route.origin}</b> → <b>${route.destination}</b></p>
+          <p>Time: ${route.time} | Price: ${route.price}</p>
+          <small>${route.info}</small>
+        </div>
+      `).join("");
+      
+  } catch(e) {
+    resultsDiv.innerHTML = "<p style='text-align:center;color:yellow'>Failed to load routes</p>";
+  }
+}
+</script>
 </body>
 </html>
