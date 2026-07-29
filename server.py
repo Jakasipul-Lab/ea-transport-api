@@ -117,6 +117,23 @@ app = Flask(__name__)
 def home():
     return "Flask is working and connected!"
 
-if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5000)
+from flask import Flask, request, jsonify
 
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "Flask is working and connected!"
+
+@app.route("/api/search")
+def search():
+    category = request.args.get("category", "")
+    query = request.args.get("q", "")
+    return jsonify({
+        "category": category,
+        "query": query,
+        "results": []
+    })
+
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", port=5000, debug=True)
