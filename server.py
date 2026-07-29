@@ -1,22 +1,21 @@
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
-import os
 
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# 1. SERVE YOUR HOMEPAGE FIRST
+# 1. THIS SERVES YOUR HOMEPAGE FIRST
+# It will load index.html when someone goes to easaafariroutes.com
 app.mount("/", StaticFiles(directory=".", html=True), name="static")
 
+# 2. THIS IS ONLY FOR DATA - your JS will call this
 @app.get("/api/search")
 def get_routes(category: str = Query(None), q: str = Query(None)):
     ROUTES = [
