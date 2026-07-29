@@ -14,9 +14,9 @@ export default function SafarioutesPage() {
   const handleSearch = async (e) => {
     e.preventDefault()
 
-  const searchUrl = query.trim()
-  ? `http://172.31.234.106:8000/search?q=${encodeURIComponent(query.trim())}&category=safari`
-  : `http://172.31.234.106:8000/search?category=safari`
+const searchUrl = query.trim()
+  ? `https://YOUR-BACKEND.onrender.com/search?q=${encodeURIComponent(query.trim())}&category=safari`
+  : `https://YOUR-BACKEND.onrender.com/search?category=safari`
 
     setLoading(true)
     setHasSearched(true)
