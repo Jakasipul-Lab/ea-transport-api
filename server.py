@@ -1,8 +1,8 @@
+
 import datetime
 import os
-import urllib.parse
 import uvicorn
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Response, HTTPException
 from fastapi.responses import FileResponse, HTMLResponse
 
 app = FastAPI()
@@ -30,18 +30,34 @@ SAFARI_DATABASE = [
 ]
 
 # --------------------------------------
-# ✅ PAGES
+# ✅ PAGES (With Safety Checks)
 # --------------------------------------
 @app.get("/")
-def home(): return FileResponse(os.path.join(BASE_DIR, "index.html"))
+def home():
+    file_path = os.path.join(BASE_DIR, "index.html")
+    if not os.path.exists(file_path):
+        return HTMLResponse("<h3>Error: index.html not found on server directory.</h3>", status_code=404)
+    return FileResponse(file_path)
+
 @app.get("/local")
 @app.get("/local.html")
-def local_page(): return FileResponse(os.path.join(BASE_DIR, "local.html"))
+def local_page():
+    file_path = os.path.join(BASE_DIR, "local.html")
+    if not os.path.exists(file_path):
+        return HTMLResponse("<h3>Error: local.html not found on server directory.</h3>", status_code=404)
+    return FileResponse(file_path)
+
 @app.get("/safari")
 @app.get("/safari.html")
-def safari_page(): return FileResponse(os.path.join(BASE_DIR, "safari.html"))
+def safari_page():
+    file_path = os.path.join(BASE_DIR, "safari.html")
+    if not os.path.exists(file_path):
+        return HTMLResponse("<h3>Error: safari.html not found on server directory.</h3>", status_code=404)
+    return FileResponse(file_path)
+
 @app.head("/")
-def home_head(): return Response(status_code=200)
+def home_head(): 
+    return Response(status_code=200)
 
 # --------------------------------------
 # ✅ LOCAL SEARCH - OSARE BLUE THEME
