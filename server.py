@@ -12,6 +12,29 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 @app.get("/")
 def home():
     return FileResponse(os.path.join(BASE_DIR, "index.html"))
+
+@app.get("/local")
+@app.get("/local.html")
+def local_page():
+    return FileResponse(os.path.join(BASE_DIR, "local.html"))
+
+@app.get("/safari")
+@app.get("/safari.html")
+def safari_page():
+    return FileResponse(os.path.join(BASE_DIR, "safari.html"))
+
+@app.head("/")
+def home_head():
+    return Response(status_code=200)app = FastAPI()
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# --------------------------------------
+# ✅ PAGES
+# --------------------------------------
+@app.get("/")
+def home():
+    return FileResponse(os.path.join(BASE_DIR, "index.html"))
 app = FastAPI()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
