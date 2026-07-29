@@ -1,7 +1,44 @@
-import os
-from fastapi import FastAPI, Response
-from fastapi.responses import FileResponse
+from flask import Flask, render_template, request, jsonify
 
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+@app.route("/api/search")
+def search():
+    category = request.args.get("category", "")
+    query = request.args.get("q", "")
+    return jsonify({
+        "category": category,
+        "query": query,
+        "results": []
+
+app = FastAPI()
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# --------------------------------------
+# ✅ PAGES
+# --------------------------------------
+@app.get("/")
+def home():
+    return FileResponse(os.path.join(BASE_DIR, "index.html"))
+
+@app.get("/local")
+@app.get("/local.html")
+def local_page():
+    return FileResponse(os.path.join(BASE_DIR, "local.html"))
+
+@app.get("/safari")
+@app.get("/safari.html")
+def safari_page():
+    return FileResponse(os.path.join(BASE_DIR, "safari.html"))
+
+@app.head("/")
+def home_head():
+    return Response(status_code=200)
 app = FastAPI()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
