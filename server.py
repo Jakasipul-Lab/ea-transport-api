@@ -1,10 +1,17 @@
-import datetime
 import os
-import urllib.parse
-import uvicorn
 from fastapi import FastAPI, Response
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.responses import FileResponse
 
+app = FastAPI()
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# --------------------------------------
+# ✅ PAGES
+# --------------------------------------
+@app.get("/")
+def home():
+    return FileResponse(os.path.join(BASE_DIR, "index.html"))
 app = FastAPI()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
