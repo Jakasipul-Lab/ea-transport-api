@@ -3,6 +3,45 @@ import uvicorn
 from fastapi import FastAPI, Response, Query
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 
+from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
+
+app = FastAPI()
+
+@app.get("/", response_class=HTMLResponse)
+def safari_home(q: str = ""):
+    results_html = f"<p>Showing Safari results for: <b>{q}</b></p>" if q else ""
+    return f"""
+    <html>
+        <head><title>Safari Search</title></head>
+        <body style="font-family: Arial; padding: 40px;">
+            <h1>Safari Search Engine</h1>
+            <form action="/" method="get">
+                <input type="text" name="q" value="{q}" placeholder="Search Safari..." style="padding: 8px; width: 300px;">
+                <button type="submit" style="padding: 8px 16px;">Search</button>
+            </form>
+            {results_html}
+        </body>
+    </html>
+    """
+
+@app.get("/local", response_class=HTMLResponse)
+def local_page(q: str = ""):
+    results_html = f"<p>Showing Local results for: <b>{q}</b></p>" if q else ""
+    return f"""
+    <html>
+        <head><title>Local Search</title></head>
+        <body style="font-family: Arial; padding: 40px;">
+            <h1>Local Search Engine</h1>
+            <form action="/local" method="get">
+                <input type="text" name="q" value="{q}" placeholder="Search Local..." style="padding: 8px; width: 300px;">
+                <button type="submit" style="padding: 8px 16px;">Search</button>
+            </form>
+            {results_html}
+        </body>
+    </html>
+    """
+
 app = FastAPI()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
