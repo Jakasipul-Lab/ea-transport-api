@@ -1,22 +1,168 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>OSARE - Local Travel</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-  body { font-family:Arial; background:#f1f5f9; padding:20px; }
-  header { background:#2563eb; color:#fff; padding:20px; border-radius:10px; text-align:center; }
-  form { margin:20px 0; text-align:center; }
-  input { padding:10px; width:60%; border:1px solid #ccc; border-radius:8px; }
-  button { padding:10px 20px; background:#2563eb; color:#fff; border:none; border-radius:8px; cursor:pointer; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSARE - Local Commuter Transit Hub</title>
+    <style>
+        :root { 
+            --primary: #1e3a8a; 
+            --accent: #3b82f6; 
+            --success: #10b981;
+            --orange: #f97316;
+            --whatsapp: #25d366;
+            --bg: #f8fafc;
+            --text: #1e293b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 4rem; }
+        
+        .hero { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; padding: 3.5rem 2rem; text-align: center; }
+        .container { max-width: 1100px; margin: 2rem auto; padding: 0 20px; }
+        
+        .top-nav { display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; }
+        .nav-link-btn { padding: 10px 20px; font-weight: bold; text-decoration: none; border-radius: 20px; background: #e2e8f0; color: var(--primary); transition: 0.2s; }
+        .nav-link-btn.active { background: var(--primary); color: white; }
+
+        .booking-form-box { background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; margin-bottom: 1.5rem; }
+        .input-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: #64748b; }
+        .input-group input, .input-group select { width: 100%; padding: 0.85rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem; background: #f8fafc; }
+        
+        .results-box { background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-top: 1.5rem; display: none; }
+        .results-table { width: 100%; border-collapse: collapse; margin-top: 1rem; text-align: left; }
+        .results-table th, .results-table td { padding: 14px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
+        .results-table th { background-color: #f1f5f9; color: var(--primary); font-weight: 600; }
+        
+        .btn-inline-book { background: var(--whatsapp); color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: 0.2s; text-decoration: none; }
+        .btn-inline-book:hover { background: #1ebd56; transform: scale(1.03); }
+    </style>
 </head>
 <body>
-  <header><h2>🚆 OSARE Local Travel</h2><p>Bus, SGR, Taxi across East Africa</p></header>
-  <form action="/search/local" method="get">
-    <input name="q" placeholder="Search: bus, sgr, taxi...">
-    <button type="submit">Search</button>
-  </form>
-  <p><a href="/">← Back to OSARE Home</a></p>
+    <div class="hero">
+        <h1 style="font-size: 2.6rem; font-weight: 800; letter-spacing: -0.5px;">OSARE LOCAL</h1>
+        <p style="opacity: 0.9; margin-top: 4px; font-size: 1.1rem;">Instant East African Commuter Enquiries & Daily Transit Logistics</p>
+    </div>
+    
+    <div class="container">
+        <!-- Navigation Switcher between your two files -->
+        <div class="top-nav">
+            <a href="local.html" class="nav-link-btn active">🚆 Local Commute</a>
+            <a href="index.html" class="nav-link-btn" style="color: var(--orange);">🌍 Safari Hub</a>
+        </div>
+
+        <div id="localSection">
+            <h2>Compare Local Transits</h2>
+            <p style="color: #64748b; margin-bottom: 1.5rem; font-size: 0.95rem;">Schedules sorted automatically from budget Matatus up to SGR Trains and flights.</p>
+            
+            <form class="booking-form-box" onsubmit="executeLocalSearch(event)">
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Your Name (For Booking)</label>
+                        <input type="text" id="localPassengerName" placeholder="e.g., Jane Smith" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Departure Terminal</label>
+                        <input type="text" id="localOrigin" value="Nairobi" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Arrival Destination</label>
+                        <input type="text" id="localDestination" value="Mombasa" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Budget Plan</label>
+                        <select id="budgetTier">
+                            <option value="all">Show All Price Options</option>
+                            <option value="cheap">Cheap (Matatu / Sacco)</option>
+                            <option value="moderate">Moderate (Express Buses)</option>
+                            <option value="expensive">Premium (SGR Train / Flight)</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" style="background: var(--primary); color:white; width:100%; padding:12px; border:none; border-radius:8px; font-weight:bold; font-size:1rem; cursor:pointer;">Search Routes & Rates</button>
+            </form>
+
+            <div id="searchResultsBox" class="results-box">
+                <h3 id="resultsHeading" style="color: var(--primary); margin-bottom: 0.5rem;">Available Transits</h3>
+                <div style="overflow-x: auto;">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>Mode</th>
+                                <th>Operator</th>
+                                <th>Price Range</th>
+                                <th>Frequency / Duration</th>
+                                <th>Action Link</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsTableBody">
+                            <!-- Injected dynamically by Javascript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <footer style="margin-top: 5rem; opacity: 0.5; text-align: center; font-size: 0.85rem;">
+            © 2026 Osare Hub • Local Transit Logistics Tier
+        </footer>
+    </div>
+
+    <script>
+        const travelDatabase = [
+            { type: 'cheap', mode: '🚐 Matatu / Sacco', operator: 'Super Metro Sacco', price: 'KES 1,500', duration: 'Hourly Departures', phone: '+254712345678' },
+            { type: 'moderate', mode: '🚌 Express Luxury Bus', operator: 'Mash East Africa', price: 'KES 2,500', duration: '8:00 AM & 9:30 PM', phone: '+254712345678' },
+            { type: 'expensive', mode: '🚆 SGR Madaraka Express', operator: 'Kenya Railways Desk', price: 'KES 1,500 - 4,500', duration: 'Daily 3:00 PM Express', phone: '+254712345678' },
+            { type: 'expensive', mode: '✈️ Regional Coastal Flight', operator: 'Jambojet Airways', price: 'KES 8,500', duration: 'Multiple Flights Daily', phone: '+254712345678' }
+        ];
+
+        function executeLocalSearch(event) {
+            event.preventDefault();
+            
+            const passengerName = document.getElementById('localPassengerName').value.trim();
+            const origin = document.getElementById('localOrigin').value;
+            const destination = document.getElementById('localDestination').value;
+            const selectedBudget = document.getElementById('budgetTier').value;
+            
+            const resultsBox = document.getElementById('searchResultsBox');
+            const tableBody = document.getElementById('resultsTableBody');
+            const heading = document.getElementById('resultsHeading');
+            
+            tableBody.innerHTML = "";
+            
+            const filteredData = travelDatabase.filter(item => {
+                if (selectedBudget === 'all') return true;
+                return item.type === selectedBudget;
+            });
+            
+            heading.innerText = `Available Options: ${origin} to ${destination}`;
+            
+            if (filteredData.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: #ef4444; padding: 20px;">No exact routes found for this filter combination.</td></tr>`;
+            } else {
+                filteredData.forEach(item => {
+                    const customMessage = `Hello ${item.operator},\n\nMy name is *${passengerName}*. I am booking transit from *${origin}* to *${destination}* via *OSARE Local Transit*.\n\nOption: ${item.mode}\nRate: ${item.price}\n\nPlease check remaining seat slots for today.`;
+                    const encodedText = encodeURIComponent(customMessage);
+                    const whatsappUrl = `https://wa.me/${item.phone}?text=${encodedText}`;
+                    
+                    const row = `<tr>
+                        <td style="font-weight: 600;">${item.mode}</td>
+                        <td>${item.operator}</td>
+                        <td style="color: var(--orange); font-weight: 600;">${item.price}</td>
+                        <td>${item.duration}</td>
+                        <td>
+                            <a href="${whatsappUrl}" target="_blank" class="btn-inline-book">
+                                💬 Reserve Space
+                            </a>
+                        </td>
+                    </tr>`;
+                    tableBody.innerHTML += row;
+                });
+            }
+            
+            resultsBox.style.display = 'block';
+            resultsBox.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
 </body>
 </html>
