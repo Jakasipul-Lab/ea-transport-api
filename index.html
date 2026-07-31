@@ -1,4 +1,17 @@
-<!DOCTYPE html>
+
+
+fetch('/api/vendors/tourist')
+.then(res => {
+  console.log("Status:", res.status) // check this in F12
+  return res.json()
+})
+.then(vendors => {
+  console.log("Data:", vendors) // check this in F12
+  // ... rest of code
+})
+.catch(err => {
+  container.innerHTML = '<p style="color:red;">API Error: ' + err + '</p>'
+});<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
