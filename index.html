@@ -1,15 +1,4 @@
-fetch('/api/vendors/tourist')
-.then(res => {
-  console.log("Status:", res.status) // check this in F12
-  return res.json()
-})
-.then(vendors => {
-  console.log("Data:", vendors) // check this in F12
-  // ... rest of code
-})
-.catch(err => {
-  container.innerHTML = '<p style="color:red;">API Error: ' + err + '</p>'
-});<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -239,14 +228,6 @@ fetch('/api/vendors/tourist')
                 </div>
             </form>
         </div>
-
-        <!-- ================= NEW SECTION: 40 TOURIST VENDORS FROM DATABASE ================= -->
-        <section style="padding:40px 20px; background:#f8f9fa; margin-top:3rem; border-radius:16px;">
-          <h2 style="text-align:center; color:#1e3a8a;">40 Safari & Tour Packages for You</h2>
-          <p style="text-align:center; color:#64748b; margin-bottom:20px;">Handpicked tours, safaris & Kilimanjaro climbs - updated daily</p>
-          <div id="vendor-ads" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:20px;"></div>
-        </section>
-
         <footer style="margin-top: 5rem; opacity: 0.5; text-align: center; font-size: 0.85rem;">
             © 2026 Osare Hub • Built by nakinson osare • Marketplace Model: 5% Lead Attribution Active
         </footer>
@@ -356,33 +337,6 @@ fetch('/api/vendors/tourist')
             const encodedText = encodeURIComponent(messageText);
             window.open(`https://wa.me/${vendorPhone}?text=${encodedText}`, '_blank');
         }
-
-        // ===== LOAD 40 TOURIST VENDORS FROM NEON DB =====
-        window.addEventListener('DOMContentLoaded', async () => {
-          try {
-            const res = await fetch('/api/vendors/tourist');
-            const vendors = await res.json();
-            const container = document.getElementById('vendor-ads');
-            if(vendors.length === 0){
-                container.innerHTML = '<p style="text-align:center; grid-column:1/-1;">No tourist vendors yet. Check back soon!</p>'
-            } else {
-                container.innerHTML = vendors.map(v => `
-                  <div style="background:white; border-radius:16px; box-shadow:0 4px 12px rgba(0,0,0,0.08); overflow:hidden; transition:0.3s;">
-                    <img src="${v.image || 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=600'}" style="width:100%; height:200px; object-fit:cover;" />
-                    <div style="padding:16px;">
-                      <h3 style="margin:8px 0; color:#1e3a8a; font-size:1.1rem;">${v.name}</h3>
-                      <p style="margin:4px 0; color:#64748b; font-size:14px;">📍 ${v.location}</p>
-                      <p style="font-size:14px; color:#334155; margin-bottom:8px;">${v.description}</p>
-                      <p style="font-weight:bold; color:#f97316; font-size:18px;">${v.price_label}</p>
-                      <a href="${v.url}" target="_blank" style="display:inline-block; background:#25d366; color:white; padding:10px 16px; border-radius:8px; text-decoration:none; font-weight:bold; margin-top:8px;">Book via WhatsApp</a>
-                    </div>
-                  </div>
-                `).join('');
-            }
-          } catch(e) {
-            console.log("Vendor load error:", e)
-          }
-        });
     </script>
 </body>
 </html>
