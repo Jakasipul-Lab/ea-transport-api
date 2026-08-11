@@ -1,0 +1,63 @@
+{
+  "timestamp": "2026-08-10T23:54:30.272Z",
+  "source": "Neon Database",
+  "totalVendors": 8,
+  "vendors": [
+    {
+      "id": "0d40fe80-199b-428e-81c2-b38dcb9e9682",
+      "name": "Nile River Shuttles",
+      "company": "Nile Transport",
+      "email": "ops@nilerivershuttles.com",
+      "created_at": "2026-08-10T23:33:39.584Z"
+    },
+    {
+      "id": "66361108-9cdd-47b3-b246-1180aec51539",
+      "name": "Kilimanjaro Express",
+      "company": "Kili Logistics",
+      "email": "support@kiliexpress.com",
+      "created_at": "2026-08-10T23:33:39.467Z"
+    },
+    {
+      "id": "76ce06b7-6cc2-4682-8b98-cfa5fb6ba904",
+      "name": "Savannah Transit Co",
+      "company": "Savannah Ltd",
+      "email": "info@savannahtransit.com",
+      "created_at": "2026-08-10T23:33:39.348Z"
+    },
+    {
+      "id": "10ec0905-7918-42e2-abfc-d6918733c33d",
+      "name": "Single Vendor Test",
+      "company": "Solo Express",
+      "email": "solo+vendor@test.com",
+      "created_at": "2026-08-10T23:32:20.818Z"
+    },
+    {
+      "id": "48318fe2-4e12-4213-bfd2-0b9f04f140f7",
+      "name": "Bob Safari Tours",
+      "company": null,
+      "email": "bob@safarioperator.com",
+      "created_at": "2026-08-06T23:10:47.432Z"
+    },
+    {
+      "id": "6960a10b-b2e2-4a1d-9e68-8354f2c0aaa4",
+      "name": "Osare Nakinson",
+      "company": "OSARE HQ",
+      "email": "admin@easafariroutes.com",
+      "created_at": "2026-08-06T22:30:45.618Z"
+    },
+    {
+      "id": "1e1efd69-3fb0-4a37-afc5-7c1f01278a53",
+      "name": "Test Vendor",
+      "company": "UI Test Co",
+      "email": "vendorui+nvyjddol@test.com",
+      "created_at": "2026-07-07T01:33:32.052Z"
+    },
+    {
+      "id": "80767ca8-8b60-42ca-971d-b6b0951002e0",
+      "name": "Test Vendor",
+      "company": "Test Company",
+      "email": "pg+540i7hhj@test.com",
+      "created_at": "2026-07-07T01:18:56.445Z"
+    }
+  ]
+}
